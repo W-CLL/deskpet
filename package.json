@@ -1,0 +1,18 @@
+{
+  "name": "deskpet-update-center",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hosted release management and update delivery for DeskPet.",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "set-password": "node scripts/set-password.js",
+    "import-release": "node scripts/import-release.js",
+    "check": "node --check server.js && node --check lib/security.js && node --check lib/storage.js && node --check lib/activation-store.js && node --check scripts/set-password.js && node --check scripts/import-release.js && node --check public/admin.js",
+    "test": "node --test test/*.test.js"
+  }
+}

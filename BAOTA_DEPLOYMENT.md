@@ -54,9 +54,9 @@ native/
 
 在宝塔“文件”中：
 
-1. 创建 `/www/wwwroot/deskpet-update`。
+1. 创建 `/www/wwwroot/deskpet`。
 2. 上传压缩包并解压，让 `server.js` 直接位于该目录下。
-3. 确认 `/www/wwwroot/deskpet-update/public/app-icon.png` 存在。
+3. 确认 `/www/wwwroot/deskpet/public/app-icon.png` 存在。
 
 ## 4. 创建生产数据目录
 
@@ -86,7 +86,7 @@ audit.jsonl
 在宝塔终端执行：
 
 ```bash
-cd /www/wwwroot/deskpet-update
+cd /www/wwwroot/deskpet
 export DESKPET_DATA_DIR=/www/deskpet-data
 npm run set-password
 chown -R www:www /www/deskpet-data
@@ -100,8 +100,8 @@ chown -R www:www /www/deskpet-data
 
 | 配置项 | 值 |
 | --- | --- |
-| 项目名称 | `deskpet-update` |
-| 项目路径 | `/www/wwwroot/deskpet-update` |
+| 项目名称 | `deskpet` |
+| 项目路径 | `/www/wwwroot/deskpet` |
 | 启动文件 | `server.js` |
 | 启动命令 | `npm start` |
 | Node 版本 | `24.x` |
@@ -183,15 +183,70 @@ dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
 
 然后登录 `https://desktoppet.online/admin`，上传为草稿并点击发布。正常发布不需要 SSH、SCP，也不需要在服务器执行打包命令。
 
-## 10. 更新后台代码
+## 10. GitHub 与宝塔 WebHook 自动更新
+
+仓库地址：
+
+```text
+git@github.com:W-CLL/deskpet.git
+```
+
+这是私有仓库，建议使用只读 Deploy Key，不要把 GitHub 密码或访问令牌写进脚本：
+
+1. 在宝塔“网站 > Git 创建”中复制服务器 SSH 公钥。
+2. 打开 GitHub 仓库的 `Settings > Deploy keys`。
+3. 添加公钥，不要勾选写入权限。
+4. 在宝塔中克隆 `main` 分支到 `/www/wwwroot/deskpet`。
+5. 确认宝塔 Node 项目名称也是 `deskpet`。
+
+WebHook 部署脚本属于服务器私有配置，不放进 GitHub 仓库。将脚本单独保存在：
+
+```text
+/www/server/panel/script/deskpet-webhook.sh
+```
+
+先在宝塔终端测试：
+
+```bash
+chmod 700 /www/server/panel/script/deskpet-webhook.sh
+bash /www/server/panel/script/deskpet-webhook.sh deskpet
+```
+
+脚本会执行：
+
+1. 校验项目参数、固定仓库和 `main` 分支。
+2. 拒绝覆盖服务器上的未提交代码改动。
+3. 使用 `git fetch` 和 fast-forward 更新代码。
+4. 执行 `npm run check` 和 `npm test`。
+5. 重启名为 `deskpet` 的 PM2 项目。
+6. 检查 `https://desktoppet.online/healthz`。
+
+在宝塔 Git 管理或 WebHook 插件中，把执行脚本设置为：
+
+```bash
+bash /www/server/panel/script/deskpet-webhook.sh deskpet
+```
+
+复制宝塔生成的 WebHook URL，然后在 GitHub 仓库中进入 `Settings > Webhooks > Add webhook`：
+
+- Payload URL：宝塔生成的 WebHook URL
+- Content type：`application/json`
+- Event：只选择 `push`
+- SSL verification：宝塔面板有可信 HTTPS 证书时保持启用
+
+宝塔当前 Git 创建与 WebHook 的官方流程见：[克隆 Git 仓库创建网站并实现自动更新](https://docs.bt.cn/practical-tutorials/create-from-git-website)。
+
+WebHook 地址等同于部署凭据，不要放进 GitHub 仓库、截图或公开日志。
+
+## 11. 手动更新后台代码
 
 1. 先备份 `/www/deskpet-data`。
-2. 在宝塔中停止 `deskpet-update` Node 项目。
-3. 替换 `/www/wwwroot/deskpet-update` 中的后台代码。
+2. 在宝塔中停止 `deskpet` Node 项目。
+3. 替换 `/www/wwwroot/deskpet` 中的后台代码。
 4. 不要删除或覆盖 `/www/deskpet-data`。
 5. 重新启动项目并检查项目日志和 `/healthz`。
 
-## 11. 必须备份的内容
+## 12. 必须备份的内容
 
 定期备份整个目录：
 
@@ -201,7 +256,7 @@ dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
 
 其中的签名私钥、激活数据库和管理员密码记录缺一不可。私钥丢失后，新发布的更新将无法通过已安装客户端的签名验证。
 
-## 12. 常见问题
+## 13. 常见问题
 
 ### 后台登录后又跳回登录页
 

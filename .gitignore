@@ -28,6 +28,9 @@ audit.jsonl
 *.tar
 *.gz
 
+# Server-only deployment hooks
+/deploy/update-from-github.sh
+
 # Editor and operating system files
 .vscode/
 .idea/

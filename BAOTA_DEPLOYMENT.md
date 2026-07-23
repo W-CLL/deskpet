@@ -214,12 +214,12 @@ bash /www/server/panel/script/deskpet-webhook.sh deskpet
 
 脚本会执行：
 
-1. 校验项目参数、固定仓库和 `main` 分支。
+1. 固定项目目录、GitHub 仓库和 `main` 分支。
 2. 拒绝覆盖服务器上的未提交代码改动。
-3. 使用 `git fetch` 和 fast-forward 更新代码。
-4. 执行 `npm run check` 和 `npm test`。
-5. 重启名为 `deskpet` 的 PM2 项目。
-6. 检查 `https://desktoppet.online/healthz`。
+3. 使用互斥锁防止多个 WebHook 同时拉取。
+4. 使用 `git fetch` 和 fast-forward 更新代码。
+
+WebHook 脚本只同步代码，不执行打包、测试或进程重启。Node 项目的启动和重启由宝塔单独管理。
 
 在宝塔 Git 管理或 WebHook 插件中，把执行脚本设置为：
 

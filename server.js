@@ -606,6 +606,7 @@ async function createApplication(options = {}) {
         const configured = Boolean(await loadAuthRecord());
         return sendJson(res, config, 200, {
           ok: true,
+          service: 'deskpet-update',
           configured,
           activeVersion: store.data.activeVersion,
           tls: isSecureRequest(req, config)

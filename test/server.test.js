@@ -49,6 +49,7 @@ test('HTTPS proxy headers are trusted only from the configured loopback proxy', 
   const health = await jsonResponse(await fetch(`${baseUrl}/healthz`, {
     headers: { 'X-Forwarded-Proto': 'https', 'X-Forwarded-For': '203.0.113.9' }
   }));
+  assert.equal(health.payload.service, 'deskpet-update');
   assert.equal(health.payload.tls, true);
 });
 

@@ -1,81 +1,96 @@
-# 桌搭子管理后台
+# 桌搭子更新服务
 
-独立的 Node.js 管理后台，负责以下服务器端业务：
+这是一个可独立部署的 Express 5 应用，为桌搭子提供管理后台、版本发布、更新下载、一次性激活码和设备授权。
 
-- 管理员登录和版本发布
-- EXE 安装包上传、保存和 Range 下载
-- 更新清单生成、Ed25519 签名和 SHA-256 校验信息
-- 6 位一次性激活码生成、查看、复制、使用和撤销
-- 设备激活与更新授权
+服务器只接收本地 Windows 电脑已经打包完成的 EXE，不负责编译 C#、运行 Inno Setup 或构建桌面应用。
 
-服务不负责开发或打包桌宠。C# 编译、Inno Setup 打包和安装包测试全部在本地 Windows 电脑完成，服务器只接收最终生成的 EXE。
+## 运行要求
 
-服务不依赖第三方 Node.js 包或外部数据库。激活与授权数据使用 Node.js 内置 SQLite，版本信息和安装包保存在独立数据目录。
+- Node.js 24 或更高版本，激活数据库使用 Node 内置 `node:sqlite`
+- 可以直接使用 Node 的 HTTP 端口，也可以放在宝塔 Nginx 之后
+- PM2 或宝塔 Node 项目管理器保持单实例运行
+- 不要求 MySQL、Redis、Docker、.NET SDK 或 Inno Setup
 
-## 日常发布流程
-
-1. 在本地完成桌宠开发和测试。
-2. 在项目根目录生成安装包：
-
-   ```powershell
-   .\scripts\build-native.ps1 -Version 2.1.2
-   ```
-
-3. 打开 `https://你的域名/admin`。
-4. 填写版本号和更新说明，上传 `dist-native` 中生成的 EXE。
-5. 安装包先保存为草稿，确认后点击“发布”。
-6. 已激活的桌宠会通过更新接口检测新版本。
-
-服务器上不需要安装 .NET SDK、Inno Setup、Electron，也不需要运行桌宠打包命令。
-
-## 激活与授权
-
-- 管理员可以在后台批量生成 6 位数字与字母组合的一次性激活码。
-- 每个激活码只能成功激活一台设备一次。
-- 新生成的完整激活码经过 AES-256-GCM 加密后保存在 `activation.db`，管理员可以在后台查看和复制。
-- 客户端使用 Windows DPAPI 保存设备授权。
-- 更新清单和非过渡版安装包要求有效设备授权。
-- `DESKPET_BOOTSTRAP_VERSION` 指定旧客户端可以公开获取的过渡版本，默认是 `2.1.0`。
-
-## 主要地址
-
-- `GET /healthz`：健康检查
-- `GET /api/update/latest`：更新清单
-- `GET|HEAD /downloads/<file>`：安装包下载
-- `POST /api/activate`：设备激活
-- `GET /admin`：管理后台
-
-## 安全设计
-
-- 管理密码使用 `crypto.scrypt` 加盐哈希，不保存明文。
-- 管理会话使用 `Secure`、`HttpOnly`、`SameSite=Strict` Cookie。
-- 管理写操作要求同源请求和 CSRF 令牌。
-- 登录失败按来源 IP 限速，会话默认 8 小时失效。
-- 上传大小上限为 300 MB，文件先写入临时路径，完成后原子移动。
-- 更新清单使用 Ed25519 私钥签名，客户端只内置公钥。
-- 激活码、授权、签名私钥、管理员密码哈希和安装包都保存在独立数据目录，不能放进公开网站目录。
-- 正式环境必须通过 HTTPS 访问，Node.js 只监听 `127.0.0.1`，由宝塔的 Nginx 外网映射提供域名访问。
-
-## 本地验证后台
-
-需要 Node.js 24 或更高版本：
+## 快速开始
 
 ```powershell
 cd update-server
+npm ci
 npm run check
 npm test
+```
 
+本地运行前设置独立的数据目录：
+
+```powershell
 $env:DESKPET_PUBLIC_URL='http://127.0.0.1:3100'
 $env:DESKPET_HTTP_HOST='127.0.0.1'
 $env:DESKPET_HTTP_PORT='3100'
 $env:DESKPET_DATA_DIR="$PWD\work\data"
-$env:DESKPET_ADMIN_LOOPBACK_ONLY='false'
+npm run generate-signing-key
 npm run set-password
 npm start
 ```
 
-本地测试数据位于 `update-server\work\data`，不要上传到服务器覆盖生产数据。
+然后访问：
 
-## 生产部署
+```text
+http://127.0.0.1:3100/healthz
+http://127.0.0.1:3100/admin
+```
 
-按照 [宝塔部署文档](BAOTA_DEPLOYMENT.md) 操作。宝塔负责 Node.js 版本、PM2 进程守护、Nginx 外网映射和 HTTPS；本项目不要求 Docker、MySQL、Caddy 或 systemd 服务文件。
+`generate-signing-key` 会输出客户端公钥。正式发布前，桌面客户端必须内置与服务器私钥配对的公钥。已有生产环境必须复用原来的整个数据目录，不能重新生成密钥。
+
+## 常用命令
+
+| 命令 | 作用 |
+| --- | --- |
+| `npm start` | 启动 Express 服务 |
+| `npm run check` | 检查所有服务端 JavaScript 语法 |
+| `npm test` | 运行 HTTP 端到端测试 |
+| `npm run set-password` | 交互式设置管理员密码 |
+| `npm run generate-signing-key` | 首次生成 Ed25519 签名密钥，拒绝覆盖旧密钥 |
+| `npm run import-release -- <version> <exe>` | 从命令行导入并发布 EXE |
+
+## 日常发布
+
+1. 在主项目根目录执行 `./scripts/build-native.ps1 -Version <版本号>`。
+2. 打开 `http://或https://你的域名/admin` 并登录。
+3. 填写版本号和更新说明，上传 `dist-native` 中的 EXE。
+4. 上传完成后版本是草稿，确认 SHA-256 和信息后再发布。
+5. 已授权客户端下一次检查更新时取得带 Ed25519 签名的清单。
+
+## 配置
+
+| 环境变量 | 生产示例 | 说明 |
+| --- | --- | --- |
+| `DESKPET_PUBLIC_URL` | `http://127.0.0.1:3100` | 对外地址，参与 Origin 和下载地址生成 |
+| `DESKPET_DATA_DIR` | `/www/deskpet-data` | 生产数据目录，必须位于网站代码目录之外 |
+| `DESKPET_HTTP_HOST` | `127.0.0.1` | Node 监听地址 |
+| `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
+| `DESKPET_TRUST_PROXY` | `true` | 使用 Nginx 时，仅信任本机反向代理传入的来源 IP |
+| `DESKPET_SIGNING_PRIVATE_KEY` | `/www/deskpet-data/signing-private.pem` | Ed25519 私钥路径 |
+| `DESKPET_BOOTSTRAP_VERSION` | `2.1.0` | 未激活旧客户端可公开取得的过渡版本 |
+| `DESKPET_BRAND_ICON` | 可选 | 管理后台图标绝对路径 |
+
+完整模板位于 `deploy/baota.env.example`。
+
+## 代码导航
+
+- [服务端架构与业务逻辑](ARCHITECTURE.md)：模块职责、请求链路、发布/激活/下载流程和数据文件
+- [宝塔部署文档](BAOTA_DEPLOYMENT.md)：首次部署、Nginx、PM2、升级、备份和故障排查
+- `server.js`：宝塔保持不变的启动入口
+- `src/`：Express 路由、控制器、中间件和业务服务
+- `lib/`：版本文件和 SQLite 持久化
+- `public/`：管理后台页面
+
+## 安全约束
+
+- 应用不强制校验 HTTPS；公网部署仍建议使用 Nginx + HTTPS，Node 端口不要直接暴露到公网。
+- 管理密码只保存 scrypt 哈希，会话 Cookie 使用 `HttpOnly`、`SameSite=Strict` 和生产环境 `Secure`。
+- 所有管理写操作同时验证会话、同源请求和 CSRF 令牌。
+- EXE 以流方式上传并限制为 300 MB，不会整体读入内存。
+- 正式版本的清单和下载都要求有效设备授权。
+- `signing-private.pem`、`activation-*.key`、数据库和版本文件不得进入 Git。
+
+生产部署请直接按 [BAOTA_DEPLOYMENT.md](BAOTA_DEPLOYMENT.md) 操作。

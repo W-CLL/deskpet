@@ -1,66 +1,69 @@
-# 宝塔部署桌搭子管理后台
+# 宝塔部署说明
 
-本文只部署 `update-server`。桌宠的开发、编译、打包和测试全部在本地 Windows 电脑完成。
+本文只部署 `update-server`。桌面应用的开发、编译、测试和 EXE 打包继续在本地 Windows 电脑完成。
 
-## 1. 最终结构
+## 1. 部署拓扑
 
 ```text
-本地 Windows
-  C# / WPF 源码
-  .NET 10 SDK + Inno Setup 6
-  dist-native/*.exe
-          |
-          | 浏览器上传
-          v
-宝塔服务器
-  Node.js 24 + PM2
-  桌搭子管理后台
-  SQLite 激活数据、签名密钥、安装包
+桌面客户端 / 管理员浏览器
+           |
+           | HTTP 或 HTTPS
+           v
+宝塔 Nginx（可选：域名、证书、上传限制）
+           |
+           | HTTP 127.0.0.1:3100
+           v
+Express 5 + Node.js 24（单进程）
+           |
+           v
+/www/deskpet-data（SQLite、密钥、版本和 EXE）
 ```
 
-服务器不需要安装 .NET、Inno Setup、Electron、Docker 或 MySQL。
+如果使用 Nginx，公网只开放 `80` 和 `443`，不要公开 `3100`。也可以直接将 Node 端口映射到内网或受控网络。
 
 ## 2. 宝塔准备
 
-1. 在宝塔左侧进入“网站 > Node 项目 > Node 版本管理器”。
-2. 安装 Node.js 24。
-3. 安装 Nginx，用于域名反向代理和 HTTPS。
-4. 确认域名已经解析到服务器公网 IP。
-5. 云服务器安全组只需要对外开放 `80` 和 `443`；Node 的 `3100` 端口不要对公网开放。
+在宝塔面板中安装：
 
-宝塔的 Node 项目默认由 PM2 守护，项目崩溃或服务器重启后会自动拉起。宝塔官方操作界面可参考：[Node.js PM2 部署教程](https://docs.bt.cn/practical-tutorials/nodejs-pm2-deployment)。
+- Nginx
+- Node 项目管理器
+- Node.js 24.x
 
-## 3. 上传后台代码
+Node.js 24 是硬性要求，因为项目使用内置 `node:sqlite`。域名需要先解析到服务器公网 IP。
 
-在本地只打包 `update-server` 目录，必须包含：
+## 3. 上传代码
+
+建议将代码根目录固定为：
+
+```text
+/www/wwwroot/deskpet
+```
+
+该目录内的 `server.js` 应直接存在。部署包至少包含：
 
 ```text
 lib/
 public/
 scripts/
+src/
+deploy/baota.env.example
+ecosystem.config.cjs
 package.json
+package-lock.json
 server.js
 ```
 
-不要把以下内容放进部署压缩包：
+不要上传 `node_modules/`、`test/`、`data/`、`work/`、EXE 或本地密钥。Linux 上用锁文件重新安装依赖：
 
-```text
-test/
-work/
-data/
-dist-native/
-native/
+```bash
+cd /www/wwwroot/deskpet
+npm ci --omit=dev
+npm run check
 ```
 
-在宝塔“文件”中：
-
-1. 创建 `/www/wwwroot/deskpet`。
-2. 上传压缩包并解压，让 `server.js` 直接位于该目录下。
-3. 确认 `/www/wwwroot/deskpet/public/app-icon.png` 存在。
+Express 是运行依赖，因此不能再跳过依赖安装。以后 `package-lock.json` 变化时也必须重新执行 `npm ci --omit=dev`。
 
 ## 4. 创建生产数据目录
-
-在宝塔终端执行：
 
 ```bash
 mkdir -p /www/deskpet-data
@@ -68,11 +71,14 @@ chown -R www:www /www/deskpet-data
 chmod 700 /www/deskpet-data
 ```
 
-这个目录保存生产数据，不能放在网站公开目录，也不能在以后更新后台代码时覆盖。主要内容包括：
+生产数据必须与网站代码分开。以后替换代码时，只操作 `/www/wwwroot/deskpet`，不能覆盖 `/www/deskpet-data`。
+
+数据目录最终包含：
 
 ```text
 auth.json
-activation.db
+activation.db*
+activation-pepper.key
 activation-encryption.key
 signing-private.pem
 releases.json
@@ -81,22 +87,40 @@ uploads/
 audit.jsonl
 ```
 
+### 已有生产环境
+
+迁移或重装时，应恢复原来的整个 `/www/deskpet-data`，尤其不能重新生成 `signing-private.pem`、`activation-pepper.key` 或 `activation-encryption.key`。签名私钥变更后，已发布客户端会拒绝新清单；激活密钥变更后，旧激活码无法正常校验或查看。
+
+### 全新环境
+
+只有从未发布过客户端时才生成新的签名密钥：
+
+```bash
+cd /www/wwwroot/deskpet
+export DESKPET_DATA_DIR=/www/deskpet-data
+export DESKPET_SIGNING_PRIVATE_KEY=/www/deskpet-data/signing-private.pem
+npm run generate-signing-key
+```
+
+命令会显示 SPKI DER Base64 公钥。必须把该公钥配置到桌面客户端的更新校验代码中，再打包首个客户端。脚本在私钥已经存在时会拒绝覆盖。
+
 ## 5. 设置管理员密码
 
-在宝塔终端执行：
+在宝塔交互式终端中执行：
 
 ```bash
 cd /www/wwwroot/deskpet
 export DESKPET_DATA_DIR=/www/deskpet-data
 npm run set-password
 chown -R www:www /www/deskpet-data
+chmod 700 /www/deskpet-data
 ```
 
-按提示输入两遍管理员密码。密码不会以明文保存。最后一条命令确保宝塔以 `www` 用户启动 Node 项目后可以读取数据。
+密码至少 12 个字符，只保存 scrypt 哈希，不保存明文。
 
-## 6. 添加 Node 项目
+## 6. 创建 Node 项目
 
-进入“网站 > Node 项目 > 添加 Node 项目”，填写：
+在“网站 > Node 项目 > 添加 Node 项目”中填写：
 
 | 配置项 | 值 |
 | --- | --- |
@@ -107,178 +131,175 @@ chown -R www:www /www/deskpet-data
 | Node 版本 | `24.x` |
 | 运行用户 | `www` |
 | 内部端口 | `3100` |
+| 实例数 | `1` |
 
-如果当前宝塔版本只提供“启动文件”或“启动命令”其中一项，使用对应的一项即可，不要同时启动两个进程。
+部分宝塔版本只要求“启动文件”和“启动命令”中的一个，按界面要求填写即可，不要同时启动两个进程。
 
-后台没有第三方 npm 依赖，宝塔界面中的“安装依赖”可以跳过；运行环境只需要 Node.js 24。
-
-在项目的“环境变量”中加入：
+在项目环境变量中加入：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://desktoppet.online
+NODE_ENV=production
+DESKPET_PUBLIC_URL=http://你的域名
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
 DESKPET_TRUST_PROXY=true
-DESKPET_ADMIN_LOOPBACK_ONLY=false
 DESKPET_SIGNING_PRIVATE_KEY=/www/deskpet-data/signing-private.pem
 DESKPET_BOOTSTRAP_VERSION=2.1.0
 ```
 
-保存并启动项目，在项目日志中确认没有报错。
+不要在值两侧加引号。保存后启动项目，并在日志中确认：
 
-## 7. 绑定域名与 HTTPS
+```text
+deskpet-update http listening on 127.0.0.1:3100
+```
 
-1. 在 Node 项目设置中开启“外网映射”。
-2. 绑定 `desktoppet.online`。
-3. 上游地址使用 `http://127.0.0.1:3100`。
-4. 在 SSL 设置中申请 Let's Encrypt 证书。
-5. 证书生效后开启“强制 HTTPS”。
+仓库中的 `ecosystem.config.cjs` 可用于命令行 PM2 部署。使用宝塔 Node 项目管理器时，不需要再手工运行 `pm2 start`。
 
-上传安装包最大允许 300 MB。若上传时出现 `413 Request Entity Too Large`，在该站点的 Nginx 配置 `server` 块中增加：
+## 7. 配置域名和反向代理（可选）
+
+应用本身不强制 HTTPS、Host 或端口。最简单的方式是直接访问 Node 端口；使用域名时，在 Node 项目中开启“外网映射”，上游为：
+
+```text
+http://127.0.0.1:3100
+```
+
+如果使用 HTTPS，可在宝塔申请 Let's Encrypt 证书；如果只在内网使用，普通 HTTP 即可。反向代理至少传递这些头：
+
+```nginx
+proxy_set_header Host $host;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+```
+
+安装包最大允许 300 MB。在站点 Nginx 的 `server` 块中加入：
 
 ```nginx
 client_max_body_size 300m;
 proxy_request_buffering off;
 proxy_read_timeout 600s;
+proxy_send_timeout 600s;
 ```
 
-保存配置并重载 Nginx。
+保存并重载 Nginx。`DESKPET_TRUST_PROXY=true` 只信任来自本机的来源 IP 代理头，Node 仍建议监听 `127.0.0.1`。
 
 ## 8. 部署验证
 
-依次访问：
+先访问：
 
 ```text
-https://desktoppet.online/healthz
-https://desktoppet.online/admin
+http://或https://你的域名/healthz
+http://或https://你的域名/admin
 ```
 
-`/healthz` 应返回类似：
+健康检查应类似：
 
 ```json
-{"ok":true,"configured":true,"activeVersion":null,"tls":true}
+{
+  "ok": true,
+  "service": "deskpet-update",
+  "configured": true,
+  "activeVersion": null
+}
 ```
 
-首次登录后台后，测试以下功能：
+然后在后台按顺序验证：
 
-1. 生成一个激活码。
-2. 查看并复制激活码。
-3. 上传一个本地生成的 EXE 为草稿。
-4. 确认版本号和 SHA-256 后发布。
+1. 登录并刷新页面，确认会话仍有效。
+2. 生成一个激活码，查看并复制完整内容。
+3. 上传一个本地生成的 EXE，确认显示为草稿。
+4. 发布版本，检查当前版本和 SHA-256。
+5. 使用测试客户端完成激活、检查更新和下载。
 
-## 9. 以后发布桌宠
+服务器终端再执行一次完整回归：
 
-所有打包都在本地项目根目录执行：
+```bash
+cd /www/wwwroot/deskpet
+npm test
+```
+
+测试使用系统临时目录，不会修改 `/www/deskpet-data`。
+
+## 9. 日常发布桌面版本
+
+本地 Windows 项目根目录执行：
 
 ```powershell
 .\scripts\build-native.ps1 -Version 2.1.2
 ```
 
-生成文件：
+得到：
 
 ```text
 dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
 ```
 
-然后登录 `https://desktoppet.online/admin`，上传为草稿并点击发布。正常发布不需要 SSH、SCP，也不需要在服务器执行打包命令。
+登录 `/admin` 上传为草稿并发布。正常发布桌面版本不需要 SSH，也不需要改服务器代码。
 
-## 10. GitHub 与宝塔 WebHook 自动更新
+## 10. 更新服务端代码
 
-仓库地址：
+1. 备份 `/www/deskpet-data`。
+2. 在宝塔停止 `deskpet` Node 项目。
+3. 更新 `/www/wwwroot/deskpet` 中的代码。
+4. 不要删除、移动或覆盖 `/www/deskpet-data`。
+5. 安装锁定依赖并验证：
 
-```text
-git@github.com:W-CLL/deskpet.git
-```
+   ```bash
+   cd /www/wwwroot/deskpet
+   npm ci --omit=dev
+   npm run check
+   npm test
+   ```
 
-这是私有仓库，建议使用只读 Deploy Key，不要把 GitHub 密码或访问令牌写进脚本：
+6. 在宝塔重新启动项目。
+7. 检查项目日志、`/healthz`、`/admin` 和一次客户端更新请求。
 
-1. 在宝塔“网站 > Git 创建”中复制服务器 SSH 公钥。
-2. 打开 GitHub 仓库的 `Settings > Deploy keys`。
-3. 添加公钥，不要勾选写入权限。
-4. 在宝塔中克隆 `main` 分支到 `/www/wwwroot/deskpet`。
-5. 确认宝塔 Node 项目名称也是 `deskpet`。
+不要只执行 `git pull` 就结束：服务端依赖可能已经变化，`npm ci --omit=dev` 是更新流程的一部分。
 
-WebHook 部署脚本属于服务器私有配置，不放进 GitHub 仓库。将脚本单独保存在：
+## 11. 备份与恢复
 
-```text
-/www/server/panel/script/deskpet-webhook.sh
-```
-
-先在宝塔终端测试：
-
-```bash
-chmod 700 /www/server/panel/script/deskpet-webhook.sh
-bash /www/server/panel/script/deskpet-webhook.sh deskpet
-```
-
-脚本会执行：
-
-1. 固定项目目录、GitHub 仓库和 `main` 分支。
-2. 拒绝覆盖服务器上的未提交代码改动。
-3. 使用互斥锁防止多个 WebHook 同时拉取。
-4. 使用 `git fetch` 和 fast-forward 更新代码。
-
-WebHook 脚本只同步代码，不执行打包、测试或进程重启。Node 项目的启动和重启由宝塔单独管理。
-
-在宝塔 Git 管理或 WebHook 插件中，把执行脚本设置为：
-
-```bash
-bash /www/server/panel/script/deskpet-webhook.sh deskpet
-```
-
-复制宝塔生成的 WebHook URL，然后在 GitHub 仓库中进入 `Settings > Webhooks > Add webhook`：
-
-- Payload URL：宝塔生成的 WebHook URL
-- Content type：`application/json`
-- Event：只选择 `push`
-- SSL verification：宝塔面板有可信 HTTPS 证书时保持启用
-
-宝塔当前 Git 创建与 WebHook 的官方流程见：[克隆 Git 仓库创建网站并实现自动更新](https://docs.bt.cn/practical-tutorials/create-from-git-website)。
-
-WebHook 地址等同于部署凭据，不要放进 GitHub 仓库、截图或公开日志。
-
-## 11. 手动更新后台代码
-
-1. 先备份 `/www/deskpet-data`。
-2. 在宝塔中停止 `deskpet` Node 项目。
-3. 替换 `/www/wwwroot/deskpet` 中的后台代码。
-4. 不要删除或覆盖 `/www/deskpet-data`。
-5. 重新启动项目并检查项目日志和 `/healthz`。
-
-## 12. 必须备份的内容
-
-定期备份整个目录：
+定期对整个目录做一致性备份：
 
 ```text
 /www/deskpet-data
 ```
 
-其中的签名私钥、激活数据库和管理员密码记录缺一不可。私钥丢失后，新发布的更新将无法通过已安装客户端的签名验证。
+恢复时先停止 Node 项目，恢复整个目录和权限，再启动项目。建议保留多个历史备份，并在独立位置验证备份可以读取。
 
-## 13. 常见问题
+代码可由 Git 或部署包恢复，生产数据和私钥无法从代码仓库恢复。
 
-### 后台登录后又跳回登录页
+## 12. 常见问题
 
-确认域名使用 HTTPS，并检查：
+### 启动时报 `Cannot find module 'express'`
+
+进入项目目录执行 `npm ci --omit=dev`，并确认宝塔项目路径与执行命令的目录相同。
+
+### 启动时报找不到 `node:sqlite`
+
+宝塔实际使用的 Node 版本低于 24。在 Node 项目设置中重新选择 24.x 后重启。
+
+### 启动时报找不到 `signing-private.pem`
+
+确认 `DESKPET_SIGNING_PRIVATE_KEY` 指向现有生产私钥。已有客户端时不能生成新私钥代替；应从备份恢复。
+
+### 登录后立即回到登录页
+
+确认访问地址与 `DESKPET_PUBLIC_URL` 使用相同的协议和域名，并检查：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://desktoppet.online
+DESKPET_PUBLIC_URL=http://或https://你的域名
 DESKPET_TRUST_PROXY=true
 ```
 
-### 上传安装包返回 413
+使用 Nginx 时，确认它传递了原始 `Host` 和 `X-Forwarded-For`。
 
-按第 7 节提高 Nginx 的 `client_max_body_size`。
+### 上传返回 413
 
-### 项目提示找不到 `node:sqlite`
+检查 Nginx 的 `client_max_body_size 300m`，然后重载 Nginx。Node 自身也会拒绝超过 300 MB 的文件。
 
-当前 Node.js 版本过低，在宝塔 Node 版本管理器中切换到 Node.js 24。
+### 更新清单能访问但客户端拒绝
 
-### 桌宠无法检查更新
+检查桌面客户端内置公钥是否与 `/www/deskpet-data/signing-private.pem` 配对。不要通过关闭签名校验来绕过。
 
-先在浏览器访问 `/healthz`。如果浏览器正常而桌宠在 VPN 环境下失败，将 `desktoppet.online` 和服务器 IP 设置为 VPN 直连。
+### 更新代码后版本或激活码消失
 
-### 更新后台后数据不见了
-
-检查 `DESKPET_DATA_DIR` 是否仍指向 `/www/deskpet-data`，不要把生产数据放进代码目录。
+检查 `DESKPET_DATA_DIR` 是否仍为 `/www/deskpet-data`，并确认运行用户 `www` 对该目录有读写权限。

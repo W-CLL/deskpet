@@ -20,39 +20,6 @@ test('password hashes verify without storing the plaintext password', async () =
   assert.equal(JSON.stringify(record).includes('correct horse battery staple'), false);
 });
 
-test('HTTPS proxy headers are trusted only from the configured loopback proxy', async (context) => {
-  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-proxy-test-'));
-  const { privateKey } = crypto.generateKeyPairSync('ed25519');
-  const application = await createApplication({
-    publicUrl: 'https://8.134.130.155',
-    dataDirectory,
-    requireHttps: true,
-    trustProxy: true,
-    enforceHost: false,
-    signingPrivateKey: privateKey
-  });
-  const server = http.createServer(application.handler);
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const baseUrl = `http://127.0.0.1:${server.address().port}`;
-  context.after(async () => {
-    application.close();
-    await new Promise((resolve) => server.close(resolve));
-    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
-  });
-
-  const direct = await fetch(`${baseUrl}/admin`, { redirect: 'manual' });
-  assert.equal(direct.status, 200);
-
-  const proxied = await fetch(`${baseUrl}/admin`, { headers: { 'X-Forwarded-Proto': 'https', 'X-Forwarded-For': '203.0.113.9' } });
-  assert.equal(proxied.status, 200);
-
-  const health = await jsonResponse(await fetch(`${baseUrl}/healthz`, {
-    headers: { 'X-Forwarded-Proto': 'https', 'X-Forwarded-For': '203.0.113.9' }
-  }));
-  assert.equal(health.payload.service, 'deskpet-update');
-  assert.equal(health.payload.tls, true);
-});
-
 test('admin upload, publish, manifest and download workflow', async (context) => {
   const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-update-test-'));
   const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');
@@ -62,9 +29,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
     publicUrl: 'http://127.0.0.1',
     bootstrapVersion: '1.6.0',
     dataDirectory,
-    requireHttps: false,
     cookieSecure: false,
-    enforceHost: false,
     maxUploadSize: 1024 * 1024,
     signingPrivateKey: privateKey
   });
@@ -199,9 +164,7 @@ test('one-time activation gates current manifests and downloads', async (context
     publicUrl: 'http://127.0.0.1',
     bootstrapVersion: '2.1.0',
     dataDirectory,
-    requireHttps: false,
     cookieSecure: false,
-    enforceHost: false,
     signingPrivateKey: privateKey
   });
   const server = http.createServer(application.handler);
@@ -326,4 +289,50 @@ test('one-time activation gates current manifests and downloads', async (context
     headers: { Authorization: authorization }
   }));
   assert.equal(revokedUpdate.response.status, 401);
+});
+
+test('Express request parsing returns stable API errors', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-http-test-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const health = await fetch(`${baseUrl}/healthz`);
+  assert.equal(health.headers.has('x-powered-by'), false);
+
+  const wrongType = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: '{}'
+  }));
+  assert.equal(wrongType.response.status, 415);
+  assert.equal(wrongType.payload.code, 'CONTENT_TYPE_REQUIRED');
+
+  const malformed = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{broken'
+  }));
+  assert.equal(malformed.response.status, 400);
+  assert.equal(malformed.payload.code, 'INVALID_JSON');
+
+  const oversized = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ padding: 'x'.repeat(5000) })
+  }));
+  assert.equal(oversized.response.status, 413);
+  assert.equal(oversized.payload.code, 'BODY_TOO_LARGE');
 });

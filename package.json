@@ -2,7 +2,7 @@
   "name": "deskpet-update-center",
   "version": "1.0.0",
   "private": true,
-  "description": "Self-hosted release management and update delivery for DeskPet.",
+  "description": "Express-based release, activation and update service for DeskPet.",
   "main": "server.js",
   "type": "commonjs",
   "engines": {
@@ -11,8 +11,12 @@
   "scripts": {
     "start": "node server.js",
     "set-password": "node scripts/set-password.js",
+    "generate-signing-key": "node scripts/generate-signing-key.js",
     "import-release": "node scripts/import-release.js",
-    "check": "node --check server.js && node --check lib/security.js && node --check lib/storage.js && node --check lib/activation-store.js && node --check scripts/set-password.js && node --check scripts/import-release.js && node --check public/admin.js",
+    "check": "node --check server.js && node --check src/app.js && node --check src/start-server.js && node --check src/config/app-config.js && node --check src/controllers/admin-controller.js && node --check src/controllers/public-controller.js && node --check src/errors/http-error.js && node --check src/http/request-context.js && node --check src/middleware/access-policy.js && node --check src/middleware/error-handler.js && node --check src/middleware/json-body.js && node --check src/routes/admin-routes.js && node --check src/routes/public-routes.js && node --check src/services/activation-service.js && node --check src/services/admin-auth-service.js && node --check src/services/audit-service.js && node --check src/services/release-service.js && node --check lib/security.js && node --check lib/storage.js && node --check lib/activation-store.js && node --check scripts/set-password.js && node --check scripts/generate-signing-key.js && node --check scripts/import-release.js && node --check public/admin.js",
     "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }

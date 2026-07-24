@@ -55,7 +55,7 @@ http://127.0.0.1:3100/admin
 ## 日常发布
 
 1. 在主项目根目录执行 `./scripts/build-native.ps1 -Version <版本号>`。
-2. 打开 `http://或https://你的域名/admin` 并登录。
+2. 打开 `https://你的域名/admin` 并登录。
 3. 填写版本号和更新说明，上传 `dist-native` 中的 EXE。
 4. 上传完成后版本是草稿，确认 SHA-256 和信息后再发布。
 5. 已授权客户端下一次检查更新时取得带 Ed25519 签名的清单。
@@ -64,7 +64,7 @@ http://127.0.0.1:3100/admin
 
 | 环境变量 | 生产示例 | 说明 |
 | --- | --- | --- |
-| `DESKPET_PUBLIC_URL` | `http://127.0.0.1:3100` | 对外地址，参与 Origin 和下载地址生成 |
+| `DESKPET_PUBLIC_URL` | `https://你的域名` | 对外地址，参与 Origin 和下载地址生成；本地运行时改为 `http://127.0.0.1:3100` |
 | `DESKPET_DATA_DIR` | `/www/deskpet-data` | 生产数据目录，必须位于网站代码目录之外 |
 | `DESKPET_HTTP_HOST` | `127.0.0.1` | Node 监听地址 |
 | `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
@@ -78,7 +78,7 @@ http://127.0.0.1:3100/admin
 ## 代码导航
 
 - [服务端架构与业务逻辑](ARCHITECTURE.md)：模块职责、请求链路、发布/激活/下载流程和数据文件
-- [宝塔部署文档](BAOTA_DEPLOYMENT.md)：首次部署、Nginx、PM2、升级、备份和故障排查
+- [宝塔部署文档](BAOTA_DEPLOYMENT.md)：包含全新服务器从克隆代码到首次验收的逐步流程
 - `server.js`：宝塔保持不变的启动入口
 - `src/`：Express 路由、控制器、中间件和业务服务
 - `lib/`：版本文件和 SQLite 持久化
@@ -87,6 +87,7 @@ http://127.0.0.1:3100/admin
 ## 安全约束
 
 - 应用不强制校验 HTTPS；公网部署仍建议使用 Nginx + HTTPS，Node 端口不要直接暴露到公网。
+- 当前桌面客户端默认连接 `https://desktoppet.online/api/update/latest`，更换域名或改用 HTTP 时必须同步修改客户端地址并重新打包。
 - 管理密码只保存 scrypt 哈希，会话 Cookie 使用 `HttpOnly`、`SameSite=Strict` 和生产环境 `Secure`。
 - 所有管理写操作同时验证会话、同源请求和 CSRF 令牌。
 - EXE 以流方式上传并限制为 300 MB，不会整体读入内存。

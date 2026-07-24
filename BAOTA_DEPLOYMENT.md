@@ -2,12 +2,130 @@
 
 本文只部署 `update-server`。桌面应用的开发、编译、测试和 EXE 打包继续在本地 Windows 电脑完成。
 
+## 0. 全新部署快速流程
+
+以下步骤适用于服务器上没有旧代码、没有旧数据的情况。建议严格按顺序执行。
+
+### 0.1 先确定对外地址
+
+`DESKPET_PUBLIC_URL` 是浏览器、更新清单和客户端实际使用的地址，必须写完整协议和域名，不要以 `/` 结尾。
+
+当前桌面客户端源码中的更新地址是：
+
+```text
+https://desktoppet.online/api/update/latest
+```
+
+因此，如果不修改客户端源码，宝塔环境应使用：
+
+```dotenv
+DESKPET_PUBLIC_URL=https://desktoppet.online
+```
+
+生产环境统一使用上面的 HTTPS 地址。服务端不会额外限制 Host、来源 IP 或请求协议，客户端和浏览器只需要访问这个公开地址即可。
+
+### 0.2 准备域名和宝塔组件
+
+1. 将域名解析到服务器公网 IP。
+2. 在宝塔安装 Node.js 24.x、Nginx 和 Node 项目管理器。
+3. 在宝塔网站中申请 HTTPS 证书，并将域名绑定到该站点。
+
+### 0.3 克隆代码并安装运行依赖
+
+以下命令在宝塔终端执行。仓库为私有仓库时，请改用 SSH 地址或宝塔 Git 凭据。
+
+```bash
+mkdir -p /www/wwwroot
+cd /www/wwwroot
+git clone https://github.com/W-CLL/deskpet.git deskpet
+cd /www/wwwroot/deskpet
+node --version
+npm ci --omit=dev
+npm run check
+npm test
+```
+
+`node --version` 必须是 `v24.x`。`npm ci --omit=dev` 会按照 `package-lock.json` 安装 Express，不能只上传代码后直接启动。
+
+### 0.4 创建数据目录并设置权限
+
+```bash
+mkdir -p /www/deskpet-data
+chown -R www:www /www/wwwroot/deskpet /www/deskpet-data
+chmod 700 /www/deskpet-data
+```
+
+代码目录和数据目录必须分开。数据目录不能放在 `/www/wwwroot/deskpet` 下，也不能加入 Git。
+
+### 0.5 生成签名密钥并更新客户端公钥
+
+全新环境且还没有发布客户端时执行：
+
+```bash
+cd /www/wwwroot/deskpet
+export DESKPET_DATA_DIR=/www/deskpet-data
+export DESKPET_SIGNING_PRIVATE_KEY=/www/deskpet-data/signing-private.pem
+npm run generate-signing-key
+```
+
+命令输出一行 SPKI DER Base64 公钥。把它写入桌面项目 `native/ZhuoDazi/Services/UpdateService.cs` 的 `PublicKeySpki` 常量，然后再生成首个客户端。私钥只留在 `/www/deskpet-data/signing-private.pem`，不能提交到 Git 或发给客户端。
+
+如果已经有客户端或旧服务器，不能执行这一步生成新密钥，必须从原服务器备份恢复 `signing-private.pem`，否则客户端会拒绝新版本签名。
+
+### 0.6 设置管理员密码
+
+`set-password` 必须在宝塔交互式终端中运行：
+
+```bash
+cd /www/wwwroot/deskpet
+export DESKPET_DATA_DIR=/www/deskpet-data
+npm run set-password
+chown -R www:www /www/deskpet-data
+chmod 700 /www/deskpet-data
+```
+
+按提示输入两次密码。密码至少 12 个字符，服务只保存 scrypt 哈希。
+
+### 0.7 在宝塔添加 Node 项目
+
+按第 6 节创建 Node 项目，并使用下面的环境变量。保存环境变量后再启动项目：
+
+```dotenv
+NODE_ENV=production
+DESKPET_PUBLIC_URL=https://desktoppet.online
+DESKPET_DATA_DIR=/www/deskpet-data
+DESKPET_HTTP_HOST=127.0.0.1
+DESKPET_HTTP_PORT=3100
+DESKPET_TRUST_PROXY=true
+DESKPET_SIGNING_PRIVATE_KEY=/www/deskpet-data/signing-private.pem
+DESKPET_BOOTSTRAP_VERSION=2.1.0
+```
+
+### 0.8 配置 Nginx 外网映射
+
+将域名反向代理到 `http://127.0.0.1:3100`，配置见第 7 节。上传 EXE 前必须设置 `client_max_body_size 300m`。
+
+### 0.9 首次验收
+
+```bash
+curl -i http://127.0.0.1:3100/healthz
+curl -i https://desktoppet.online/healthz
+```
+
+第二条命令的返回 JSON 应包含：
+
+```json
+{"ok":true,"service":"deskpet-update","configured":true,"activeVersion":null}
+```
+
+然后打开 `https://desktoppet.online/admin`，登录后依次测试生成激活码、上传草稿、发布版本和客户端下载。
+
 ## 1. 部署拓扑
 
 ```text
 桌面客户端 / 管理员浏览器
            |
-           | HTTP 或 HTTPS
+           | HTTPS 443
            v
 宝塔 Nginx（可选：域名、证书、上传限制）
            |
@@ -139,7 +257,7 @@ chmod 700 /www/deskpet-data
 
 ```dotenv
 NODE_ENV=production
-DESKPET_PUBLIC_URL=http://你的域名
+DESKPET_PUBLIC_URL=https://你的域名
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
@@ -164,7 +282,7 @@ deskpet-update http listening on 127.0.0.1:3100
 http://127.0.0.1:3100
 ```
 
-如果使用 HTTPS，可在宝塔申请 Let's Encrypt 证书；如果只在内网使用，普通 HTTP 即可。反向代理至少传递这些头：
+反向代理只需要把 HTTPS 域名转发到 Node 的内部 HTTP 端口，至少传递这些头：
 
 ```nginx
 proxy_set_header Host $host;
@@ -187,8 +305,8 @@ proxy_send_timeout 600s;
 先访问：
 
 ```text
-http://或https://你的域名/healthz
-http://或https://你的域名/admin
+https://你的域名/healthz
+https://你的域名/admin
 ```
 
 健康检查应类似：
@@ -283,10 +401,10 @@ dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
 
 ### 登录后立即回到登录页
 
-确认访问地址与 `DESKPET_PUBLIC_URL` 使用相同的协议和域名，并检查：
+确认访问地址为 HTTPS 域名，并检查：
 
 ```dotenv
-DESKPET_PUBLIC_URL=http://或https://你的域名
+DESKPET_PUBLIC_URL=https://你的域名
 DESKPET_TRUST_PROXY=true
 ```
 

@@ -67,8 +67,11 @@ update-server/
 2. `ReleaseService.createUpload` 校验版本和文件，创建 15 分钟有效的上传任务。
 3. 浏览器使用任务地址执行 `PUT`，服务端边接收边计算 SHA-256，并写入 `uploads/*.part`。
 4. 完整接收后，`ReleaseStore.commitUpload` 将文件原子移动到 `releases/`，同时更新 `releases.json`。此时版本仍是草稿。
-5. 管理员确认发布后，`ReleaseStore.publish` 更新 `activeVersion`。
-6. 每个关键动作追加到 `audit.jsonl`。
+5. 管理员确认发布后，`ReleaseService.validateRelease` 再次核对版本号和标准文件名，检查磁盘文件大小，重新计算 SHA-256，并对更新清单签名后立即使用对应公钥验签。
+6. 全部校验通过后，`ReleaseStore.publish` 才会更新 `activeVersion`；任一校验失败时版本保持草稿。
+7. 每个关键动作和发布校验结果追加到 `audit.jsonl`。
+
+网页后台发布和 `npm run import-release` 共用同一套发布前校验。安装包必须命名为 `ZhuoDazi-Desktop-Pet-<版本号>.exe`。
 
 上传任务只保存在单进程内存中，因此 PM2 固定为一个实例。服务重启会使未完成的上传任务失效，但不会影响已经提交的版本。
 

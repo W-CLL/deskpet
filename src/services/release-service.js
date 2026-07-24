@@ -18,6 +18,74 @@ function signedManifestPayload(manifest) {
   }), 'utf8');
 }
 
+function expectedReleaseFileName(version) {
+  return `ZhuoDazi-Desktop-Pet-${version}.exe`;
+}
+
+async function hashFile(filePath) {
+  const hash = crypto.createHash('sha256');
+  for await (const chunk of fs.createReadStream(filePath)) hash.update(chunk);
+  return hash.digest('hex');
+}
+
+async function validateReleaseArtifact({
+  releaseStore,
+  publicUrl,
+  signingPrivateKey,
+  signingPublicKey = crypto.createPublicKey(signingPrivateKey),
+  version
+}) {
+  const normalizedVersion = normalizeVersion(version);
+  const release = releaseStore.find(normalizedVersion);
+  if (!release) throw new HttpError(404, '版本不存在', 'VERSION_NOT_FOUND');
+
+  const expectedFileName = expectedReleaseFileName(normalizedVersion);
+  if (release.version !== normalizedVersion
+    || release.fileName !== expectedFileName
+    || release.originalName.toLowerCase() !== expectedFileName.toLowerCase()) {
+    throw new HttpError(409, '安装包文件名与版本号不一致', 'RELEASE_VERSION_MISMATCH');
+  }
+
+  const filePath = releaseStore.filePath(release);
+  let stat;
+  try {
+    stat = await fs.promises.stat(filePath);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      throw new HttpError(409, '安装包文件不存在，无法发布', 'RELEASE_FILE_MISSING');
+    }
+    throw error;
+  }
+  if (!stat.isFile()) throw new HttpError(409, '安装包文件无效，无法发布', 'RELEASE_FILE_INVALID');
+  if (stat.size !== release.size) {
+    throw new HttpError(409, '安装包大小校验失败，无法发布', 'RELEASE_SIZE_MISMATCH');
+  }
+
+  const sha256 = await hashFile(filePath);
+  if (sha256 !== release.sha256) {
+    throw new HttpError(409, '安装包 SHA-256 校验失败，无法发布', 'RELEASE_HASH_MISMATCH');
+  }
+
+  const manifest = {
+    version: release.version,
+    url: new URL(`/downloads/${encodeURIComponent(release.fileName)}`, publicUrl).href,
+    sha256: release.sha256,
+    notes: release.notes
+  };
+  const payload = signedManifestPayload(manifest);
+  const signature = crypto.sign(null, payload, signingPrivateKey);
+  if (!crypto.verify(null, payload, signingPublicKey, signature)) {
+    throw new HttpError(500, '更新清单签名校验失败，无法发布', 'SIGNATURE_VERIFICATION_FAILED');
+  }
+  return {
+    version: release.version,
+    size: stat.size,
+    sha256,
+    signatureVerified: true,
+    checkedAt: new Date().toISOString()
+  };
+}
+
 class ReleaseService {
   constructor({ config, releaseStore, activationService, auditService, signingPrivateKey }) {
     this.config = config;
@@ -25,6 +93,7 @@ class ReleaseService {
     this.activationService = activationService;
     this.auditService = auditService;
     this.signingPrivateKey = signingPrivateKey;
+    this.signingPublicKey = crypto.createPublicKey(signingPrivateKey);
     this.pendingUploads = new Map();
   }
 
@@ -50,6 +119,13 @@ class ReleaseService {
     const notes = String(body?.notes || '').replace(/\r/g, '').trim();
     if (!originalName.toLowerCase().endsWith('.exe')) {
       throw new HttpError(400, '只允许上传 EXE 文件', 'INVALID_FILE_TYPE');
+    }
+    if (originalName.toLowerCase() !== expectedReleaseFileName(version).toLowerCase()) {
+      throw new HttpError(
+        400,
+        `安装包文件名必须为 ${expectedReleaseFileName(version)}`,
+        'FILE_VERSION_MISMATCH'
+      );
     }
     if (!Number.isSafeInteger(fileSize)
       || fileSize <= 0
@@ -148,19 +224,45 @@ class ReleaseService {
   }
 
   async publish(req, version) {
-    let release;
+    let result;
     try {
-      release = await this.releaseStore.publish(version);
+      const validation = await this.validateRelease(version);
+      const release = await this.releaseStore.publish(version);
+      result = { release, validation };
     } catch (error) {
-      throw mapStoreError(error);
+      const mappedError = mapStoreError(error);
+      await this.auditService.write({
+        action: 'publish',
+        outcome: 'failed',
+        ip: clientIp(req, this.config),
+        version,
+        code: mappedError.code || 'PUBLISH_FAILED'
+      });
+      throw mappedError;
     }
     await this.auditService.write({
       action: 'publish',
       outcome: 'success',
       ip: clientIp(req, this.config),
-      version: release.version
+      version: result.release.version,
+      sha256: result.validation.sha256,
+      signatureVerified: result.validation.signatureVerified
     });
-    return { release };
+    return result;
+  }
+
+  async validateRelease(version) {
+    try {
+      return await validateReleaseArtifact({
+        releaseStore: this.releaseStore,
+        publicUrl: this.config.publicUrl,
+        signingPrivateKey: this.signingPrivateKey,
+        signingPublicKey: this.signingPublicKey,
+        version
+      });
+    } catch (error) {
+      throw mapStoreError(error);
+    }
   }
 
   async delete(req, version) {
@@ -243,4 +345,9 @@ class ReleaseService {
   }
 }
 
-module.exports = { ReleaseService, signedManifestPayload };
+module.exports = {
+  ReleaseService,
+  expectedReleaseFileName,
+  signedManifestPayload,
+  validateReleaseArtifact
+};

@@ -144,8 +144,8 @@ async function publishRelease(release) {
   });
   if (!confirmed) return;
   try {
-    await api(`/api/admin/releases/${encodeURIComponent(release.version)}/publish`, { method: 'POST' });
-    showToast(`v${release.version} 已发布`);
+    const result = await api(`/api/admin/releases/${encodeURIComponent(release.version)}/publish`, { method: 'POST' });
+    showToast(`v${result.release.version} 已发布，签名和 SHA-256 校验通过`);
     await loadReleases();
   } catch (error) {
     showToast(error.message, 'error');

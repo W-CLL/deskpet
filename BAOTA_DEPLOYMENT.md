@@ -8,18 +8,18 @@
 
 ### 0.1 先确定对外地址
 
-`DESKPET_PUBLIC_URL` 是浏览器、更新清单和客户端实际使用的地址，必须写完整协议和域名，不要以 `/` 结尾。
+`DESKPET_PUBLIC_URL` 是浏览器、更新清单和客户端实际使用的地址，必须写完整协议和 IP，不要以 `/` 结尾。
 
 当前桌面客户端源码中的更新地址是：
 
 ```text
-https://desktoppet.online/api/update/latest
+https://8.134.130.155/api/update/latest
 ```
 
 因此，如果不修改客户端源码，宝塔环境应使用：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://desktoppet.online
+DESKPET_PUBLIC_URL=https://8.134.130.155
 ```
 
 生产环境统一使用上面的 HTTPS 地址。服务端不会额外限制 Host、来源 IP 或请求协议，客户端和浏览器只需要访问这个公开地址即可。
@@ -92,7 +92,7 @@ chmod 700 /www/deskpet-data
 
 ```dotenv
 NODE_ENV=production
-DESKPET_PUBLIC_URL=https://desktoppet.online
+DESKPET_PUBLIC_URL=https://8.134.130.155
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
@@ -109,7 +109,7 @@ DESKPET_BOOTSTRAP_VERSION=2.1.0
 
 ```bash
 curl -i http://127.0.0.1:3100/healthz
-curl -i https://desktoppet.online/healthz
+curl -i https://8.134.130.155/healthz
 ```
 
 第二条命令的返回 JSON 应包含：
@@ -118,7 +118,7 @@ curl -i https://desktoppet.online/healthz
 {"ok":true,"service":"deskpet-update","configured":true,"activeVersion":null}
 ```
 
-然后打开 `https://desktoppet.online/admin`，登录后依次测试生成激活码、上传草稿、发布版本和客户端下载。
+然后打开 `https://8.134.130.155/admin`，登录后依次测试生成激活码、上传草稿、发布版本和客户端下载。
 
 ## 1. 部署拓扑
 
@@ -257,7 +257,7 @@ chmod 700 /www/deskpet-data
 
 ```dotenv
 NODE_ENV=production
-DESKPET_PUBLIC_URL=https://你的域名
+DESKPET_PUBLIC_URL=https://8.134.130.155
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
@@ -305,8 +305,8 @@ proxy_send_timeout 600s;
 先访问：
 
 ```text
-https://你的域名/healthz
-https://你的域名/admin
+https://8.134.130.155/healthz
+https://8.134.130.155/admin
 ```
 
 健康检查应类似：
@@ -342,13 +342,13 @@ npm test
 本地 Windows 项目根目录执行：
 
 ```powershell
-.\scripts\build-native.ps1 -Version 2.1.2
+.\native\scripts\build-native.ps1 -Version 2.1.2
 ```
 
 得到：
 
 ```text
-dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
+native\dist\ZhuoDazi-Desktop-Pet-2.1.2.exe
 ```
 
 登录 `/admin` 上传为草稿并发布。正常发布桌面版本不需要 SSH，也不需要改服务器代码。
@@ -401,10 +401,10 @@ dist-native\ZhuoDazi-Desktop-Pet-2.1.2.exe
 
 ### 登录后立即回到登录页
 
-确认访问地址为 HTTPS 域名，并检查：
+确认访问地址为当前 HTTPS 地址，并检查：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://你的域名
+DESKPET_PUBLIC_URL=https://8.134.130.155
 DESKPET_TRUST_PROXY=true
 ```
 

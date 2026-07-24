@@ -3,6 +3,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pipeline } = require('node:stream/promises');
 const { ReleaseStore, normalizeVersion } = require('../lib/storage');
+const { loadConfig } = require('../src/config/app-config');
+const {
+  expectedReleaseFileName,
+  validateReleaseArtifact
+} = require('../src/services/release-service');
 
 const MAX_UPLOAD_SIZE = 300 * 1024 * 1024;
 
@@ -15,13 +20,22 @@ async function main() {
   const version = normalizeVersion(versionValue);
   const executablePath = path.resolve(executableValue);
   if (path.extname(executablePath).toLowerCase() !== '.exe') throw new Error('只允许导入 EXE 文件');
+  if (path.basename(executablePath).toLowerCase() !== expectedReleaseFileName(version).toLowerCase()) {
+    throw new Error(`安装包文件名必须为 ${expectedReleaseFileName(version)}`);
+  }
   const stat = await fs.promises.stat(executablePath);
   if (!stat.isFile() || stat.size <= 0 || stat.size > MAX_UPLOAD_SIZE) throw new Error('EXE 文件大小无效');
 
-  const dataDirectory = path.resolve(process.env.DESKPET_DATA_DIR || path.join(__dirname, '..', 'data'));
-  const store = new ReleaseStore(dataDirectory);
+  const config = loadConfig();
+  const store = new ReleaseStore(config.dataDirectory);
   await store.initialize();
   if (store.has(version)) throw new Error(`版本 ${version} 已经存在`);
+  const signingPrivateKey = crypto.createPrivateKey(
+    await fs.promises.readFile(config.signingPrivateKeyPath)
+  );
+  if (signingPrivateKey.asymmetricKeyType !== 'ed25519') {
+    throw new Error('更新签名私钥必须使用 Ed25519');
+  }
 
   const uploadId = `cli-${process.pid}-${Date.now()}`;
   const temporaryPath = store.uploadPath(uploadId);
@@ -46,9 +60,21 @@ async function main() {
       sha256: hash.digest('hex'),
       notes: process.env.DESKPET_RELEASE_NOTES || ''
     });
+    const validation = await validateReleaseArtifact({
+      releaseStore: store,
+      publicUrl: config.publicUrl,
+      signingPrivateKey,
+      version
+    });
     const published = await store.publish(version);
-    await store.audit({ action: 'cli-import', outcome: 'success', version, sha256: release.sha256 });
-    process.stdout.write(`${JSON.stringify(published)}\n`);
+    await store.audit({
+      action: 'cli-import',
+      outcome: 'success',
+      version,
+      sha256: release.sha256,
+      signatureVerified: validation.signatureVerified
+    });
+    process.stdout.write(`${JSON.stringify({ release: published, validation })}\n`);
   } catch (error) {
     await fs.promises.rm(temporaryPath, { force: true }).catch(() => {});
     throw error;

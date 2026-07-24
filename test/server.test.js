@@ -81,7 +81,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   const executable = Buffer.from('MZ deskpet release test payload', 'utf8');
   const releaseInfo = {
     version: '1.6.0',
-    fileName: 'DeskPet-1.6.0.exe',
+    fileName: 'ZhuoDazi-Desktop-Pet-1.6.0.exe',
     fileSize: executable.length,
     notes: '安全更新\n测试发布'
   };
@@ -93,6 +93,14 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   }));
   assert.equal(rejectedPreflight.response.status, 403);
   assert.equal(rejectedPreflight.payload.code, 'CSRF_REJECTED');
+
+  const mismatchedFileName = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases`, {
+    method: 'POST',
+    headers: { Cookie: cookie, 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+    body: JSON.stringify({ ...releaseInfo, fileName: 'ZhuoDazi-Desktop-Pet-1.6.1.exe' })
+  }));
+  assert.equal(mismatchedFileName.response.status, 400);
+  assert.equal(mismatchedFileName.payload.code, 'FILE_VERSION_MISMATCH');
 
   const preflight = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases`, {
     method: 'POST',
@@ -116,12 +124,26 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(noRelease.response.status, 404);
   assert.equal(noRelease.payload.code, 'NO_RELEASE');
 
+  const releasePath = application.store.filePath(upload.payload.release);
+  const tamperedExecutable = Buffer.from(executable);
+  tamperedExecutable[tamperedExecutable.length - 1] ^= 0xff;
+  await fs.promises.writeFile(releasePath, tamperedExecutable);
+  const tamperedPublish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/1.6.0/publish`, {
+    method: 'POST',
+    headers: { Cookie: cookie, 'X-CSRF-Token': csrfToken }
+  }));
+  assert.equal(tamperedPublish.response.status, 409);
+  assert.equal(tamperedPublish.payload.code, 'RELEASE_HASH_MISMATCH');
+  await fs.promises.writeFile(releasePath, executable);
+
   const publish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/1.6.0/publish`, {
     method: 'POST',
     headers: { Cookie: cookie, 'X-CSRF-Token': csrfToken }
   }));
   assert.equal(publish.response.status, 200);
   assert.equal(publish.payload.release.active, true);
+  assert.equal(publish.payload.validation.sha256, upload.payload.release.sha256);
+  assert.equal(publish.payload.validation.signatureVerified, true);
 
   const manifest = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`));
   assert.equal(manifest.response.status, 200);

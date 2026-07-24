@@ -30,6 +30,9 @@ audit.jsonl
 
 # Server-only deployment hooks
 /deploy/update-from-github.sh
+/.htaccess
+/.well-known/
+/deskpet_start.sh
 
 # Editor and operating system files
 .vscode/

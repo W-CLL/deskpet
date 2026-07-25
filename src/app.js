@@ -93,11 +93,11 @@ async function createApplication(options = {}) {
   );
   app.get(
     '/assets/admin.css',
-    serveFile(path.join(publicDirectory, 'admin.css'), 'public, max-age=3600')
+    serveFile(path.join(publicDirectory, 'admin.css'), 'no-cache')
   );
   app.get(
     '/assets/admin.js',
-    serveFile(path.join(publicDirectory, 'admin.js'), 'public, max-age=3600')
+    serveFile(path.join(publicDirectory, 'admin.js'), 'no-cache')
   );
   app.get(
     '/assets/app-icon.png',

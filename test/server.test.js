@@ -59,6 +59,16 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(adminPage.status, 200);
   assert.equal(adminPage.headers.get('x-frame-options'), 'DENY');
   assert.match(adminPage.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+  assert.match(await adminPage.text(), /class="admin-shell"/);
+
+  const adminCss = await fetch(`${baseUrl}/assets/admin.css?v=sidebar-1`);
+  assert.equal(adminCss.status, 200);
+  assert.equal(adminCss.headers.get('cache-control'), 'no-cache');
+  assert.match(await adminCss.text(), /\.admin-shell\s*\{/);
+
+  const adminScript = await fetch(`${baseUrl}/assets/admin.js?v=sidebar-1`);
+  assert.equal(adminScript.status, 200);
+  assert.equal(adminScript.headers.get('cache-control'), 'no-cache');
 
   const unauthenticated = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases`));
   assert.equal(unauthenticated.response.status, 401);

@@ -4,7 +4,16 @@ const elements = {
   loginError: document.querySelector('#loginError'),
   adminView: document.querySelector('#adminView'),
   logoutButton: document.querySelector('#logoutButton'),
+  connectionStatus: document.querySelector('#connectionStatus'),
+  pageTitle: document.querySelector('#pageTitle'),
+  pageSubtitle: document.querySelector('#pageSubtitle'),
+  navItems: document.querySelectorAll('[data-page]'),
+  pagePanels: document.querySelectorAll('[data-page-panel]'),
+  quickActions: document.querySelectorAll('[data-go-to]'),
   activeVersion: document.querySelector('#activeVersion'),
+  overviewReleaseTotal: document.querySelector('#overviewReleaseTotal'),
+  overviewActiveLicenses: document.querySelector('#overviewActiveLicenses'),
+  overviewUnusedCodes: document.querySelector('#overviewUnusedCodes'),
   manifestUrl: document.querySelector('#manifestUrl'),
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
@@ -43,6 +52,34 @@ const elements = {
 let csrfToken = '';
 let toastTimer;
 
+const pages = {
+  overview: ['概览', '发布与授权运行状态'],
+  releases: ['版本发布', '上传安装包并维护发布记录'],
+  activations: ['激活授权', '管理激活码与设备授权']
+};
+
+function navigateTo(pageName) {
+  const selectedPage = pages[pageName] ? pageName : 'overview';
+  const [title, subtitle] = pages[selectedPage];
+  elements.pageTitle.textContent = title;
+  elements.pageSubtitle.textContent = subtitle;
+
+  for (const item of elements.navItems) {
+    const selected = item.dataset.page === selectedPage;
+    if (selected) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
+  }
+
+  for (const panel of elements.pagePanels) {
+    panel.hidden = panel.dataset.pagePanel !== selectedPage;
+  }
+
+  if (window.location.hash !== `#${selectedPage}`) {
+    window.history.replaceState(null, '', `#${selectedPage}`);
+  }
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
 function showToast(message, tone = '') {
   clearTimeout(toastTimer);
   elements.toast.textContent = message;
@@ -58,14 +95,14 @@ function showLogin(message = '') {
   elements.loginError.textContent = message;
   elements.loginView.hidden = false;
   elements.adminView.hidden = true;
-  elements.logoutButton.hidden = true;
 }
 
 function showAdmin(session) {
   csrfToken = session.csrfToken;
   elements.loginView.hidden = true;
   elements.adminView.hidden = false;
-  elements.logoutButton.hidden = false;
+  elements.connectionStatus.textContent = '管理服务正常';
+  navigateTo(window.location.hash.slice(1));
 }
 
 async function api(path, options = {}) {
@@ -171,6 +208,7 @@ async function deleteRelease(release) {
 
 function renderReleases(payload) {
   elements.activeVersion.textContent = payload.activeVersion ? `v${payload.activeVersion}` : '尚未发布';
+  elements.overviewReleaseTotal.textContent = payload.releases.length;
   elements.manifestUrl.value = payload.manifestUrl || '';
   elements.releaseRows.replaceChildren();
   elements.emptyReleases.hidden = payload.releases.length > 0;
@@ -250,6 +288,8 @@ async function revokeLicense(item) {
 
 function renderActivations(payload) {
   const summary = payload.summary || {};
+  elements.overviewActiveLicenses.textContent = summary.active || 0;
+  elements.overviewUnusedCodes.textContent = summary.unused || 0;
   elements.activationTotal.textContent = summary.total || 0;
   elements.activationUnused.textContent = summary.unused || 0;
   elements.activationActive.textContent = summary.active || 0;
@@ -461,6 +501,18 @@ elements.uploadForm.addEventListener('submit', async (event) => {
 
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
+
+for (const item of elements.navItems) {
+  item.addEventListener('click', () => navigateTo(item.dataset.page));
+}
+
+for (const action of elements.quickActions) {
+  action.addEventListener('click', () => navigateTo(action.dataset.goTo));
+}
+
+window.addEventListener('hashchange', () => {
+  if (!elements.adminView.hidden) navigateTo(window.location.hash.slice(1));
+});
 
 elements.generateCodeForm.addEventListener('submit', async (event) => {
   event.preventDefault();

@@ -48,6 +48,8 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
 
   const health = await jsonResponse(await fetch(`${baseUrl}/healthz`));
   assert.equal(health.response.status, 200);
+  assert.equal(health.payload.service, 'deskpet-update');
+  assert.match(health.payload.startedAt, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
   assert.equal(health.payload.configured, true);
   assert.equal(health.payload.activeVersion, null);
 
@@ -162,6 +164,8 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   const downloadPath = new URL(manifest.payload.url).pathname;
   const download = await fetch(`${baseUrl}${downloadPath}`);
   assert.equal(download.status, 200);
+  assert.equal(download.headers.get('x-accel-buffering'), 'no');
+  assert.equal(download.headers.get('accept-ranges'), 'bytes');
   assert.deepEqual(Buffer.from(await download.arrayBuffer()), executable);
 
   const partial = await fetch(`${baseUrl}${downloadPath}`, { headers: { Range: 'bytes=0-1' } });

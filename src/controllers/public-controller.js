@@ -6,12 +6,14 @@ class PublicController {
     this.activationService = activationService;
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
+    this.startedAt = new Date().toISOString();
   }
 
   async health(_req, res) {
     res.status(200).json({
       ok: true,
       service: 'deskpet-update',
+      startedAt: this.startedAt,
       configured: await this.authService.isConfigured(),
       activeVersion: this.releaseStore.data.activeVersion
     });
@@ -36,6 +38,7 @@ class PublicController {
     res.setHeader('Content-Disposition', `attachment; filename="${item.release.fileName}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('ETag', `"${item.release.sha256}"`);
+    res.setHeader('X-Accel-Buffering', 'no');
     if (item.range) {
       res.setHeader(
         'Content-Range',
@@ -49,7 +52,10 @@ class PublicController {
       res.end();
       return;
     }
-    const stream = fs.createReadStream(item.filePath, item.range || undefined);
+    const stream = fs.createReadStream(item.filePath, {
+      ...(item.range || {}),
+      highWaterMark: 1024 * 1024
+    });
     stream.on('error', next);
     stream.pipe(res);
   }

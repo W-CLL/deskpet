@@ -14,6 +14,7 @@ class PublicController {
       ok: true,
       service: 'deskpet-update',
       startedAt: this.startedAt,
+      uptimeSeconds: Math.floor(process.uptime()),
       configured: await this.authService.isConfigured(),
       activeVersion: this.releaseStore.data.activeVersion
     });

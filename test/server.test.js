@@ -50,6 +50,8 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(health.response.status, 200);
   assert.equal(health.payload.service, 'deskpet-update');
   assert.match(health.payload.startedAt, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+  assert.equal(Number.isInteger(health.payload.uptimeSeconds), true);
+  assert.equal(health.payload.uptimeSeconds >= 0, true);
   assert.equal(health.payload.configured, true);
   assert.equal(health.payload.activeVersion, null);
 

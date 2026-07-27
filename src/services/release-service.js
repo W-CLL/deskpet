@@ -4,7 +4,13 @@ const path = require('node:path');
 const { Transform } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
 const { randomToken } = require('../../lib/security');
-const { normalizeVersion } = require('../../lib/storage');
+const {
+  expectedReleaseFileName,
+  normalizeArchitecture,
+  normalizePlatform,
+  normalizeVersion,
+  releaseKey
+} = require('../../lib/storage');
 const { HttpError, mapStoreError } = require('../errors/http-error');
 const { clientIp, parseRange } = require('../http/request-context');
 const { UPLOAD_TTL_MS } = require('../config/app-config');
@@ -18,10 +24,6 @@ function signedManifestPayload(manifest) {
   }), 'utf8');
 }
 
-function expectedReleaseFileName(version) {
-  return `ZhuoDazi-Desktop-Pet-${version}.exe`;
-}
-
 async function hashFile(filePath) {
   const hash = crypto.createHash('sha256');
   for await (const chunk of fs.createReadStream(filePath)) hash.update(chunk);
@@ -33,14 +35,20 @@ async function validateReleaseArtifact({
   publicUrl,
   signingPrivateKey,
   signingPublicKey = crypto.createPublicKey(signingPrivateKey),
+  platform,
+  architecture,
   version
 }) {
   const normalizedVersion = normalizeVersion(version);
-  const release = releaseStore.find(normalizedVersion);
+  const normalizedPlatform = normalizePlatform(platform);
+  const normalizedArchitecture = normalizeArchitecture(normalizedPlatform, architecture);
+  const release = releaseStore.find(normalizedPlatform, normalizedArchitecture, normalizedVersion);
   if (!release) throw new HttpError(404, '版本不存在', 'VERSION_NOT_FOUND');
 
-  const expectedFileName = expectedReleaseFileName(normalizedVersion);
-  if (release.version !== normalizedVersion
+  const expectedFileName = expectedReleaseFileName(normalizedPlatform, normalizedArchitecture, normalizedVersion);
+  if (release.platform !== normalizedPlatform
+    || release.architecture !== normalizedArchitecture
+    || release.version !== normalizedVersion
     || release.fileName !== expectedFileName
     || release.originalName.toLowerCase() !== expectedFileName.toLowerCase()) {
     throw new HttpError(409, '安装包文件名与版本号不一致', 'RELEASE_VERSION_MISMATCH');
@@ -101,15 +109,19 @@ class ReleaseService {
     return {
       publicUrl: this.config.publicUrl.href.replace(/\/$/, ''),
       manifestUrl: new URL('/api/update/latest', this.config.publicUrl).href,
-      bootstrapVersion: this.config.bootstrapVersion,
-      activeVersion: this.releaseStore.data.activeVersion,
+      bootstrapVersions: this.config.bootstrapVersions,
+      activeVersions: this.releaseStore.data.activeVersions,
       releases: this.releaseStore.list()
     };
   }
 
   createUpload(body, session) {
+    let platform;
+    let architecture;
     let version;
     try {
+      platform = normalizePlatform(body?.platform || 'windows');
+      architecture = normalizeArchitecture(platform, body?.architecture || 'x64');
       version = normalizeVersion(body?.version);
     } catch (error) {
       throw mapStoreError(error);
@@ -117,13 +129,15 @@ class ReleaseService {
     const originalName = path.basename(String(body?.fileName || '')).slice(0, 160);
     const fileSize = Number(body?.fileSize);
     const notes = String(body?.notes || '').replace(/\r/g, '').trim();
-    if (!originalName.toLowerCase().endsWith('.exe')) {
-      throw new HttpError(400, '只允许上传 EXE 文件', 'INVALID_FILE_TYPE');
+    const expectedFileName = expectedReleaseFileName(platform, architecture, version);
+    const expectedExtension = platform === 'windows' ? '.exe' : '.zip';
+    if (!originalName.toLowerCase().endsWith(expectedExtension)) {
+      throw new HttpError(400, `只允许上传 ${expectedExtension.toUpperCase()} 文件`, 'INVALID_FILE_TYPE');
     }
-    if (originalName.toLowerCase() !== expectedReleaseFileName(version).toLowerCase()) {
+    if (originalName.toLowerCase() !== expectedFileName.toLowerCase()) {
       throw new HttpError(
         400,
-        `安装包文件名必须为 ${expectedReleaseFileName(version)}`,
+        `安装包文件名必须为 ${expectedFileName}`,
         'FILE_VERSION_MISMATCH'
       );
     }
@@ -135,13 +149,15 @@ class ReleaseService {
     if (notes.length > 1200) {
       throw new HttpError(400, '更新说明不能超过 1200 个字符', 'NOTES_TOO_LONG');
     }
-    if (this.releaseStore.has(version)) {
-      throw new HttpError(409, '该版本已经存在', 'VERSION_EXISTS');
+    if (this.releaseStore.has(platform, architecture, version)) {
+      throw new HttpError(409, '该平台和架构的版本已经存在', 'VERSION_EXISTS');
     }
 
     const uploadId = randomToken(24);
     this.pendingUploads.set(uploadId, {
       sessionToken: session.token,
+      platform,
+      architecture,
       version,
       originalName,
       fileSize,
@@ -194,6 +210,8 @@ class ReleaseService {
       try {
         release = await this.releaseStore.commitUpload({
           temporaryPath,
+          platform: pending.platform,
+          architecture: pending.architecture,
           version: pending.version,
           originalName: pending.originalName,
           size: received,
@@ -207,6 +225,8 @@ class ReleaseService {
         action: 'upload',
         outcome: 'success',
         ip: clientIp(req, this.config),
+        platform: release.platform,
+        architecture: release.architecture,
         version: release.version,
         sha256: release.sha256
       });
@@ -217,17 +237,19 @@ class ReleaseService {
         action: 'upload',
         outcome: 'failed',
         ip: clientIp(req, this.config),
+        platform: pending.platform,
+        architecture: pending.architecture,
         version: pending.version
       });
       throw error;
     }
   }
 
-  async publish(req, version) {
+  async publish(req, platform, architecture, version) {
     let result;
     try {
-      const validation = await this.validateRelease(version);
-      const release = await this.releaseStore.publish(version);
+      const validation = await this.validateRelease(platform, architecture, version);
+      const release = await this.releaseStore.publish(platform, architecture, version);
       result = { release, validation };
     } catch (error) {
       const mappedError = mapStoreError(error);
@@ -235,6 +257,8 @@ class ReleaseService {
         action: 'publish',
         outcome: 'failed',
         ip: clientIp(req, this.config),
+        platform,
+        architecture,
         version,
         code: mappedError.code || 'PUBLISH_FAILED'
       });
@@ -244,6 +268,8 @@ class ReleaseService {
       action: 'publish',
       outcome: 'success',
       ip: clientIp(req, this.config),
+      platform: result.release.platform,
+      architecture: result.release.architecture,
       version: result.release.version,
       sha256: result.validation.sha256,
       signatureVerified: result.validation.signatureVerified
@@ -251,13 +277,15 @@ class ReleaseService {
     return result;
   }
 
-  async validateRelease(version) {
+  async validateRelease(platform, architecture, version) {
     try {
       return await validateReleaseArtifact({
         releaseStore: this.releaseStore,
         publicUrl: this.config.publicUrl,
         signingPrivateKey: this.signingPrivateKey,
         signingPublicKey: this.signingPublicKey,
+        platform,
+        architecture,
         version
       });
     } catch (error) {
@@ -265,18 +293,19 @@ class ReleaseService {
     }
   }
 
-  async delete(req, version) {
-    if (version === this.config.bootstrapVersion
-      && this.releaseStore.data.activeVersion !== version) {
-      throw new HttpError(
-        409,
-        '激活过渡版本不能删除',
-        'BOOTSTRAP_VERSION_DELETE_REJECTED'
-      );
-    }
+  async delete(req, platform, architecture, version) {
     let release;
     try {
-      release = await this.releaseStore.delete(version);
+      const target = releaseKey(platform, architecture);
+      if (version === this.bootstrapVersionFor(platform, architecture)
+        && this.releaseStore.data.activeVersions[target] !== version) {
+        throw new HttpError(
+          409,
+          '激活过渡版本不能删除',
+          'BOOTSTRAP_VERSION_DELETE_REJECTED'
+        );
+      }
+      release = await this.releaseStore.delete(platform, architecture, version);
     } catch (error) {
       throw mapStoreError(error);
     }
@@ -284,28 +313,36 @@ class ReleaseService {
       action: 'delete',
       outcome: 'success',
       ip: clientIp(req, this.config),
+      platform: release.platform,
+      architecture: release.architecture,
       version: release.version
     });
     return { ok: true };
   }
 
   latestManifest(req) {
+    const { platform, architecture } = this.releaseTarget(req);
     let manifest;
     if (req.headers.authorization) {
       this.activationService.requireLicense(req, true);
-      manifest = this.releaseStore.manifest(this.config.publicUrl);
+      manifest = this.releaseStore.manifest(this.config.publicUrl, platform, architecture);
     } else {
-      manifest = this.releaseStore.manifest(
-        this.config.publicUrl,
-        this.config.bootstrapVersion
-      );
-      if (!manifest && !this.releaseStore.find(this.config.bootstrapVersion)) {
-        manifest = this.releaseStore.manifest(this.config.publicUrl);
+      const bootstrapVersion = this.bootstrapVersionFor(platform, architecture);
+      if (bootstrapVersion) {
+        manifest = this.releaseStore.manifest(
+          this.config.publicUrl,
+          platform,
+          architecture,
+          bootstrapVersion
+        );
+        if (!manifest && !this.releaseStore.find(platform, architecture, bootstrapVersion)) {
+          manifest = this.releaseStore.manifest(this.config.publicUrl, platform, architecture);
+        }
       }
     }
 
     if (!manifest) {
-      if (!this.releaseStore.active()) {
+      if (!this.releaseStore.active(platform, architecture)) {
         throw new HttpError(404, '暂未发布版本', 'NO_RELEASE');
       }
       throw new HttpError(401, '请先激活桌搭子', 'ACTIVATION_REQUIRED');
@@ -322,7 +359,7 @@ class ReleaseService {
     }
     const release = this.releaseStore.findPublishedFile(fileName);
     if (!release) throw new HttpError(404, '版本文件不存在', 'NOT_FOUND');
-    const isBootstrap = release.version === this.config.bootstrapVersion;
+    const isBootstrap = release.version === this.bootstrapVersionFor(release.platform, release.architecture);
     if (!isBootstrap) this.activationService.requireLicense(req);
 
     const filePath = this.releaseStore.filePath(release);
@@ -341,6 +378,24 @@ class ReleaseService {
     const now = Date.now();
     for (const [uploadId, upload] of this.pendingUploads) {
       if (upload.expiresAt <= now) this.pendingUploads.delete(uploadId);
+    }
+  }
+
+  bootstrapVersionFor(platform, architecture) {
+    return this.config.bootstrapVersions[releaseKey(platform, architecture)] || null;
+  }
+
+  releaseTarget(req) {
+    const requestUrl = new URL(req.originalUrl || req.url, 'http://localhost');
+    try {
+      const platform = normalizePlatform(requestUrl.searchParams.get('platform') || 'windows');
+      const architecture = normalizeArchitecture(
+        platform,
+        requestUrl.searchParams.get('architecture') || (platform === 'windows' ? 'x64' : '')
+      );
+      return { platform, architecture };
+    } catch (error) {
+      throw new HttpError(400, error.message, 'INVALID_RELEASE_TARGET');
     }
   }
 }

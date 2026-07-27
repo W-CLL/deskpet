@@ -18,7 +18,10 @@ const elements = {
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
   releaseVersion: document.querySelector('#releaseVersion'),
+  releasePlatform: document.querySelector('#releasePlatform'),
+  releaseArchitecture: document.querySelector('#releaseArchitecture'),
   releaseFile: document.querySelector('#releaseFile'),
+  releaseFileLabel: document.querySelector('#releaseFileLabel'),
   releaseNotes: document.querySelector('#releaseNotes'),
   uploadButton: document.querySelector('#uploadButton'),
   uploadProgress: document.querySelector('#uploadProgress'),
@@ -160,6 +163,33 @@ function actionButton(label, className, handler) {
   return button;
 }
 
+function releaseApiPath(release) {
+  return `/api/admin/releases/${encodeURIComponent(release.platform)}/${encodeURIComponent(release.architecture)}/${encodeURIComponent(release.version)}`;
+}
+
+function platformLabel(release) {
+  const system = release.platform === 'macos' ? 'macOS' : 'Windows';
+  return `${system} / ${release.architecture}`;
+}
+
+function syncUploadTarget() {
+  const isMac = elements.releasePlatform.value === 'macos';
+  const choices = isMac
+    ? [['arm64', 'Apple Silicon'], ['x86_64', 'Intel']]
+    : [['x64', 'x64']];
+  const previous = elements.releaseArchitecture.value;
+  elements.releaseArchitecture.replaceChildren(...choices.map(([value, label]) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = label;
+    return option;
+  }));
+  if (choices.some(([value]) => value === previous)) elements.releaseArchitecture.value = previous;
+  elements.releaseFile.value = '';
+  elements.releaseFile.accept = isMac ? '.zip,application/zip,application/octet-stream' : '.exe,application/octet-stream';
+  elements.releaseFileLabel.textContent = isMac ? 'macOS 更新包 ZIP' : 'Windows 安装包 EXE';
+}
+
 function confirmAction({ title, message, confirmLabel = '确认', danger = false }) {
   elements.confirmTitle.textContent = title;
   elements.confirmMessage.textContent = message;
@@ -175,14 +205,14 @@ function confirmAction({ title, message, confirmLabel = '确认', danger = false
 
 async function publishRelease(release) {
   const confirmed = await confirmAction({
-    title: `发布 v${release.version}`,
+    title: `发布 ${platformLabel(release)} v${release.version}`,
     message: '发布后，桌搭子客户端会立即检测到该版本。',
     confirmLabel: '确认发布'
   });
   if (!confirmed) return;
   try {
-    const result = await api(`/api/admin/releases/${encodeURIComponent(release.version)}/publish`, { method: 'POST' });
-    showToast(`v${result.release.version} 已发布，签名和 SHA-256 校验通过`);
+    const result = await api(`${releaseApiPath(release)}/publish`, { method: 'POST' });
+    showToast(`${platformLabel(result.release)} v${result.release.version} 已发布，签名和 SHA-256 校验通过`);
     await loadReleases();
   } catch (error) {
     showToast(error.message, 'error');
@@ -191,15 +221,15 @@ async function publishRelease(release) {
 
 async function deleteRelease(release) {
   const confirmed = await confirmAction({
-    title: `删除 v${release.version}`,
+    title: `删除 ${platformLabel(release)} v${release.version}`,
     message: '安装包和版本记录将永久删除。',
     confirmLabel: '删除版本',
     danger: true
   });
   if (!confirmed) return;
   try {
-    await api(`/api/admin/releases/${encodeURIComponent(release.version)}`, { method: 'DELETE' });
-    showToast(`v${release.version} 已删除`);
+    await api(releaseApiPath(release), { method: 'DELETE' });
+    showToast(`${platformLabel(release)} v${release.version} 已删除`);
     await loadReleases();
   } catch (error) {
     showToast(error.message, 'error');
@@ -207,7 +237,10 @@ async function deleteRelease(release) {
 }
 
 function renderReleases(payload) {
-  elements.activeVersion.textContent = payload.activeVersion ? `v${payload.activeVersion}` : '尚未发布';
+  const activeEntries = Object.entries(payload.activeVersions || {});
+  elements.activeVersion.textContent = activeEntries.length
+    ? activeEntries.map(([target, version]) => `${target} v${version}`).join(' / ')
+    : '尚未发布';
   elements.overviewReleaseTotal.textContent = payload.releases.length;
   elements.manifestUrl.value = payload.manifestUrl || '';
   elements.releaseRows.replaceChildren();
@@ -222,6 +255,9 @@ function renderReleases(payload) {
     const notes = document.createElement('span');
     notes.textContent = release.notes ? release.notes.split('\n')[0] : '无更新说明';
     versionCell.append(version, notes);
+
+    const platformCell = cell();
+    platformCell.textContent = platformLabel(release);
 
     const statusCell = cell();
     const status = document.createElement('span');
@@ -252,7 +288,7 @@ function renderReleases(payload) {
     }
     actionsCell.append(actions);
 
-    row.append(versionCell, statusCell, fileCell, hashCell, dateCell, actionsCell);
+    row.append(versionCell, platformCell, statusCell, fileCell, hashCell, dateCell, actionsCell);
     elements.releaseRows.append(row);
   }
 }
@@ -464,6 +500,9 @@ elements.logoutButton.addEventListener('click', async () => {
   showLogin();
 });
 
+syncUploadTarget();
+elements.releasePlatform.addEventListener('change', syncUploadTarget);
+
 elements.uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   const file = elements.releaseFile.files[0];
@@ -476,6 +515,8 @@ elements.uploadForm.addEventListener('submit', async (event) => {
     const task = await api('/api/admin/releases', {
       method: 'POST',
       body: {
+        platform: elements.releasePlatform.value,
+        architecture: elements.releaseArchitecture.value,
         version: elements.releaseVersion.value.trim(),
         fileName: file.name,
         fileSize: file.size,
@@ -486,6 +527,7 @@ elements.uploadForm.addEventListener('submit', async (event) => {
     elements.uploadProgressBar.value = 100;
     elements.uploadProgressText.textContent = '100%';
     elements.uploadForm.reset();
+    syncUploadTarget();
     showToast('安装包已上传为草稿');
     await loadReleases();
   } catch (error) {

@@ -18,6 +18,18 @@ function loadConfig(overrides = {}) {
     overrides.dataDirectory || process.env.DESKPET_DATA_DIR || path.join(PROJECT_ROOT, 'data')
   );
 
+  const bootstrapVersion = normalizeVersion(
+    overrides.bootstrapVersion || process.env.DESKPET_BOOTSTRAP_VERSION || '2.1.0'
+  );
+  const macosBootstrapVersion = overrides.macosBootstrapVersion || process.env.DESKPET_MACOS_BOOTSTRAP_VERSION;
+  const bootstrapVersions = {
+    'windows/x64': bootstrapVersion
+  };
+  if (macosBootstrapVersion) {
+    bootstrapVersions['macos/arm64'] = normalizeVersion(macosBootstrapVersion);
+    bootstrapVersions['macos/x86_64'] = normalizeVersion(macosBootstrapVersion);
+  }
+
   return {
     publicUrl,
     dataDirectory,
@@ -34,9 +46,9 @@ function loadConfig(overrides = {}) {
         || process.env.DESKPET_SIGNING_PRIVATE_KEY
         || path.join(dataDirectory, 'signing-private.pem')
     ),
-    bootstrapVersion: normalizeVersion(
-      overrides.bootstrapVersion || process.env.DESKPET_BOOTSTRAP_VERSION || '2.1.0'
-    ),
+    // Kept for deployments and callers that only serve the original Windows client.
+    bootstrapVersion,
+    bootstrapVersions,
     cookieSecure: overrides.cookieSecure ?? publicUrl.protocol === 'https:',
     trustProxy: overrides.trustProxy ?? /^true$/i.test(process.env.DESKPET_TRUST_PROXY || ''),
     maxUploadSize: Number(overrides.maxUploadSize || MAX_UPLOAD_SIZE)

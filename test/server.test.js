@@ -7,6 +7,7 @@ const path = require('node:path');
 const test = require('node:test');
 const { createApplication, signedManifestPayload } = require('../server');
 const { hashPassword, verifyPassword } = require('../lib/security');
+const { ReleaseStore } = require('../lib/storage');
 
 async function jsonResponse(response) {
   const payload = await response.json();
@@ -18,6 +19,36 @@ test('password hashes verify without storing the plaintext password', async () =
   assert.equal(await verifyPassword('correct horse battery staple', record), true);
   assert.equal(await verifyPassword('wrong password value', record), false);
   assert.equal(JSON.stringify(record).includes('correct horse battery staple'), false);
+});
+
+test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-release-migration-test-'));
+  context.after(() => fs.promises.rm(dataDirectory, { recursive: true, force: true }));
+  const legacy = {
+    schemaVersion: 1,
+    activeVersion: '2.4.3',
+    releases: [{
+      version: '2.4.3',
+      fileName: 'ZhuoDazi-Desktop-Pet-2.4.3.exe',
+      originalName: 'ZhuoDazi-Desktop-Pet-2.4.3.exe',
+      size: 123,
+      sha256: 'a'.repeat(64),
+      notes: 'legacy',
+      createdAt: '2026-07-27T00:00:00.000Z',
+      publishedAt: '2026-07-27T00:00:00.000Z'
+    }]
+  };
+  await fs.promises.writeFile(path.join(dataDirectory, 'releases.json'), JSON.stringify(legacy));
+  const store = new ReleaseStore(dataDirectory);
+  await store.initialize();
+
+  assert.equal(store.data.schemaVersion, 2);
+  assert.equal(store.data.activeVersions['windows/x64'], '2.4.3');
+  assert.equal(store.active('windows', 'x64')?.version, '2.4.3');
+  assert.deepEqual(store.list()[0].platform, 'windows');
+  assert.deepEqual(store.list()[0].architecture, 'x64');
+  const persisted = JSON.parse(await fs.promises.readFile(path.join(dataDirectory, 'releases.json'), 'utf8'));
+  assert.equal(persisted.schemaVersion, 2);
 });
 
 test('admin upload, publish, manifest and download workflow', async (context) => {
@@ -134,6 +165,21 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(upload.payload.release.active, false);
   assert.equal(upload.payload.release.sha256, crypto.createHash('sha256').update(executable).digest('hex'));
 
+  const macPreflight = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases`, {
+    method: 'POST',
+    headers: { Cookie: cookie, 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+    body: JSON.stringify({
+      platform: 'macos',
+      architecture: 'arm64',
+      version: '1.6.0',
+      fileName: 'ZhuoDazi-macOS-1.6.0-arm64.zip',
+      fileSize: executable.length,
+      notes: 'macOS package can share the version number'
+    })
+  }));
+  assert.equal(macPreflight.response.status, 201);
+  assert.match(macPreflight.payload.uploadUrl, /^\/api\/admin\/uploads\//);
+
   const noRelease = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`));
   assert.equal(noRelease.response.status, 404);
   assert.equal(noRelease.payload.code, 'NO_RELEASE');
@@ -142,7 +188,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   const tamperedExecutable = Buffer.from(executable);
   tamperedExecutable[tamperedExecutable.length - 1] ^= 0xff;
   await fs.promises.writeFile(releasePath, tamperedExecutable);
-  const tamperedPublish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/1.6.0/publish`, {
+  const tamperedPublish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/windows/x64/1.6.0/publish`, {
     method: 'POST',
     headers: { Cookie: cookie, 'X-CSRF-Token': csrfToken }
   }));
@@ -150,7 +196,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(tamperedPublish.payload.code, 'RELEASE_HASH_MISMATCH');
   await fs.promises.writeFile(releasePath, executable);
 
-  const publish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/1.6.0/publish`, {
+  const publish = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/windows/x64/1.6.0/publish`, {
     method: 'POST',
     headers: { Cookie: cookie, 'X-CSRF-Token': csrfToken }
   }));
@@ -185,7 +231,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(partial.headers.get('content-range'), `bytes 0-1/${executable.length}`);
   assert.deepEqual(Buffer.from(await partial.arrayBuffer()), executable.subarray(0, 2));
 
-  const activeDelete = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/1.6.0`, {
+  const activeDelete = await jsonResponse(await fetch(`${baseUrl}/api/admin/releases/windows/x64/1.6.0`, {
     method: 'DELETE',
     headers: { Cookie: cookie, 'X-CSRF-Token': csrfToken }
   }));
@@ -291,13 +337,15 @@ test('one-time activation gates current manifests and downloads', async (context
     await fs.promises.writeFile(temporaryPath, executable);
     await application.store.commitUpload({
       temporaryPath,
+      platform: 'windows',
+      architecture: 'x64',
       version,
       originalName: `DeskPet-${version}.exe`,
       size: executable.length,
       sha256: crypto.createHash('sha256').update(executable).digest('hex'),
       notes: `测试 ${version}`
     });
-    await application.store.publish(version);
+    await application.store.publish('windows', 'x64', version);
   }
 
   const bootstrapManifest = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`));
@@ -327,6 +375,81 @@ test('one-time activation gates current manifests and downloads', async (context
     headers: { Authorization: authorization }
   }));
   assert.equal(revokedUpdate.response.status, 401);
+});
+
+test('macOS releases are isolated by platform and architecture', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-macos-release-test-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  for (const architecture of ['arm64', 'x86_64']) {
+    const artifact = Buffer.from(`macOS ${architecture} 2.0.0`, 'utf8');
+    const temporaryPath = application.store.uploadPath(`macos-${architecture}`);
+    await fs.promises.writeFile(temporaryPath, artifact);
+    await application.store.commitUpload({
+      temporaryPath,
+      platform: 'macos',
+      architecture,
+      version: '2.0.0',
+      originalName: `ZhuoDazi-macOS-2.0.0-${architecture}.zip`,
+      size: artifact.length,
+      sha256: crypto.createHash('sha256').update(artifact).digest('hex'),
+      notes: `macOS ${architecture}`
+    });
+    await application.store.publish('macos', architecture, '2.0.0');
+  }
+
+  const unauthenticated = await jsonResponse(await fetch(
+    `${baseUrl}/api/update/latest?platform=macos&architecture=arm64`
+  ));
+  assert.equal(unauthenticated.response.status, 401);
+  assert.equal(unauthenticated.payload.code, 'ACTIVATION_REQUIRED');
+
+  const code = application.activationStore.createCodes({ count: 1, expiresInDays: 30, note: 'macOS' }).codes[0];
+  const credential = crypto.randomBytes(32).toString('base64url');
+  const activation = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code,
+      installationId: crypto.randomBytes(16).toString('hex'),
+      credential,
+      appVersion: '2.0.0'
+    })
+  }));
+  assert.equal(activation.response.status, 200);
+  const authorization = `Bearer ${activation.payload.licenseId}.${credential}`;
+
+  for (const architecture of ['arm64', 'x86_64']) {
+    const manifest = await jsonResponse(await fetch(
+      `${baseUrl}/api/update/latest?platform=macos&architecture=${architecture}`,
+      { headers: { Authorization: authorization } }
+    ));
+    assert.equal(manifest.response.status, 200);
+    assert.equal(manifest.payload.platform, 'macos');
+    assert.equal(manifest.payload.architecture, architecture);
+    assert.equal(manifest.payload.version, '2.0.0');
+    assert.match(manifest.payload.url, new RegExp(`ZhuoDazi-macOS-2\\.0\\.0-${architecture}\\.zip$`));
+  }
+
+  const invalidTarget = await jsonResponse(await fetch(
+    `${baseUrl}/api/update/latest?platform=windows&architecture=arm64`
+  ));
+  assert.equal(invalidTarget.response.status, 400);
+  assert.equal(invalidTarget.payload.code, 'INVALID_RELEASE_TARGET');
 });
 
 test('Express request parsing returns stable API errors', async (context) => {

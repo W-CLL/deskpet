@@ -32,12 +32,12 @@ function createAdminRouter({ controller, authService }) {
     (req, res) => controller.createUpload(req, res)
   );
   router.post(
-    '/releases/:version/publish',
+    '/releases/:platform/:architecture/:version/publish',
     requireWriteSession,
     (req, res) => controller.publish(req, res)
   );
   router.delete(
-    '/releases/:version',
+    '/releases/:platform/:architecture/:version',
     requireWriteSession,
     (req, res) => controller.delete(req, res)
   );

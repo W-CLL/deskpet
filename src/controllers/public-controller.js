@@ -16,7 +16,8 @@ class PublicController {
       startedAt: this.startedAt,
       uptimeSeconds: Math.floor(process.uptime()),
       configured: await this.authService.isConfigured(),
-      activeVersion: this.releaseStore.data.activeVersion
+      activeVersion: this.releaseStore.data.activeVersions['windows/x64'] || null,
+      activeVersions: this.releaseStore.data.activeVersions
     });
   }
 

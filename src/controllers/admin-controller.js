@@ -72,11 +72,21 @@ class AdminController {
   }
 
   async publish(req, res) {
-    res.status(200).json(await this.releaseService.publish(req, req.params.version));
+    res.status(200).json(await this.releaseService.publish(
+      req,
+      req.params.platform,
+      req.params.architecture,
+      req.params.version
+    ));
   }
 
   async delete(req, res) {
-    res.status(200).json(await this.releaseService.delete(req, req.params.version));
+    res.status(200).json(await this.releaseService.delete(
+      req,
+      req.params.platform,
+      req.params.architecture,
+      req.params.version
+    ));
   }
 }
 

@@ -142,8 +142,19 @@
                   <span>版本号</span>
                   <input id="releaseVersion" name="version" inputmode="decimal" placeholder="2.4.0" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
                 </label>
+                <label>
+                  <span>发布平台</span>
+                  <select id="releasePlatform" name="platform">
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                  </select>
+                </label>
+                <label>
+                  <span>目标架构</span>
+                  <select id="releaseArchitecture" name="architecture"></select>
+                </label>
                 <label class="file-field">
-                  <span>Windows 安装包</span>
+                  <span id="releaseFileLabel">Windows 安装包</span>
                   <input id="releaseFile" name="file" type="file" accept=".exe,application/octet-stream" required>
                 </label>
                 <label class="notes-field">
@@ -173,6 +184,7 @@
                   <thead>
                     <tr>
                       <th>版本</th>
+                      <th>平台</th>
                       <th>状态</th>
                       <th>文件</th>
                       <th>SHA-256</th>

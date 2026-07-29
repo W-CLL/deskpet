@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=feedback-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-4">
 </head>
 <body>
   <main class="app-root">
@@ -15,13 +15,13 @@
         <div class="login-brand">
           <img src="/assets/app-icon.png" width="44" height="44" alt="">
           <div>
-            <strong>桌搭子更新中心</strong>
-            <span>服务端管理后台</span>
+            <strong>桌搭子管理后台</strong>
+            <span>更新、授权与用户反馈</span>
           </div>
         </div>
         <div class="section-heading login-heading">
-          <p class="eyebrow">管理员入口</p>
-          <h1>登录</h1>
+          <p class="eyebrow">安全访问</p>
+          <h1>登录管理后台</h1>
         </div>
         <label>
           <span>用户名</span>
@@ -46,6 +46,7 @@
           </div>
         </div>
 
+        <p class="sidebar-label">工作区</p>
         <nav class="sidebar-nav" aria-label="后台导航">
           <button class="nav-item" type="button" data-page="overview" aria-current="page">
             <span>概览</span>
@@ -76,7 +77,8 @@
 
       <div class="admin-content">
         <header class="content-header">
-          <div>
+          <div class="header-title">
+            <span class="header-kicker">管理工作区</span>
             <h1 id="pageTitle">概览</h1>
             <p id="pageSubtitle">发布与授权运行状态</p>
           </div>
@@ -86,59 +88,67 @@
         <div class="page-body">
           <section class="admin-page" data-page-panel="overview">
             <div class="metric-grid" aria-label="运行概览">
-              <article class="metric-item metric-primary">
+              <article class="metric-item metric-primary metric-release">
                 <span>当前发布</span>
                 <strong id="activeVersion">尚未发布</strong>
                 <small>客户端默认获取版本</small>
               </article>
-              <article class="metric-item">
+              <article class="metric-item metric-records">
                 <span>版本记录</span>
                 <strong id="overviewReleaseTotal">0</strong>
                 <small>草稿与已发布版本</small>
               </article>
-              <article class="metric-item">
+              <article class="metric-item metric-licenses">
                 <span>有效授权</span>
                 <strong id="overviewActiveLicenses">0</strong>
                 <small>当前可获取更新设备</small>
               </article>
-              <article class="metric-item">
+              <article class="metric-item metric-codes">
                 <span>未使用激活码</span>
                 <strong id="overviewUnusedCodes">0</strong>
                 <small>可以继续发放</small>
               </article>
-              <article class="metric-item">
+              <article class="metric-item metric-feedback">
                 <span>待处理反馈</span>
                 <strong id="overviewPendingFeedback">0</strong>
                 <small>待处理与进行中</small>
               </article>
             </div>
 
-            <section class="tool-panel manifest-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="eyebrow">客户端接入</p>
-                  <h2>更新清单地址</h2>
+            <div class="overview-workbench">
+              <section class="tool-panel manifest-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">客户端接入</p>
+                    <h2>更新清单地址</h2>
+                  </div>
                 </div>
-              </div>
-              <div class="copy-row">
-                <input id="manifestUrl" aria-label="更新清单地址" readonly>
-                <button id="copyManifestButton" class="button button-secondary" type="button">复制地址</button>
-              </div>
-            </section>
+                <div class="copy-row">
+                  <input id="manifestUrl" aria-label="更新清单地址" readonly>
+                  <button id="copyManifestButton" class="button button-secondary" type="button">复制地址</button>
+                </div>
+              </section>
 
-            <div class="quick-grid">
-              <button class="quick-action" type="button" data-go-to="releases">
-                <strong>发布新版本</strong>
-                <span>上传安装包或处理草稿版本</span>
-              </button>
-              <button class="quick-action" type="button" data-go-to="activations">
-                <strong>管理设备授权</strong>
-                <span>生成激活码或撤销已有授权</span>
-              </button>
-              <button class="quick-action" type="button" data-go-to="feedback">
-                <strong>处理用户反馈</strong>
-                <span>查看问题、建议并更新处理状态</span>
-              </button>
+              <section class="quick-section">
+                <div class="panel-heading">
+                  <p class="eyebrow">常用操作</p>
+                  <h2>快速前往</h2>
+                </div>
+                <div class="quick-grid">
+                  <button class="quick-action" type="button" data-go-to="releases">
+                    <strong>发布新版本</strong>
+                    <span>上传安装包或处理草稿版本</span>
+                  </button>
+                  <button class="quick-action" type="button" data-go-to="activations">
+                    <strong>管理设备授权</strong>
+                    <span>生成激活码或撤销已有授权</span>
+                  </button>
+                  <button class="quick-action" type="button" data-go-to="feedback">
+                    <strong>处理用户反馈</strong>
+                    <span>查看问题、建议并更新处理状态</span>
+                  </button>
+                </div>
+              </section>
             </div>
           </section>
 
@@ -222,11 +232,11 @@
                 <button id="refreshActivationButton" class="button button-secondary" type="button">刷新</button>
               </div>
 
-              <div class="activation-summary" aria-label="激活码统计">
-                <span>全部 <strong id="activationTotal">0</strong></span>
-                <span>未使用 <strong id="activationUnused">0</strong></span>
-                <span>有效授权 <strong id="activationActive">0</strong></span>
-                <span>已撤销 <strong id="activationRevoked">0</strong></span>
+              <div class="summary-strip" aria-label="激活码统计">
+                <span class="summary-item" data-tone="neutral">全部 <strong id="activationTotal">0</strong></span>
+                <span class="summary-item" data-tone="info">未使用 <strong id="activationUnused">0</strong></span>
+                <span class="summary-item" data-tone="success">有效授权 <strong id="activationActive">0</strong></span>
+                <span class="summary-item" data-tone="danger">已撤销 <strong id="activationRevoked">0</strong></span>
               </div>
 
               <form id="generateCodeForm" class="activation-form">
@@ -274,12 +284,12 @@
                 <button id="refreshFeedbackButton" class="button button-secondary" type="button">刷新</button>
               </div>
 
-              <div class="activation-summary" aria-label="反馈统计">
-                <span>全部 <strong id="feedbackTotal">0</strong></span>
-                <span>待处理 <strong id="feedbackPending">0</strong></span>
-                <span>进行中 <strong id="feedbackInProgress">0</strong></span>
-                <span>已处理 <strong id="feedbackResolved">0</strong></span>
-                <span>已关闭 <strong id="feedbackClosed">0</strong></span>
+              <div class="summary-strip feedback-summary" aria-label="反馈统计">
+                <span class="summary-item" data-tone="neutral">全部 <strong id="feedbackTotal">0</strong></span>
+                <span class="summary-item" data-tone="warning">待处理 <strong id="feedbackPending">0</strong></span>
+                <span class="summary-item" data-tone="info">进行中 <strong id="feedbackInProgress">0</strong></span>
+                <span class="summary-item" data-tone="success">已处理 <strong id="feedbackResolved">0</strong></span>
+                <span class="summary-item" data-tone="muted">已关闭 <strong id="feedbackClosed">0</strong></span>
               </div>
 
               <div class="table-wrap feedback-table-wrap">
@@ -327,6 +337,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=feedback-1" defer></script>
+  <script src="/assets/admin.js?v=admin-ui-4" defer></script>
 </body>
 </html>

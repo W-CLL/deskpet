@@ -11,10 +11,11 @@ function requireParam(value, pattern) {
 }
 
 class AdminController {
-  constructor({ authService, activationService, releaseService }) {
+  constructor({ authService, activationService, releaseService, feedbackService }) {
     this.authService = authService;
     this.activationService = activationService;
     this.releaseService = releaseService;
+    this.feedbackService = feedbackService;
   }
 
   async login(req, res) {
@@ -54,6 +55,15 @@ class AdminController {
   async revokeLicense(req, res) {
     const licenseId = requireParam(req.params.id, UUID_PATTERN);
     res.status(200).json(await this.activationService.revoke(req, licenseId));
+  }
+
+  feedback(_req, res) {
+    res.status(200).json(this.feedbackService.listAll());
+  }
+
+  async updateFeedback(req, res) {
+    const feedbackId = requireParam(req.params.id, UUID_PATTERN);
+    res.status(200).json(await this.feedbackService.updateStatus(req, feedbackId, req.body));
   }
 
   createUpload(req, res) {

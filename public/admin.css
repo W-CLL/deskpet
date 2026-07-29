@@ -24,7 +24,8 @@ body {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
   letter-spacing: 0;
 }
@@ -314,7 +315,7 @@ dialog h2 {
 
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  grid-template-columns: repeat(5, minmax(135px, 1fr));
   gap: 12px;
 }
 
@@ -385,7 +386,7 @@ dialog h2 {
 
 .quick-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -437,7 +438,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+select {
   width: 100%;
   min-width: 0;
   color: #171a19;
@@ -453,6 +455,11 @@ input {
   padding: 0 11px;
 }
 
+select {
+  height: 40px;
+  padding: 0 10px;
+}
+
 input[type="file"] {
   padding: 7px 9px;
 }
@@ -465,7 +472,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   border-color: #25845b;
   box-shadow: 0 0 0 3px rgb(37 132 91 / 13%);
 }
@@ -605,7 +613,8 @@ progress {
 }
 
 .activation-table-wrap,
-.releases-section .table-wrap {
+.releases-section .table-wrap,
+.feedback-table-wrap {
   margin-top: 20px;
 }
 
@@ -625,6 +634,83 @@ table {
 
 .activation-table {
   min-width: 1040px;
+}
+
+.feedback-table {
+  min-width: 860px;
+  table-layout: fixed;
+}
+
+.feedback-table td {
+  vertical-align: top;
+}
+
+.feedback-content {
+  width: auto;
+}
+
+.feedback-content strong,
+.feedback-content .feedback-message {
+  display: block;
+}
+
+.feedback-content .feedback-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 12px;
+  color: #7a827e;
+  font-size: 11px;
+}
+
+.feedback-content strong {
+  margin-top: 8px;
+  color: #171a19;
+}
+
+.feedback-content .feedback-message {
+  margin-top: 6px;
+  color: #59625d;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.feedback-type {
+  display: inline-flex;
+  min-height: 23px;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.feedback-type.problem {
+  color: #963832;
+  background: #f7e2df;
+}
+
+.feedback-type.suggestion {
+  color: #275f78;
+  background: #dfeef4;
+}
+
+.feedback-status-select {
+  width: 112px;
+}
+
+.feedback-note-cell {
+  width: 240px;
+}
+
+.feedback-note-cell textarea {
+  min-height: 82px;
+  resize: vertical;
+}
+
+.feedback-table .actions-column {
+  width: 90px;
 }
 
 th,

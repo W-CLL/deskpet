@@ -14,6 +14,7 @@ const elements = {
   overviewReleaseTotal: document.querySelector('#overviewReleaseTotal'),
   overviewActiveLicenses: document.querySelector('#overviewActiveLicenses'),
   overviewUnusedCodes: document.querySelector('#overviewUnusedCodes'),
+  overviewPendingFeedback: document.querySelector('#overviewPendingFeedback'),
   manifestUrl: document.querySelector('#manifestUrl'),
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
@@ -42,6 +43,14 @@ const elements = {
   activationRevoked: document.querySelector('#activationRevoked'),
   activationRows: document.querySelector('#activationRows'),
   emptyActivations: document.querySelector('#emptyActivations'),
+  refreshFeedbackButton: document.querySelector('#refreshFeedbackButton'),
+  feedbackTotal: document.querySelector('#feedbackTotal'),
+  feedbackPending: document.querySelector('#feedbackPending'),
+  feedbackInProgress: document.querySelector('#feedbackInProgress'),
+  feedbackResolved: document.querySelector('#feedbackResolved'),
+  feedbackClosed: document.querySelector('#feedbackClosed'),
+  feedbackRows: document.querySelector('#feedbackRows'),
+  emptyFeedback: document.querySelector('#emptyFeedback'),
   confirmDialog: document.querySelector('#confirmDialog'),
   confirmTitle: document.querySelector('#confirmTitle'),
   confirmMessage: document.querySelector('#confirmMessage'),
@@ -58,7 +67,8 @@ let toastTimer;
 const pages = {
   overview: ['概览', '发布与授权运行状态'],
   releases: ['版本发布', '上传安装包并维护发布记录'],
-  activations: ['激活授权', '管理激活码与设备授权']
+  activations: ['激活授权', '管理激活码与设备授权'],
+  feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
 
 function navigateTo(pageName) {
@@ -431,8 +441,112 @@ async function loadActivations() {
   }
 }
 
+const feedbackTypes = {
+  problem: '问题反馈',
+  suggestion: '功能建议'
+};
+
+const feedbackStatuses = {
+  pending: '待处理',
+  in_progress: '进行中',
+  resolved: '已处理',
+  closed: '已关闭'
+};
+
+async function saveFeedback(item, statusSelect, noteInput, button) {
+  button.disabled = true;
+  try {
+    await api(`/api/admin/feedback/${encodeURIComponent(item.id)}`, {
+      method: 'PATCH',
+      body: {
+        status: statusSelect.value,
+        adminNote: noteInput.value.trim()
+      }
+    });
+    showToast('反馈状态已保存');
+    await loadFeedback();
+  } catch (error) {
+    showToast(error.message, 'error');
+    button.disabled = false;
+  }
+}
+
+function renderFeedback(payload) {
+  const summary = payload.summary || {};
+  const active = (summary.pending || 0) + (summary.inProgress || 0);
+  elements.overviewPendingFeedback.textContent = active;
+  elements.feedbackTotal.textContent = summary.total || 0;
+  elements.feedbackPending.textContent = summary.pending || 0;
+  elements.feedbackInProgress.textContent = summary.inProgress || 0;
+  elements.feedbackResolved.textContent = summary.resolved || 0;
+  elements.feedbackClosed.textContent = summary.closed || 0;
+  elements.feedbackRows.replaceChildren();
+  elements.emptyFeedback.hidden = payload.items.length > 0;
+
+  for (const item of payload.items) {
+    const row = document.createElement('tr');
+    const feedbackCell = cell('feedback-content');
+    const type = document.createElement('span');
+    type.className = `feedback-type ${item.type}`;
+    type.textContent = feedbackTypes[item.type] || '反馈';
+    const title = document.createElement('strong');
+    title.textContent = item.title;
+    const content = document.createElement('span');
+    content.className = 'feedback-message';
+    content.textContent = item.content;
+    const meta = document.createElement('span');
+    meta.className = 'feedback-meta';
+    const device = document.createElement('span');
+    device.textContent = `设备 …${item.installationSuffix} · ${item.platform || '-'} v${item.appVersion || '-'}`;
+    const dates = document.createElement('span');
+    dates.textContent = `提交 ${formatDate(item.createdAt)} · 更新 ${formatDate(item.updatedAt)}`;
+    meta.append(device, dates);
+    feedbackCell.append(type, title, content, meta);
+
+    const statusCell = cell();
+    const statusSelect = document.createElement('select');
+    statusSelect.className = 'feedback-status-select';
+    statusSelect.setAttribute('aria-label', `反馈“${item.title}”的状态`);
+    for (const [value, label] of Object.entries(feedbackStatuses)) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = label;
+      option.selected = value === item.status;
+      statusSelect.append(option);
+    }
+    statusCell.append(statusSelect);
+
+    const noteCell = cell('feedback-note-cell');
+    const noteInput = document.createElement('textarea');
+    noteInput.rows = 3;
+    noteInput.maxLength = 1000;
+    noteInput.placeholder = '可选，客户端可查看';
+    noteInput.value = item.adminNote || '';
+    noteCell.append(noteInput);
+
+    const actionsCell = cell();
+    const saveButton = actionButton('保存', 'button-secondary', () => (
+      saveFeedback(item, statusSelect, noteInput, saveButton)
+    ));
+    actionsCell.append(saveButton);
+    row.append(feedbackCell, statusCell, noteCell, actionsCell);
+    elements.feedbackRows.append(row);
+  }
+}
+
+async function loadFeedback() {
+  elements.refreshFeedbackButton.disabled = true;
+  try {
+    renderFeedback(await api('/api/admin/feedback'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshFeedbackButton.disabled = false;
+  }
+}
+
 async function loadDashboard() {
-  await Promise.all([loadReleases(), loadActivations()]);
+  await Promise.all([loadReleases(), loadActivations(), loadFeedback()]);
 }
 
 async function loadReleases() {
@@ -543,6 +657,7 @@ elements.uploadForm.addEventListener('submit', async (event) => {
 
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
+elements.refreshFeedbackButton.addEventListener('click', loadFeedback);
 
 for (const item of elements.navItems) {
   item.addEventListener('click', () => navigateTo(item.dataset.page));

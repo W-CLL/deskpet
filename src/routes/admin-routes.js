@@ -69,6 +69,14 @@ function createAdminRouter({ controller, authService }) {
     (req, res) => controller.revokeLicense(req, res)
   );
 
+  router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
+  router.patch(
+    '/feedback/:id',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updateFeedback(req, res)
+  );
+
   return router;
 }
 

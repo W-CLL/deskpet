@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=sidebar-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=feedback-1">
 </head>
 <body>
   <main class="app-root">
@@ -59,6 +59,10 @@
             <span>激活授权</span>
             <small>激活码与设备</small>
           </button>
+          <button class="nav-item" type="button" data-page="feedback">
+            <span>问题反馈</span>
+            <small>问题与功能建议</small>
+          </button>
         </nav>
 
         <div class="sidebar-status">
@@ -102,6 +106,11 @@
                 <strong id="overviewUnusedCodes">0</strong>
                 <small>可以继续发放</small>
               </article>
+              <article class="metric-item">
+                <span>待处理反馈</span>
+                <strong id="overviewPendingFeedback">0</strong>
+                <small>待处理与进行中</small>
+              </article>
             </div>
 
             <section class="tool-panel manifest-panel">
@@ -125,6 +134,10 @@
               <button class="quick-action" type="button" data-go-to="activations">
                 <strong>管理设备授权</strong>
                 <span>生成激活码或撤销已有授权</span>
+              </button>
+              <button class="quick-action" type="button" data-go-to="feedback">
+                <strong>处理用户反馈</strong>
+                <span>查看问题、建议并更新处理状态</span>
               </button>
             </div>
           </section>
@@ -250,6 +263,41 @@
               </div>
             </section>
           </section>
+
+          <section class="admin-page" data-page-panel="feedback" hidden>
+            <section class="tool-panel feedback-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">用户声音</p>
+                  <h2>问题反馈与建议</h2>
+                </div>
+                <button id="refreshFeedbackButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="activation-summary" aria-label="反馈统计">
+                <span>全部 <strong id="feedbackTotal">0</strong></span>
+                <span>待处理 <strong id="feedbackPending">0</strong></span>
+                <span>进行中 <strong id="feedbackInProgress">0</strong></span>
+                <span>已处理 <strong id="feedbackResolved">0</strong></span>
+                <span>已关闭 <strong id="feedbackClosed">0</strong></span>
+              </div>
+
+              <div class="table-wrap feedback-table-wrap">
+                <table class="feedback-table">
+                  <thead>
+                    <tr>
+                      <th>类型与内容</th>
+                      <th>状态</th>
+                      <th>处理备注</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="feedbackRows"></tbody>
+                </table>
+                <p id="emptyFeedback" class="empty-state" hidden>暂无反馈</p>
+              </div>
+            </section>
+          </section>
         </div>
       </div>
     </div>
@@ -279,6 +327,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=sidebar-1" defer></script>
+  <script src="/assets/admin.js?v=feedback-1" defer></script>
 </body>
 </html>

@@ -1,9 +1,10 @@
 const fs = require('node:fs');
 
 class PublicController {
-  constructor({ authService, activationService, releaseService, releaseStore }) {
+  constructor({ authService, activationService, feedbackService, releaseService, releaseStore }) {
     this.authService = authService;
     this.activationService = activationService;
+    this.feedbackService = feedbackService;
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
     this.startedAt = new Date().toISOString();
@@ -23,6 +24,14 @@ class PublicController {
 
   async activate(req, res) {
     res.status(200).json(await this.activationService.activate(req, req.body));
+  }
+
+  feedback(req, res) {
+    res.status(200).json(this.feedbackService.listForDevice(req));
+  }
+
+  async submitFeedback(req, res) {
+    res.status(201).json(await this.feedbackService.submit(req, req.body));
   }
 
   latest(req, res) {

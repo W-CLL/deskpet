@@ -4,6 +4,7 @@ const path = require('node:path');
 const express = require('express');
 const { ReleaseStore } = require('../lib/storage');
 const { ActivationStore } = require('../lib/activation-store');
+const { FeedbackStore } = require('../lib/feedback-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -14,6 +15,7 @@ const { createPublicRouter } = require('./routes/public-routes');
 const { ActivationService } = require('./services/activation-service');
 const { AdminAuthService } = require('./services/admin-auth-service');
 const { AuditService } = require('./services/audit-service');
+const { FeedbackService } = require('./services/feedback-service');
 const { ReleaseService } = require('./services/release-service');
 
 function serveFile(filePath, cacheControl) {
@@ -32,6 +34,8 @@ async function createApplication(options = {}) {
   await releaseStore.initialize();
   const activationStore = new ActivationStore(config.dataDirectory);
   await activationStore.initialize();
+  const feedbackStore = new FeedbackStore(config.dataDirectory);
+  await feedbackStore.initialize();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -63,14 +67,22 @@ async function createApplication(options = {}) {
     auditService,
     signingPrivateKey
   });
+  const feedbackService = new FeedbackService({
+    config,
+    feedbackStore,
+    activationService,
+    auditService
+  });
   const adminController = new AdminController({
     authService,
     activationService,
-    releaseService
+    releaseService,
+    feedbackService
   });
   const publicController = new PublicController({
     authService,
     activationService,
+    feedbackService,
     releaseService,
     releaseStore
   });
@@ -120,15 +132,18 @@ async function createApplication(options = {}) {
     handler: app,
     store: releaseStore,
     activationStore,
+    feedbackStore,
     services: {
       activationService,
       authService,
+      feedbackService,
       releaseService
     },
     close() {
       if (closed) return;
       closed = true;
       clearInterval(maintenanceTimer);
+      feedbackStore.close();
       activationStore.close();
     }
   };

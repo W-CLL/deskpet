@@ -488,13 +488,17 @@ dialog h2 {
   min-width: 0;
 }
 
-.manifest-panel,
-.upload-section {
+.manifest-panel {
   padding: 22px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 7px;
   box-shadow: var(--shadow-sm);
+}
+
+.upload-section {
+  display: grid;
+  gap: 14px;
 }
 
 .manifest-panel {
@@ -703,34 +707,214 @@ input[readonly] {
   gap: 8px;
 }
 
+.release-editor-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.editor-state {
+  display: inline-flex;
+  min-height: 25px;
+  align-items: center;
+  padding: 2px 9px;
+  color: #5c665f;
+  background: #edf1ef;
+  border: 1px solid #d7ded9;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .upload-form {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 16px 18px;
-  margin-top: 20px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  box-shadow: var(--shadow-sm);
 }
 
-.upload-form > label:nth-child(1),
-.upload-form > label:nth-child(2),
-.upload-form > label:nth-child(3) {
-  grid-column: span 2;
+.release-form-block {
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+  padding: 20px 22px;
 }
 
-.file-field {
-  grid-column: span 6;
+.release-form-block + .release-form-block {
+  border-top: 1px solid #e5e9e7;
 }
 
-.notes-field {
-  grid-column: 1 / span 8;
+.form-block-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.form-block-heading h3 {
+  margin: 0;
+  color: #27312c;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.form-block-index {
+  display: inline-flex;
+  width: 26px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  color: #23704f;
+  background: var(--green-soft);
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.release-target-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.72fr) minmax(300px, 1.35fr) minmax(150px, 0.72fr);
+  align-items: end;
+  gap: 18px;
+}
+
+.platform-segment {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.platform-segment legend {
+  margin-bottom: 7px;
+  padding: 0;
+  color: #505954;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.platform-options {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  background: #edf1ef;
+  border: 1px solid #d8dfdb;
+  border-radius: 6px;
+}
+
+.platform-choice {
+  position: relative;
+  display: block;
+}
+
+.platform-choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.platform-choice > span {
+  display: flex;
+  min-width: 0;
+  min-height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 10px;
+  color: #59635d;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.platform-choice strong {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-choice small {
+  color: #88918c;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.platform-choice input:checked + span {
+  color: #175f3e;
+  background: #ffffff;
+  border-color: #aec8ba;
+  box-shadow: 0 2px 8px rgb(30 44 36 / 7%);
+}
+
+.platform-choice input:checked + span small {
+  color: #4f7b64;
+}
+
+.platform-choice input:focus-visible + span {
+  outline: 2px solid #25845b;
+  outline-offset: 2px;
+}
+
+.release-package-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.45fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.release-package-grid textarea {
+  min-height: 104px;
 }
 
 .upload-actions {
   display: flex;
-  min-height: 40px;
-  grid-column: 9 / -1;
-  align-items: flex-end;
+  min-height: 66px;
+  align-items: center;
   justify-content: flex-end;
   gap: 14px;
+  padding: 13px 20px;
+  background: #f7f9f8;
+  border-top: 1px solid #e2e7e4;
+}
+
+.release-toolbar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.release-inline-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 14px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.release-inline-summary span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.release-inline-summary strong {
+  color: var(--ink-strong);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
 }
 
 .progress-wrap {
@@ -1052,6 +1236,16 @@ th:last-child {
   background: #dff0e7;
 }
 
+.status-badge.published {
+  color: #2d6178;
+  background: #e2eef3;
+}
+
+.status-badge.draft {
+  color: #6d5b30;
+  background: #f4ecda;
+}
+
 .status-badge.expired {
   color: #76591f;
   background: #f5ead2;
@@ -1165,16 +1359,6 @@ dialog p {
   .quick-action {
     min-height: 78px;
   }
-
-  .upload-form > label:nth-child(1),
-  .upload-form > label:nth-child(2),
-  .upload-form > label:nth-child(3) {
-    grid-column: span 4;
-  }
-
-  .file-field {
-    grid-column: 1 / -1;
-  }
 }
 
 @media (max-width: 940px) {
@@ -1192,6 +1376,24 @@ dialog p {
 
   .metric-item:not(.metric-release) {
     grid-column: span 3;
+  }
+
+  .release-target-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .architecture-field {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .platform-segment {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .release-package-grid {
+    grid-template-columns: 1fr;
   }
 
   .activation-form {
@@ -1213,14 +1415,14 @@ dialog p {
     z-index: 20;
     height: auto;
     min-height: 0;
-    padding: 9px 12px 0;
+    padding: 0;
     border-right: 0;
-    border-bottom: 1px solid #303a35;
+    border-bottom: 0;
   }
 
   .sidebar-brand {
-    min-height: 43px;
-    padding: 0 2px 8px;
+    min-height: 52px;
+    padding: 8px 16px;
     border-bottom: 0;
   }
 
@@ -1237,24 +1439,42 @@ dialog p {
     display: flex;
     min-width: 0;
     overflow-x: hidden;
+    padding: 0 10px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 4px 14px rgb(27 34 30 / 4%);
   }
 
   .nav-item {
     min-width: 0;
-    min-height: 44px;
+    min-height: 48px;
     flex: 1 1 25%;
-    padding: 7px 12px 9px;
+    padding: 7px 5px 9px;
+    color: #66706a;
     text-align: center;
-    border-radius: 5px 5px 0 0;
+    border: 0;
+    border-radius: 0;
   }
 
   .nav-item::before {
     top: auto;
-    right: 12px;
+    right: 20px;
     bottom: 0;
-    left: 12px;
+    left: 20px;
     width: auto;
-    height: 3px;
+    height: 2px;
+  }
+
+  .nav-item:hover {
+    color: #31483c;
+    background: #f7f9f8;
+    border-color: transparent;
+  }
+
+  .nav-item[aria-current="page"] {
+    color: #176a45;
+    background: #f3f8f5;
+    border-color: transparent;
   }
 
   .nav-item small,
@@ -1342,8 +1562,7 @@ dialog p {
     gap: 20px;
   }
 
-  .manifest-panel,
-  .upload-section {
+  .manifest-panel {
     padding: 18px 14px;
   }
 
@@ -1353,7 +1572,6 @@ dialog p {
   }
 
   .quick-grid,
-  .upload-form,
   .activation-form {
     grid-template-columns: 1fr;
   }
@@ -1362,13 +1580,41 @@ dialog p {
     min-height: 62px;
   }
 
-  .upload-form > label:nth-child(1),
-  .upload-form > label:nth-child(2),
-  .upload-form > label:nth-child(3),
-  .file-field,
-  .notes-field,
-  .upload-actions {
+  .release-form-block {
+    padding: 17px 14px;
+  }
+
+  .release-target-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .version-field,
+  .architecture-field,
+  .platform-segment {
+    grid-row: auto;
     grid-column: auto;
+  }
+
+  .release-package-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .release-editor-heading {
+    align-items: flex-end;
+  }
+
+  .releases-section .inline-heading {
+    align-items: flex-start;
+  }
+
+  .release-toolbar {
+    align-items: flex-end;
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .release-inline-summary {
+    justify-content: flex-end;
   }
 
   .copy-row {
@@ -1383,6 +1629,7 @@ dialog p {
   .upload-actions {
     align-items: stretch;
     flex-direction: column;
+    padding: 14px;
   }
 
   .upload-actions .button {

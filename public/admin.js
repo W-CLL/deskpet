@@ -19,7 +19,7 @@ const elements = {
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
   releaseVersion: document.querySelector('#releaseVersion'),
-  releasePlatform: document.querySelector('#releasePlatform'),
+  releasePlatformInputs: document.querySelectorAll('input[name="platform"]'),
   releaseArchitecture: document.querySelector('#releaseArchitecture'),
   releaseFile: document.querySelector('#releaseFile'),
   releaseFileLabel: document.querySelector('#releaseFileLabel'),
@@ -29,6 +29,9 @@ const elements = {
   uploadProgressBar: document.querySelector('#uploadProgressBar'),
   uploadProgressText: document.querySelector('#uploadProgressText'),
   refreshButton: document.querySelector('#refreshButton'),
+  releasePageTotal: document.querySelector('#releasePageTotal'),
+  releasePagePublished: document.querySelector('#releasePagePublished'),
+  releasePageDrafts: document.querySelector('#releasePageDrafts'),
   releaseRows: document.querySelector('#releaseRows'),
   emptyReleases: document.querySelector('#emptyReleases'),
   refreshActivationButton: document.querySelector('#refreshActivationButton'),
@@ -182,8 +185,13 @@ function platformLabel(release) {
   return `${system} / ${release.architecture}`;
 }
 
+function selectedReleasePlatform() {
+  return Array.from(elements.releasePlatformInputs)
+    .find((input) => input.checked)?.value || 'windows';
+}
+
 function syncUploadTarget() {
-  const isMac = elements.releasePlatform.value === 'macos';
+  const isMac = selectedReleasePlatform() === 'macos';
   const choices = isMac
     ? [['arm64', 'Apple Silicon'], ['x86_64', 'Intel']]
     : [['x64', 'x64']];
@@ -252,6 +260,11 @@ function renderReleases(payload) {
     ? activeEntries.map(([target, version]) => `${target} v${version}`).join(' / ')
     : '尚未发布';
   elements.overviewReleaseTotal.textContent = payload.releases.length;
+  elements.releasePageTotal.textContent = payload.releases.length;
+  elements.releasePagePublished.textContent = payload.releases
+    .filter((release) => release.publishedAt).length;
+  elements.releasePageDrafts.textContent = payload.releases
+    .filter((release) => !release.publishedAt).length;
   elements.manifestUrl.value = payload.manifestUrl || '';
   elements.releaseRows.replaceChildren();
   elements.emptyReleases.hidden = payload.releases.length > 0;
@@ -271,7 +284,8 @@ function renderReleases(payload) {
 
     const statusCell = cell();
     const status = document.createElement('span');
-    status.className = `status-badge${release.active ? ' active' : ''}`;
+    const statusClass = release.active ? 'active' : release.publishedAt ? 'published' : 'draft';
+    status.className = `status-badge ${statusClass}`;
     status.textContent = release.active ? '当前发布' : release.publishedAt ? '已发布' : '草稿';
     statusCell.append(status);
 
@@ -615,7 +629,9 @@ elements.logoutButton.addEventListener('click', async () => {
 });
 
 syncUploadTarget();
-elements.releasePlatform.addEventListener('change', syncUploadTarget);
+for (const input of elements.releasePlatformInputs) {
+  input.addEventListener('change', syncUploadTarget);
+}
 
 elements.uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -629,7 +645,7 @@ elements.uploadForm.addEventListener('submit', async (event) => {
     const task = await api('/api/admin/releases', {
       method: 'POST',
       body: {
-        platform: elements.releasePlatform.value,
+        platform: selectedReleasePlatform(),
         architecture: elements.releaseArchitecture.value,
         version: elements.releaseVersion.value.trim(),
         fileName: file.name,

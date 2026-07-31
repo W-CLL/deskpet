@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-4">
+  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-5">
 </head>
 <body>
   <main class="app-root">
@@ -154,36 +154,67 @@
 
           <section class="admin-page" data-page-panel="releases" hidden>
             <section class="tool-panel upload-section">
-              <div class="panel-heading">
+              <div class="panel-heading release-editor-heading">
                 <div>
-                  <p class="eyebrow">新版本</p>
-                  <h2>上传安装包</h2>
+                  <p class="eyebrow">版本交付</p>
+                  <h2>创建发布草稿</h2>
                 </div>
+                <span class="editor-state">草稿流程</span>
               </div>
               <form id="uploadForm" class="upload-form">
-                <label>
-                  <span>版本号</span>
-                  <input id="releaseVersion" name="version" inputmode="decimal" placeholder="2.4.0" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
-                </label>
-                <label>
-                  <span>发布平台</span>
-                  <select id="releasePlatform" name="platform">
-                    <option value="windows">Windows</option>
-                    <option value="macos">macOS</option>
-                  </select>
-                </label>
-                <label>
-                  <span>目标架构</span>
-                  <select id="releaseArchitecture" name="architecture"></select>
-                </label>
-                <label class="file-field">
-                  <span id="releaseFileLabel">Windows 安装包</span>
-                  <input id="releaseFile" name="file" type="file" accept=".exe,application/octet-stream" required>
-                </label>
-                <label class="notes-field">
-                  <span>更新说明</span>
-                  <textarea id="releaseNotes" name="notes" rows="4" maxlength="1200" placeholder="每行一项"></textarea>
-                </label>
+                <section class="release-form-block release-target-block">
+                  <div class="form-block-heading">
+                    <span class="form-block-index">01</span>
+                    <h3>发布目标</h3>
+                  </div>
+                  <div class="release-target-grid">
+                    <label class="version-field">
+                      <span>版本号</span>
+                      <input id="releaseVersion" name="version" inputmode="decimal" placeholder="2.4.0" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
+                    </label>
+                    <fieldset class="platform-segment">
+                      <legend>发布平台</legend>
+                      <div class="platform-options">
+                        <label class="platform-choice">
+                          <input name="platform" type="radio" value="windows" checked>
+                          <span>
+                            <strong>Windows</strong>
+                            <small>EXE</small>
+                          </span>
+                        </label>
+                        <label class="platform-choice">
+                          <input name="platform" type="radio" value="macos">
+                          <span>
+                            <strong>macOS</strong>
+                            <small>ZIP</small>
+                          </span>
+                        </label>
+                      </div>
+                    </fieldset>
+                    <label class="architecture-field">
+                      <span>目标架构</span>
+                      <select id="releaseArchitecture" name="architecture"></select>
+                    </label>
+                  </div>
+                </section>
+
+                <section class="release-form-block release-package-block">
+                  <div class="form-block-heading">
+                    <span class="form-block-index">02</span>
+                    <h3>安装包与说明</h3>
+                  </div>
+                  <div class="release-package-grid">
+                    <label class="file-field">
+                      <span id="releaseFileLabel">Windows 安装包</span>
+                      <input id="releaseFile" name="file" type="file" accept=".exe,application/octet-stream" required>
+                    </label>
+                    <label class="notes-field">
+                      <span>更新说明</span>
+                      <textarea id="releaseNotes" name="notes" rows="4" maxlength="1200" placeholder="每行一项"></textarea>
+                    </label>
+                  </div>
+                </section>
+
                 <div class="upload-actions">
                   <div id="uploadProgress" class="progress-wrap" hidden>
                     <progress id="uploadProgressBar" max="100" value="0"></progress>
@@ -200,7 +231,14 @@
                   <p class="eyebrow">版本记录</p>
                   <h2>发布管理</h2>
                 </div>
-                <button id="refreshButton" class="button button-secondary" type="button">刷新</button>
+                <div class="release-toolbar">
+                  <div class="release-inline-summary" aria-label="版本记录统计">
+                    <span>全部 <strong id="releasePageTotal">0</strong></span>
+                    <span>已发布 <strong id="releasePagePublished">0</strong></span>
+                    <span>草稿 <strong id="releasePageDrafts">0</strong></span>
+                  </div>
+                  <button id="refreshButton" class="button button-secondary" type="button">刷新</button>
+                </div>
               </div>
               <div class="table-wrap">
                 <table>
@@ -337,6 +375,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=admin-ui-4" defer></script>
+  <script src="/assets/admin.js?v=admin-ui-5" defer></script>
 </body>
 </html>

@@ -80,10 +80,14 @@ update-server/
 1. 管理员生成 6 位一次性激活码。
 2. 激活码用 HMAC 索引，并以 AES-256-GCM 密文保存到 SQLite；接口列表只返回掩码。
 3. 客户端提交激活码、安装 ID 和随机凭据。
-4. `ActivationStore.activate` 在 SQLite 事务内占用激活码并生成授权 ID，避免并发重复使用。
+4. 普通激活码在 SQLite 事务内创建稳定账号和第一份设备授权；已有旧授权在启动迁移时自动获得账号。
 5. 同一安装 ID 和凭据可以安全重试；其他设备不能复用该激活码。
-6. 客户端后续使用 `Bearer <licenseId>.<credential>` 请求受保护的更新和下载。
-7. 管理员撤销授权后，后续鉴权立即失败。
+6. 客户端后续使用 `Bearer <licenseId>.<credential>`，服务端由授权内部解析 `accountId`，客户端不能指定数据账号。
+7. 管理员可生成绑定已有账号的一次性换机码；新设备绑定成功后旧设备授权自动撤销。
+8. 管理员撤销设备授权后，该设备后续鉴权立即失败；账号数据仍归属于原 `accountId`。
+
+SQLite 迁移由每个 Store 启动时自动执行，并记录在 `schema_migrations`。部署前也可
+使用 `npm run migrate` 手动执行；失败的迁移会回滚并阻止服务启动。
 
 IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后清空。
 
@@ -104,6 +108,7 @@ IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后�
 ```text
 auth.json                    管理员密码哈希
 activation.db*               激活码和授权 SQLite 数据
+                              同库包含 accounts 与 schema_migrations
 activation-pepper.key        激活码 HMAC 密钥
 activation-encryption.key    激活码加密密钥
 signing-private.pem          更新清单 Ed25519 私钥
@@ -132,6 +137,7 @@ audit.jsonl                  管理操作审计日志
 | `GET/POST` | `/api/admin/activation-codes` | 管理会话 | 列表或生成激活码 |
 | `POST` | `/api/admin/activation-codes/:id/reveal` | 管理会话 + CSRF | 查看完整激活码 |
 | `POST` | `/api/admin/licenses/:id/revoke` | 管理会话 + CSRF | 撤销授权 |
+| `POST` | `/api/admin/accounts/:id/rebind-code` | 管理会话 + CSRF | 为已有账号生成一次性换机码 |
 
 API 错误统一返回：
 

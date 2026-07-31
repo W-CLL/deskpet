@@ -41,6 +41,7 @@ const elements = {
   activationNote: document.querySelector('#activationNote'),
   generateCodeButton: document.querySelector('#generateCodeButton'),
   activationTotal: document.querySelector('#activationTotal'),
+  activationAccounts: document.querySelector('#activationAccounts'),
   activationUnused: document.querySelector('#activationUnused'),
   activationActive: document.querySelector('#activationActive'),
   activationRevoked: document.querySelector('#activationRevoked'),
@@ -346,16 +347,38 @@ async function revokeLicense(item) {
   }
 }
 
+async function createRebindCode(item) {
+  const confirmed = await confirmAction({
+    title: `生成账号 …${item.account.suffix} 的换机码`,
+    message: '换机码在新设备成功绑定后才会撤销原设备授权，有效期为 24 小时。',
+    confirmLabel: '生成换机码'
+  });
+  if (!confirmed) return;
+  try {
+    const generated = await api(
+      `/api/admin/accounts/${encodeURIComponent(item.account.id)}/rebind-code`,
+      { method: 'POST', body: { expiresInHours: 24 } }
+    );
+    elements.generatedCodesText.value = generated.code;
+    elements.generatedCodesDialog.showModal();
+    await loadActivations();
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
 function renderActivations(payload) {
   const summary = payload.summary || {};
   elements.overviewActiveLicenses.textContent = summary.active || 0;
   elements.overviewUnusedCodes.textContent = summary.unused || 0;
   elements.activationTotal.textContent = summary.total || 0;
+  elements.activationAccounts.textContent = summary.accounts || 0;
   elements.activationUnused.textContent = summary.unused || 0;
   elements.activationActive.textContent = summary.active || 0;
   elements.activationRevoked.textContent = summary.revoked || 0;
   elements.activationRows.replaceChildren();
   elements.emptyActivations.hidden = payload.codes.length > 0;
+  const accountsWithRebindAction = new Set();
 
   for (const item of payload.codes) {
     const row = document.createElement('tr');
@@ -363,6 +386,11 @@ function renderActivations(payload) {
     const code = document.createElement('strong');
     code.textContent = item.maskedCode;
     codeCell.append(code);
+    if (item.purpose === 'rebind') {
+      const rebindHint = document.createElement('span');
+      rebindHint.textContent = '换机码';
+      codeCell.append(rebindHint);
+    }
     if (!item.canReveal) {
       const legacyHint = document.createElement('span');
       legacyHint.textContent = '旧码无法恢复';
@@ -388,14 +416,19 @@ function renderActivations(payload) {
     dateCell.append(created, expires);
 
     const licenseCell = cell('license-cell');
+    if (item.account) {
+      const account = document.createElement('strong');
+      account.textContent = `账号 …${item.account.suffix}`;
+      licenseCell.append(account);
+    }
     if (item.license) {
-      const device = document.createElement('strong');
+      const device = document.createElement('span');
       device.textContent = `设备 …${item.license.installationSuffix}`;
       const detail = document.createElement('span');
       const checkedAt = item.license.lastUpdateAt ? formatDate(item.license.lastUpdateAt) : '尚未检查更新';
       detail.textContent = `v${item.license.appVersion || '-'} · ${checkedAt}`;
       licenseCell.append(device, detail);
-    } else {
+    } else if (!item.account) {
       licenseCell.textContent = '-';
     }
 
@@ -437,6 +470,10 @@ function renderActivations(payload) {
     }
     if (item.license?.status === 'active') {
       actions.append(actionButton('撤销', 'button-danger', () => revokeLicense(item)));
+    }
+    if (item.account?.status === 'active' && !accountsWithRebindAction.has(item.account.id)) {
+      actions.append(actionButton('换机码', 'button-secondary', () => createRebindCode(item)));
+      accountsWithRebindAction.add(item.account.id);
     }
     actionsCell.append(actions);
     row.append(codeCell, statusCell, noteCell, dateCell, licenseCell, actionsCell);

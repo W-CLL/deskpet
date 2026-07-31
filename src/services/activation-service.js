@@ -73,6 +73,32 @@ class ActivationService {
     return { code: revealed.code };
   }
 
+  async createRebindCode(req, accountId, body) {
+    let generated;
+    try {
+      generated = this.activationStore.createRebindCode(accountId, {
+        expiresInHours: Number(body?.expiresInHours ?? 24),
+        note: body?.note
+      });
+    } catch (error) {
+      throw new HttpError(400, error.message, 'INVALID_REBIND_CODE_REQUEST');
+    }
+    if (!generated) throw new HttpError(404, '有效账号不存在', 'ACCOUNT_NOT_FOUND');
+    await this.auditService.write({
+      action: 'account-rebind-code-generate',
+      outcome: 'success',
+      ip: clientIp(req, this.config),
+      accountId,
+      expiresAt: generated.expiresAt
+    });
+    return {
+      accountId,
+      code: generated.codes[0],
+      createdAt: generated.createdAt,
+      expiresAt: generated.expiresAt
+    };
+  }
+
   async revoke(req, licenseId) {
     const license = this.activationStore.revoke(licenseId);
     if (!license) throw new HttpError(404, '有效授权不存在', 'LICENSE_NOT_FOUND');
@@ -153,6 +179,7 @@ class ActivationService {
       action: 'activate',
       outcome: license.alreadyActivated ? 'retry' : 'success',
       ip,
+      accountId: license.accountId,
       licenseId: license.licenseId
     });
     return license;

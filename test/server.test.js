@@ -313,6 +313,8 @@ test('one-time activation gates current manifests and downloads', async (context
   const winningIndex = results.findIndex((item) => item.response.status === 200);
   const winner = attempts[winningIndex];
   const licenseId = results[winningIndex].payload.licenseId;
+  const accountId = results[winningIndex].payload.accountId;
+  assert.match(accountId, /^[0-9a-f-]{36}$/i);
 
   const retry = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
     method: 'POST',
@@ -366,13 +368,52 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(allowedDownload.status, 200);
   assert.deepEqual(Buffer.from(await allowedDownload.arrayBuffer()), Buffer.from('MZ deskpet 2.2.0', 'utf8'));
 
-  const revoke = await jsonResponse(await fetch(`${baseUrl}/api/admin/licenses/${licenseId}/revoke`, {
+  const rebindCode = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/accounts/${accountId}/rebind-code`,
+    {
+      method: 'POST',
+      headers: adminHeaders,
+      body: JSON.stringify({ expiresInHours: 24, note: 'HTTP 换机测试' })
+    }
+  ));
+  assert.equal(rebindCode.response.status, 201);
+  assert.equal(rebindCode.payload.accountId, accountId);
+  assert.match(rebindCode.payload.code, /^(?=.*[A-Z])(?=.*[2-9])[A-HJ-NP-Z2-9]{6}$/);
+
+  const replacementCredential = crypto.randomBytes(32).toString('base64url');
+  const replacementActivation = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      code: rebindCode.payload.code,
+      installationId: crypto.randomBytes(16).toString('hex'),
+      credential: replacementCredential,
+      appVersion: '2.2.0'
+    })
+  }));
+  assert.equal(replacementActivation.response.status, 200);
+  assert.equal(replacementActivation.payload.accountId, accountId);
+  assert.notEqual(replacementActivation.payload.licenseId, licenseId);
+
+  const replacedLicenseUpdate = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
+    headers: { Authorization: authorization }
+  }));
+  assert.equal(replacedLicenseUpdate.response.status, 401);
+
+  const replacementAuthorization = `Bearer ${replacementActivation.payload.licenseId}.${replacementCredential}`;
+  const replacementUpdate = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
+    headers: { Authorization: replacementAuthorization }
+  }));
+  assert.equal(replacementUpdate.response.status, 200);
+  assert.equal(replacementUpdate.payload.version, '2.2.0');
+
+  const revoke = await jsonResponse(await fetch(`${baseUrl}/api/admin/licenses/${replacementActivation.payload.licenseId}/revoke`, {
     method: 'POST',
     headers: adminHeaders
   }));
   assert.equal(revoke.response.status, 200);
   const revokedUpdate = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
-    headers: { Authorization: authorization }
+    headers: { Authorization: replacementAuthorization }
   }));
   assert.equal(revokedUpdate.response.status, 401);
 });

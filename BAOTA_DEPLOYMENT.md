@@ -368,10 +368,21 @@ native\dist\ZhuoDazi-Desktop-Pet-2.1.2.exe
    npm test
    ```
 
-6. 在宝塔重新启动项目。
-7. 检查项目日志、`/healthz`、`/admin` 和一次客户端更新请求。
+6. 确认数据目录后手动预执行数据库迁移：
+
+   ```bash
+   DESKPET_DATA_DIR=/www/deskpet-data npm run migrate:existing
+   ```
+
+   `migrate:existing` 会先确认 `activation.db` 确实存在，避免数据目录写错后生成一套空库。该步骤可提前发现目录权限、磁盘空间或数据库损坏问题。即使跳过，服务重新启动时
+   也会在监听端口前自动执行未完成迁移。
+
+7. 在宝塔重新启动项目。
+8. 检查项目日志、`/healthz`、`/admin`、账号数量和一次客户端更新请求。
 
 不要只执行 `git pull` 就结束：服务端依赖可能已经变化，`npm ci --omit=dev` 是更新流程的一部分。
+不要在未设置 `DESKPET_DATA_DIR` 的普通 SSH Shell 中直接运行迁移，否则会在代码目录
+创建一套新的空数据。迁移只向前执行；如需回退代码，应停止服务并恢复升级前备份。
 
 ## 11. 备份与恢复
 
@@ -381,7 +392,9 @@ native\dist\ZhuoDazi-Desktop-Pet-2.1.2.exe
 /www/deskpet-data
 ```
 
-恢复时先停止 Node 项目，恢复整个目录和权限，再启动项目。建议保留多个历史备份，并在独立位置验证备份可以读取。
+恢复时先停止 Node 项目，恢复整个目录和权限，再启动项目。备份必须包含 SQLite 的
+`.db`、`.db-wal`、`.db-shm` 以及所有密钥；建议保留多个历史备份，并在独立位置验证
+备份可以读取。
 
 代码可由 Git 或部署包恢复，生产数据和私钥无法从代码仓库恢复。
 

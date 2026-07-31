@@ -57,6 +57,15 @@ class AdminController {
     res.status(200).json(await this.activationService.revoke(req, licenseId));
   }
 
+  async createRebindCode(req, res) {
+    const accountId = requireParam(req.params.id, UUID_PATTERN);
+    res.status(201).json(await this.activationService.createRebindCode(
+      req,
+      accountId,
+      req.body
+    ));
+  }
+
   feedback(_req, res) {
     res.status(200).json(this.feedbackService.listAll());
   }

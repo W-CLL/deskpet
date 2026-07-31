@@ -68,6 +68,12 @@ function createAdminRouter({ controller, authService }) {
     requireWriteSession,
     (req, res) => controller.revokeLicense(req, res)
   );
+  router.post(
+    '/accounts/:id/rebind-code',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createRebindCode(req, res)
+  );
 
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
   router.patch(

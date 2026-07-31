@@ -53,11 +53,30 @@ http://127.0.0.1:3100/admin
 | 命令 | 作用 |
 | --- | --- |
 | `npm start` | 启动 Express 服务 |
+| `npm run migrate` | 手动执行未完成的 SQLite 迁移；服务启动时也会自动执行 |
 | `npm run check` | 检查所有服务端 JavaScript 语法 |
 | `npm test` | 运行 HTTP 端到端测试 |
 | `npm run set-password` | 交互式设置管理员密码 |
 | `npm run generate-signing-key` | 首次生成 Ed25519 签名密钥，拒绝覆盖旧密钥 |
 | `npm run import-release -- <version> <exe>` | 从命令行导入并发布标准命名的 EXE，发布前执行完整校验 |
+
+## 账号与数据库迁移
+
+激活码是账号入口，激活成功后由服务端创建稳定的 `accountId` 和设备级
+`licenseId`。旧客户端继续使用原来的 Bearer 凭据；已有设备授权在升级后会自动
+建立账号，不要求用户重新输入激活码。管理后台可以为已有账号生成 24 小时有效的
+一次性换机码，新设备绑定成功后旧设备授权自动撤销，账号数据保持不变。
+
+`activation.db` 和 `feedback.db` 使用 `schema_migrations` 记录迁移版本。
+`npm start` 会在监听端口前自动执行迁移，也可在重启前手动执行：
+
+```bash
+DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
+```
+
+生产迁移前必须停止单实例服务并备份整个 `DESKPET_DATA_DIR`。不要只复制单个
+`.db` 文件，也不要替换现有 `activation-*.key` 或签名私钥。迁移只向前执行；需要
+回退服务端版本时，应恢复升级前的完整数据目录备份。
 
 ## 日常发布
 
@@ -89,6 +108,7 @@ http://127.0.0.1:3100/admin
 - `server.js`：宝塔保持不变的启动入口
 - `src/`：Express 路由、控制器、中间件和业务服务
 - `lib/`：版本文件和 SQLite 持久化
+- `ACCOUNT_INTERACTION_PLAN.txt`：账号、迁移、随机互动、内容缓存和统计的实施方案
 - `public/`：管理后台页面
 
 ## 安全约束

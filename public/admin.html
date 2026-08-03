@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=content-library-2">
+  <link rel="stylesheet" href="/assets/admin.css?v=canonical-domain-1">
 </head>
 <body>
   <main class="app-root">
@@ -128,12 +128,24 @@
                 <div class="panel-heading">
                   <div>
                     <p class="eyebrow">客户端接入</p>
-                    <h2>更新清单地址</h2>
+                    <h2>域名接入地址</h2>
                   </div>
                 </div>
-                <div class="copy-row">
-                  <input id="manifestUrl" aria-label="更新清单地址" readonly>
-                  <button id="copyManifestButton" class="button button-secondary" type="button">复制地址</button>
+                <div class="address-list">
+                  <div class="address-field">
+                    <span>管理后台</span>
+                    <span class="copy-row">
+                      <input id="adminUrl" aria-label="管理后台地址" readonly>
+                      <button id="copyAdminUrlButton" class="button button-secondary" type="button">复制地址</button>
+                    </span>
+                  </div>
+                  <div class="address-field">
+                    <span>更新清单</span>
+                    <span class="copy-row">
+                      <input id="manifestUrl" aria-label="更新清单地址" readonly>
+                      <button id="copyManifestButton" class="button button-secondary" type="button">复制地址</button>
+                    </span>
+                  </div>
                 </div>
               </section>
 
@@ -665,6 +677,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=content-library-2" defer></script>
+  <script src="/assets/admin.js?v=canonical-domain-1" defer></script>
 </body>
 </html>

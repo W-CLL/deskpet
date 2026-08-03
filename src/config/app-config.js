@@ -2,17 +2,23 @@ const path = require('node:path');
 const { normalizeVersion } = require('../../lib/storage');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
+const CANONICAL_PUBLIC_URL = 'https://in.desktoppet.online';
 const MAX_JSON_BODY = 32 * 1024;
 const MAX_UPLOAD_SIZE = 300 * 1024 * 1024;
 const UPLOAD_TTL_MS = 15 * 60 * 1000;
 
 function loadConfig(overrides = {}) {
-  const publicUrl = new URL(
-    overrides.publicUrl || process.env.DESKPET_PUBLIC_URL || 'http://127.0.0.1:3100'
+  const configuredPublicUrl = new URL(
+    overrides.publicUrl || process.env.DESKPET_PUBLIC_URL || CANONICAL_PUBLIC_URL
   );
-  if (!['https:', 'http:'].includes(publicUrl.protocol)) {
+  if (!['https:', 'http:'].includes(configuredPublicUrl.protocol)) {
     throw new Error('DESKPET_PUBLIC_URL 必须使用 HTTP 或 HTTPS');
   }
+  const isLoopbackPublicUrl = ['127.0.0.1', 'localhost', '[::1]']
+    .includes(configuredPublicUrl.hostname.toLowerCase());
+  const publicUrl = isLoopbackPublicUrl
+    ? configuredPublicUrl
+    : new URL(CANONICAL_PUBLIC_URL);
 
   const dataDirectory = path.resolve(
     overrides.dataDirectory || process.env.DESKPET_DATA_DIR || path.join(PROJECT_ROOT, 'data')
@@ -56,6 +62,7 @@ function loadConfig(overrides = {}) {
 }
 
 module.exports = {
+  CANONICAL_PUBLIC_URL,
   MAX_JSON_BODY,
   MAX_UPLOAD_SIZE,
   PROJECT_ROOT,

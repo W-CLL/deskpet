@@ -108,6 +108,7 @@ class ReleaseService {
   list() {
     return {
       publicUrl: this.config.publicUrl.href.replace(/\/$/, ''),
+      adminUrl: new URL('/admin', this.config.publicUrl).href,
       manifestUrl: new URL('/api/update/latest', this.config.publicUrl).href,
       bootstrapVersions: this.config.bootstrapVersions,
       activeVersions: this.releaseStore.data.activeVersions,

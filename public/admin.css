@@ -504,8 +504,8 @@ dialog h2 {
 .manifest-panel {
   display: grid;
   min-height: 224px;
-  align-content: space-between;
-  gap: 30px;
+  grid-template-rows: auto 1fr;
+  gap: 20px;
 }
 
 .quick-section {
@@ -705,6 +705,20 @@ input[readonly] {
   min-width: 0;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
+}
+
+.address-list {
+  display: grid;
+  align-self: center;
+  gap: 14px;
+}
+
+.address-field {
+  display: grid;
+  gap: 7px;
+  color: #505954;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .release-editor-heading {

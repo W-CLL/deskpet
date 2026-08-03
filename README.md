@@ -7,7 +7,7 @@
 ## 运行要求
 
 - Node.js 24 或更高版本，激活数据库使用 Node 内置 `node:sqlite`
-- 可以直接使用 Node 的 HTTP 端口，也可以放在宝塔 Nginx 之后
+- 公网必须通过宝塔 Nginx 的域名 HTTPS 入口，Node HTTP 端口只供本机或受控内网使用
 - PM2 或宝塔 Node 项目管理器保持单实例运行
 - 不要求 MySQL、Redis、Docker、.NET SDK 或 Inno Setup
 
@@ -107,7 +107,7 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 
 | 环境变量 | 生产示例 | 说明 |
 | --- | --- | --- |
-| `DESKPET_PUBLIC_URL` | `https://in.desktoppet.online` | 对外地址，参与 Origin 和下载地址生成；本地运行时改为 `http://127.0.0.1:3100` |
+| `DESKPET_PUBLIC_URL` | `https://in.desktoppet.online` | 生产环境固定为规范域名并参与 Origin、后台及下载地址生成；仅本机回环地址可用于本地开发 |
 | `DESKPET_DATA_DIR` | `/www/deskpet-data` | 生产数据目录，必须位于网站代码目录之外 |
 | `DESKPET_HTTP_HOST` | `127.0.0.1` | Node 监听地址 |
 | `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
@@ -130,8 +130,8 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 
 ## 安全约束
 
-- 应用不强制校验 HTTPS；公网部署仍建议使用 Nginx + HTTPS，Node 端口不要直接暴露到公网。
-- 2.5.1 及之后的 Windows 客户端默认连接 `https://in.desktoppet.online/api/update/latest`；旧客户端仍需保留 IP HTTPS 入口以取得桥接更新。
+- 公网请求统一使用 `https://in.desktoppet.online`；错误 Host 和 HTTP 请求会跳转到该域名，Node 端口不要直接暴露到公网。
+- Windows 与 macOS 客户端、管理后台、更新清单和下载地址全部使用域名。写死旧地址的客户端需要手动安装域名版客户端一次，不再保留公网 IP HTTPS 兼容入口。
 - 管理密码只保存 scrypt 哈希，会话 Cookie 使用 `HttpOnly`、`SameSite=Strict` 和生产环境 `Secure`。
 - 所有管理写操作同时验证会话、同源请求和 CSRF 令牌。
 - EXE 以流方式上传并限制为 300 MB，不会整体读入内存。

@@ -51,6 +51,106 @@ test('legacy Windows release metadata migrates to the platform-aware schema', as
   assert.equal(persisted.schemaVersion, 2);
 });
 
+test('public and admin requests use the canonical HTTPS domain', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-domain-test-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const authRecord = await hashPassword('canonical domain password');
+  await fs.promises.writeFile(path.join(dataDirectory, 'auth.json'), JSON.stringify(authRecord));
+  const application = await createApplication({
+    publicUrl: 'https://legacy.invalid',
+    dataDirectory,
+    trustProxy: true,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const port = server.address().port;
+  const baseUrl = `http://127.0.0.1:${port}`;
+  assert.equal(application.config.publicUrl.href, 'https://in.desktoppet.online/');
+  assert.deepEqual(application.services.releaseService.list(), {
+    publicUrl: 'https://in.desktoppet.online',
+    adminUrl: 'https://in.desktoppet.online/admin',
+    manifestUrl: 'https://in.desktoppet.online/api/update/latest',
+    bootstrapVersions: { 'windows/x64': '2.1.0' },
+    activeVersions: {},
+    releases: []
+  });
+  const requestWithHost = (requestPath, headers, options = {}) => new Promise((resolve, reject) => {
+    const request = http.request({
+      hostname: '127.0.0.1',
+      port,
+      path: requestPath,
+      headers,
+      method: options.method || 'GET'
+    }, (response) => {
+      response.resume();
+      response.once('end', () => resolve(response));
+    });
+    request.once('error', reject);
+    request.end(options.body);
+  });
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const redirectedAdmin = await requestWithHost('/admin?from=legacy', {
+    Host: 'legacy.invalid',
+    'X-Forwarded-Proto': 'http'
+  });
+  assert.equal(redirectedAdmin.statusCode, 308);
+  assert.equal(
+    redirectedAdmin.headers.location,
+    'https://in.desktoppet.online/admin?from=legacy'
+  );
+
+  const proxiedLoopbackHost = await requestWithHost('/admin', {
+    Host: 'localhost',
+    'X-Forwarded-Proto': 'https'
+  });
+  assert.equal(proxiedLoopbackHost.statusCode, 308);
+  assert.equal(proxiedLoopbackHost.headers.location, 'https://in.desktoppet.online/admin');
+
+  const insecureDomain = await requestWithHost('/admin', {
+    Host: 'in.desktoppet.online',
+    'X-Forwarded-Proto': 'http'
+  });
+  assert.equal(insecureDomain.statusCode, 308);
+  assert.equal(insecureDomain.headers.location, 'https://in.desktoppet.online/admin');
+
+  const canonicalLogin = await requestWithHost('/api/admin/login', {
+    Host: 'in.desktoppet.online',
+    Origin: 'https://in.desktoppet.online',
+    'Content-Type': 'application/json',
+    'X-Forwarded-Proto': 'https'
+  }, {
+    method: 'POST',
+    body: JSON.stringify({ username: 'admin', password: 'canonical domain password' })
+  });
+  assert.equal(canonicalLogin.statusCode, 200);
+
+  const staleOriginLogin = await requestWithHost('/api/admin/login', {
+    Host: 'in.desktoppet.online',
+    Origin: 'https://legacy.invalid',
+    'Content-Type': 'application/json',
+    'X-Forwarded-Proto': 'https'
+  }, {
+    method: 'POST',
+    body: JSON.stringify({ username: 'admin', password: 'canonical domain password' })
+  });
+  assert.equal(staleOriginLogin.statusCode, 403);
+
+  const canonicalHealth = await requestWithHost('/healthz', {
+    Host: 'in.desktoppet.online',
+    'X-Forwarded-Proto': 'https'
+  });
+  assert.equal(canonicalHealth.statusCode, 200);
+
+  const loopbackHealth = await fetch(`${baseUrl}/healthz`);
+  assert.equal(loopbackHealth.status, 200);
+});
+
 test('admin upload, publish, manifest and download workflow', async (context) => {
   const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-update-test-'));
   const { privateKey, publicKey } = crypto.generateKeyPairSync('ed25519');

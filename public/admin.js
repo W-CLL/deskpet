@@ -15,6 +15,8 @@ const elements = {
   overviewActiveLicenses: document.querySelector('#overviewActiveLicenses'),
   overviewUnusedCodes: document.querySelector('#overviewUnusedCodes'),
   overviewPendingFeedback: document.querySelector('#overviewPendingFeedback'),
+  adminUrl: document.querySelector('#adminUrl'),
+  copyAdminUrlButton: document.querySelector('#copyAdminUrlButton'),
   manifestUrl: document.querySelector('#manifestUrl'),
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
@@ -445,6 +447,7 @@ function renderReleases(payload) {
     .filter((release) => release.publishedAt).length;
   elements.releasePageDrafts.textContent = payload.releases
     .filter((release) => !release.publishedAt).length;
+  elements.adminUrl.value = payload.adminUrl || '';
   elements.manifestUrl.value = payload.manifestUrl || '';
   listViews.releases.setItems(payload.releases);
 }
@@ -1261,6 +1264,16 @@ elements.copyGeneratedCodesButton.addEventListener('click', async () => {
   } catch {
     elements.generatedCodesText.select();
     showToast('激活码已选中');
+  }
+});
+
+elements.copyAdminUrlButton.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(elements.adminUrl.value);
+    showToast('管理后台地址已复制');
+  } catch {
+    elements.adminUrl.select();
+    showToast('已选中管理后台地址');
   }
 });
 

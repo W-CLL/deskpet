@@ -10,7 +10,7 @@ const { ContentStore } = require('../lib/content-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
-const { accessPolicy } = require('./middleware/access-policy');
+const { accessPolicy, canonicalOrigin } = require('./middleware/access-policy');
 const { errorHandler, notFound } = require('./middleware/error-handler');
 const { createAdminRouter } = require('./routes/admin-routes');
 const { createPublicRouter } = require('./routes/public-routes');
@@ -116,6 +116,7 @@ async function createApplication(options = {}) {
   app.disable('x-powered-by');
   app.set('query parser', false);
   app.use(accessPolicy());
+  app.use(canonicalOrigin(config));
   app.use(createPublicRouter(publicController));
   app.use('/api/admin', createAdminRouter({
     controller: adminController,

@@ -93,6 +93,7 @@ module.exports = {
   clientIp,
   directIp,
   isLoopbackRequest,
+  isTrustedProxy,
   parseRange,
   sessionCookie
 };

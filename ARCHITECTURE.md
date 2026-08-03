@@ -16,8 +16,8 @@
 ## 请求处理链
 
 ```text
-Nginx（可选）
-    -> Express access-policy（安全响应头和缓存策略）
+Nginx（公网必需，统一域名和 HTTPS）
+    -> Express access-policy（规范域名跳转、安全响应头和缓存策略）
     -> routes（HTTP 方法和路径）
     -> auth middleware（管理会话、CSRF）
     -> controllers（解析 HTTP 输入、设置状态码和响应头）

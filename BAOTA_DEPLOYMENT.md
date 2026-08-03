@@ -9,6 +9,7 @@
 ### 0.1 先确定对外地址
 
 `DESKPET_PUBLIC_URL` 是管理后台、更新清单内下载链接和新客户端使用的公开地址，必须写完整协议和域名，不要以 `/` 结尾。
+生产环境即使残留其他公开地址，应用也会统一归一化为 `https://in.desktoppet.online`；只有 `localhost`、`127.0.0.1` 和 `::1` 可作为本地开发地址。
 
 2.5.1 及之后的 Windows 客户端更新地址是：
 
@@ -22,7 +23,7 @@ https://in.desktoppet.online/api/update/latest
 DESKPET_PUBLIC_URL=https://in.desktoppet.online
 ```
 
-生产环境的新客户端和管理后台统一使用上面的 HTTPS 地址。2.5.0 及之前的 Windows 客户端仍会先访问写死的 IP 更新地址，`DESKPET_PUBLIC_URL` 不会改变旧程序的请求入口；迁移期间必须另外保留可用的 IP HTTPS 反向代理，由旧客户端取得指向域名安装包的桥接更新清单。
+生产环境的客户端、管理后台、更新清单和下载地址全部使用上面的 HTTPS 域名，不再配置公网 IP HTTPS 入口。写死旧地址的客户端无法使用域名证书，必须手动安装域名版客户端一次，之后才能继续在线更新。
 
 ### 0.2 准备域名和宝塔组件
 
@@ -103,7 +104,7 @@ DESKPET_BOOTSTRAP_VERSION=2.1.0
 
 ### 0.8 配置 Nginx 外网映射
 
-将域名反向代理到 `http://127.0.0.1:3100`，配置见第 7 节。上传 EXE 前必须设置 `client_max_body_size 300m`。
+将域名反向代理到 `http://127.0.0.1:3100`，配置见第 7 节。站点只绑定 `in.desktoppet.online`，不要把公网 IP 加入同一个 HTTPS 站点。上传 EXE 前必须设置 `client_max_body_size 300m`。
 
 ### 0.9 首次验收
 
@@ -127,7 +128,7 @@ curl -i https://in.desktoppet.online/healthz
            |
            | HTTPS 443
            v
-宝塔 Nginx（可选：域名、证书、上传限制）
+宝塔 Nginx（固定域名、证书、上传限制）
            |
            | HTTP 127.0.0.1:3100
            v
@@ -137,7 +138,7 @@ Express 5 + Node.js 24（单进程）
 /www/deskpet-data（SQLite、密钥、版本和 EXE）
 ```
 
-如果使用 Nginx，公网只开放 `80` 和 `443`，不要公开 `3100`。也可以直接将 Node 端口映射到内网或受控网络。
+公网只开放 Nginx 的 `80` 和 `443`，不要公开 `3100`。Node 端口仅可映射到本机、内网或其他受控网络。
 
 ## 2. 宝塔准备
 
@@ -277,19 +278,23 @@ deskpet-update http listening on 127.0.0.1:3100
 
 仓库中的 `ecosystem.config.cjs` 可用于命令行 PM2 部署。使用宝塔 Node 项目管理器时，不需要再手工运行 `pm2 start`。
 
-## 7. 配置域名和反向代理（可选）
+## 7. 配置域名和反向代理
 
-应用本身不强制 HTTPS、Host 或端口。最简单的方式是直接访问 Node 端口；使用域名时，在 Node 项目中开启“外网映射”，上游为：
+公网只允许使用 `https://in.desktoppet.online`。应用会把非回环的错误 Host 或 HTTP 请求以 `308` 跳转到该域名；Node 端口只供本机 Nginx 和健康检查使用。宝塔站点只绑定 `in.desktoppet.online`，不要把公网 IP 绑定到 HTTPS 站点。
+
+仓库提供了 [域名专用 Nginx 模板](deploy/nginx-domain-only.example.conf)。其中 80 端口默认站点会把直接地址和 HTTP 请求统一跳转到域名，443 端口只声明域名和域名证书。反向代理上游为：
 
 ```text
 http://127.0.0.1:3100
 ```
 
-反向代理只需要把 HTTPS 域名转发到 Node 的内部 HTTP 端口，至少传递这些头：
+反向代理把 HTTPS 域名转发到 Node 的内部 HTTP 端口，并固定传递规范域名与外部协议：
 
 ```nginx
-proxy_set_header Host $host;
+proxy_set_header Host in.desktoppet.online;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto https;
+proxy_set_header X-Scheme https;
 ```
 
 安装包最大允许 300 MB。在站点 Nginx 的 `server` 块中加入：
@@ -424,7 +429,7 @@ DESKPET_PUBLIC_URL=https://in.desktoppet.online
 DESKPET_TRUST_PROXY=true
 ```
 
-使用 Nginx 时，确认它传递了原始 `Host` 和 `X-Forwarded-For`。
+使用 Nginx 时，确认 `Host` 固定为 `in.desktoppet.online`，并传递 `X-Forwarded-For`、`X-Forwarded-Proto https` 和 `X-Scheme https`。
 
 ### 上传返回 413
 

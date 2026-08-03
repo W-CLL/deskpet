@@ -93,6 +93,7 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   const adminMarkup = await adminPage.text();
   assert.match(adminMarkup, /class="admin-shell"/);
   assert.match(adminMarkup, /data-page-panel="interactions"/);
+  assert.match(adminMarkup, /data-page-panel="content"/);
 
   const adminCss = await fetch(`${baseUrl}/assets/admin.css?v=sidebar-1`);
   assert.equal(adminCss.status, 200);

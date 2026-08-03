@@ -1,6 +1,6 @@
 # 桌搭子更新服务
 
-这是一个可独立部署的 Express 5 应用，为桌搭子提供管理后台、版本发布、更新下载、一次性激活码、设备授权、账号互动统计和用户反馈管理。
+这是一个可独立部署的 Express 5 应用，为桌搭子提供管理后台、版本发布、更新下载、一次性激活码、设备授权、账号互动统计、互动内容库和用户反馈管理。
 
 服务器只接收本地 Windows 电脑已经打包完成的 EXE，不负责编译 C#、运行 Inno Setup 或构建桌面应用。
 
@@ -54,6 +54,14 @@ http://127.0.0.1:3100/admin
 - 服务端按 `accountId` 隔离数据，管理后台可查看互动次数、开心次数、笑话和答题汇总。
 - 数据保存在 `DESKPET_DATA_DIR/interaction.db`；原始事件保留 90 天，去重回执和长期汇总继续保留。
 
+## 互动内容库
+
+- 管理后台可新增、编辑、启用或停用 `joke`、`math`、`trivia` 三类内容，也可一次导入最多 500 条 JSON 数据。
+- 客户端用设备授权按批获取内容。服务端会同时排除客户端指定 ID 和该账号近 30 天已展示内容，只有客户端上报 `content_shown` 后才进入近期排重。
+- 批次默认返回 15 条、最多 30 条；完整离线包支持 `ETag`，客户端下载后可长期保存并在断网时使用。
+- 每次内容变化都会递增 `catalogVersion`；响应包含停用 ID、SHA-256、Ed25519 签名和签名原文 `signedPayload`。客户端应使用更新清单同一公钥验证 Base64 解码后的原文字节，并以原文中解析出的内容为准。
+- 内容数据保存在 `DESKPET_DATA_DIR/content.db`。可导入的格式见 `examples/content-import.example.json`。
+
 `generate-signing-key` 会输出客户端公钥。正式发布前，桌面客户端必须内置与服务器私钥配对的公钥。已有生产环境必须复用原来的整个数据目录，不能重新生成密钥。
 
 ## 常用命令
@@ -76,7 +84,7 @@ http://127.0.0.1:3100/admin
 建立账号，不要求用户重新输入激活码。管理后台可以为已有账号生成 24 小时有效的
 一次性换机码，新设备绑定成功后旧设备授权自动撤销，账号数据保持不变。
 
-`activation.db`、`feedback.db` 和 `interaction.db` 使用 `schema_migrations` 记录迁移版本。
+`activation.db`、`feedback.db`、`interaction.db` 和 `content.db` 使用 `schema_migrations` 记录迁移版本。
 `npm start` 会在监听端口前自动执行迁移，也可在重启前手动执行：
 
 ```bash

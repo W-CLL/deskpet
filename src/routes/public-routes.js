@@ -30,6 +30,15 @@ function createPublicRouter(controller) {
     ...jsonBody(MAX_JSON_BODY),
     (req, res) => controller.recordInteractionEvents(req, res)
   );
+  router.post(
+    '/api/content/batch',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.contentBatch(req, res)
+  );
+  router.get(
+    '/api/content/offline-pack',
+    (req, res) => controller.contentOfflinePack(req, res)
+  );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
   router.get('/downloads/:fileName', (req, res, next) => controller.download(req, res, next));
   return router;

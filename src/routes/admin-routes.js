@@ -2,6 +2,8 @@ const express = require('express');
 const { MAX_JSON_BODY } = require('../config/app-config');
 const { jsonBody } = require('../middleware/json-body');
 
+const MAX_CONTENT_IMPORT_BODY = 2 * 1024 * 1024;
+
 function createAuthMiddleware(authService, write = false) {
   return function authenticateAdmin(req, res, next) {
     try {
@@ -77,6 +79,30 @@ function createAdminRouter({ controller, authService }) {
 
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
   router.get('/interactions', requireSession, (req, res) => controller.interactions(req, res));
+  router.get('/content', requireSession, (req, res) => controller.content(req, res));
+  router.post(
+    '/content',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createContent(req, res)
+  );
+  router.post(
+    '/content/import',
+    requireWriteSession,
+    ...jsonBody(MAX_CONTENT_IMPORT_BODY),
+    (req, res) => controller.importContent(req, res)
+  );
+  router.patch(
+    '/content/:id',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updateContent(req, res)
+  );
+  router.delete(
+    '/content/:id',
+    requireWriteSession,
+    (req, res) => controller.disableContent(req, res)
+  );
   router.patch(
     '/feedback/:id',
     requireWriteSession,

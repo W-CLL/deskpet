@@ -198,6 +198,7 @@ auth.json
 activation.db*
 feedback.db*
 interaction.db*
+content.db*
 activation-pepper.key
 activation-encryption.key
 signing-private.pem

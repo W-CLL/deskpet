@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-6">
+  <link rel="stylesheet" href="/assets/admin.css?v=content-library-1">
 </head>
 <body>
   <main class="app-root">
@@ -63,6 +63,10 @@
           <button class="nav-item" type="button" data-page="interactions">
             <span>互动统计</span>
             <small>账号行为与心情</small>
+          </button>
+          <button class="nav-item" type="button" data-page="content">
+            <span>内容库</span>
+            <small>笑话、数学与趣味题</small>
           </button>
           <button class="nav-item" type="button" data-page="feedback">
             <span>问题反馈</span>
@@ -154,6 +158,10 @@
                   <button class="quick-action" type="button" data-go-to="interactions">
                     <strong>查看互动统计</strong>
                     <span>核对心情选择、笑话和答题记录</span>
+                  </button>
+                  <button class="quick-action" type="button" data-go-to="content">
+                    <strong>维护互动内容</strong>
+                    <span>编辑笑话、数学题和趣味题</span>
                   </button>
                 </div>
               </section>
@@ -359,6 +367,130 @@
             </section>
           </section>
 
+          <section class="admin-page" data-page-panel="content" hidden>
+            <section class="content-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">在线资源库</p>
+                  <h2>互动内容</h2>
+                </div>
+                <button id="refreshContentButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="summary-strip content-summary" aria-label="内容库统计">
+                <span class="summary-item" data-tone="neutral">目录版本 <strong id="contentCatalogVersion">0</strong></span>
+                <span class="summary-item" data-tone="success">启用 <strong id="contentActive">0</strong></span>
+                <span class="summary-item" data-tone="warning">冷笑话 <strong id="contentJokes">0</strong></span>
+                <span class="summary-item" data-tone="info">数学题 <strong id="contentMath">0</strong></span>
+                <span class="summary-item" data-tone="neutral">趣味题 <strong id="contentTrivia">0</strong></span>
+                <span class="summary-item" data-tone="muted">停用 <strong id="contentDisabled">0</strong></span>
+              </div>
+
+              <div class="content-workbench">
+                <form id="contentEditorForm" class="content-editor-form">
+                  <div class="form-section-heading">
+                    <div>
+                      <p class="eyebrow">单条维护</p>
+                      <h3 id="contentEditorTitle">新增内容</h3>
+                    </div>
+                    <span id="contentEditorState" class="editor-state">新内容</span>
+                  </div>
+                  <div class="content-form-grid">
+                    <label>
+                      <span>类型</span>
+                      <select id="contentType" required>
+                        <option value="joke">冷笑话</option>
+                        <option value="math">数学题</option>
+                        <option value="trivia">趣味题</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>稳定 ID</span>
+                      <input id="contentId" maxlength="128" placeholder="可留空自动生成">
+                    </label>
+                    <label>
+                      <span>难度</span>
+                      <select id="contentDifficulty">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>语言</span>
+                      <input id="contentLocale" maxlength="40" value="zh-CN" required>
+                    </label>
+                    <label class="content-prompt-field">
+                      <span>题面</span>
+                      <textarea id="contentPrompt" rows="3" maxlength="500" required></textarea>
+                    </label>
+                    <label class="content-answer-field">
+                      <span>答案</span>
+                      <textarea id="contentAnswer" rows="3" maxlength="500" required></textarea>
+                    </label>
+                    <label class="content-explanation-field">
+                      <span>解释</span>
+                      <textarea id="contentExplanation" rows="3" maxlength="1000"></textarea>
+                    </label>
+                    <label>
+                      <span>选项（每行一项）</span>
+                      <textarea id="contentChoices" rows="3"></textarea>
+                    </label>
+                    <label>
+                      <span>标签（逗号分隔）</span>
+                      <input id="contentTags" maxlength="320">
+                    </label>
+                    <label class="toggle-field">
+                      <input id="contentActiveInput" type="checkbox" checked>
+                      <span>启用</span>
+                    </label>
+                  </div>
+                  <div class="content-form-actions">
+                    <button id="cancelContentEditButton" class="button button-secondary" type="button" hidden>取消编辑</button>
+                    <button id="saveContentButton" class="button button-primary" type="submit">新增内容</button>
+                  </div>
+                </form>
+
+                <form id="contentImportForm" class="content-import-form">
+                  <div class="form-section-heading">
+                    <div>
+                      <p class="eyebrow">批量维护</p>
+                      <h3>导入 JSON</h3>
+                    </div>
+                    <span class="editor-state">最多 500 条</span>
+                  </div>
+                  <label>
+                    <span>内容文件</span>
+                    <input id="contentImportFile" type="file" accept=".json,application/json" required>
+                  </label>
+                  <label class="toggle-field toggle-warning">
+                    <input id="contentDisableMissing" type="checkbox">
+                    <span>停用文件中未包含的现有内容</span>
+                  </label>
+                  <button id="importContentButton" class="button button-secondary" type="submit">导入内容</button>
+                </form>
+              </div>
+
+              <div class="table-wrap content-table-wrap">
+                <table class="content-table">
+                  <thead>
+                    <tr>
+                      <th>类型与状态</th>
+                      <th>题面与答案</th>
+                      <th>难度与标签</th>
+                      <th>版本与时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contentRows"></tbody>
+                </table>
+                <p id="emptyContent" class="empty-state" hidden>暂无互动内容</p>
+              </div>
+            </section>
+          </section>
+
           <section class="admin-page" data-page-panel="feedback" hidden>
             <section class="tool-panel feedback-section">
               <div class="panel-heading inline-heading">
@@ -422,6 +554,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=admin-ui-6" defer></script>
+  <script src="/assets/admin.js?v=content-library-1" defer></script>
 </body>
 </html>

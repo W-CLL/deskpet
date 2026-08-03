@@ -56,6 +56,34 @@ const elements = {
   interactionQuizzes: document.querySelector('#interactionQuizzes'),
   interactionRows: document.querySelector('#interactionRows'),
   emptyInteractions: document.querySelector('#emptyInteractions'),
+  refreshContentButton: document.querySelector('#refreshContentButton'),
+  contentCatalogVersion: document.querySelector('#contentCatalogVersion'),
+  contentActive: document.querySelector('#contentActive'),
+  contentJokes: document.querySelector('#contentJokes'),
+  contentMath: document.querySelector('#contentMath'),
+  contentTrivia: document.querySelector('#contentTrivia'),
+  contentDisabled: document.querySelector('#contentDisabled'),
+  contentEditorForm: document.querySelector('#contentEditorForm'),
+  contentEditorTitle: document.querySelector('#contentEditorTitle'),
+  contentEditorState: document.querySelector('#contentEditorState'),
+  contentType: document.querySelector('#contentType'),
+  contentId: document.querySelector('#contentId'),
+  contentDifficulty: document.querySelector('#contentDifficulty'),
+  contentLocale: document.querySelector('#contentLocale'),
+  contentPrompt: document.querySelector('#contentPrompt'),
+  contentAnswer: document.querySelector('#contentAnswer'),
+  contentExplanation: document.querySelector('#contentExplanation'),
+  contentChoices: document.querySelector('#contentChoices'),
+  contentTags: document.querySelector('#contentTags'),
+  contentActiveInput: document.querySelector('#contentActiveInput'),
+  cancelContentEditButton: document.querySelector('#cancelContentEditButton'),
+  saveContentButton: document.querySelector('#saveContentButton'),
+  contentImportForm: document.querySelector('#contentImportForm'),
+  contentImportFile: document.querySelector('#contentImportFile'),
+  contentDisableMissing: document.querySelector('#contentDisableMissing'),
+  importContentButton: document.querySelector('#importContentButton'),
+  contentRows: document.querySelector('#contentRows'),
+  emptyContent: document.querySelector('#emptyContent'),
   refreshFeedbackButton: document.querySelector('#refreshFeedbackButton'),
   feedbackTotal: document.querySelector('#feedbackTotal'),
   feedbackPending: document.querySelector('#feedbackPending'),
@@ -76,12 +104,14 @@ const elements = {
 
 let csrfToken = '';
 let toastTimer;
+let editingContentId = '';
 
 const pages = {
   overview: ['概览', '发布与授权运行状态'],
   releases: ['版本发布', '上传安装包并维护发布记录'],
   activations: ['激活授权', '管理激活码与设备授权'],
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
+  content: ['内容库', '维护客户端在线与离线互动资源'],
   feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
 
@@ -679,8 +709,177 @@ async function loadInteractions() {
   }
 }
 
+const contentTypeLabels = {
+  joke: '冷笑话',
+  math: '数学题',
+  trivia: '趣味题'
+};
+
+function resetContentEditor() {
+  editingContentId = '';
+  elements.contentEditorForm.reset();
+  elements.contentType.value = 'joke';
+  elements.contentDifficulty.value = '1';
+  elements.contentLocale.value = 'zh-CN';
+  elements.contentActiveInput.checked = true;
+  elements.contentId.readOnly = false;
+  elements.contentEditorTitle.textContent = '新增内容';
+  elements.contentEditorState.textContent = '新内容';
+  elements.cancelContentEditButton.hidden = true;
+  elements.saveContentButton.textContent = '新增内容';
+}
+
+function editContent(item) {
+  editingContentId = item.id;
+  elements.contentType.value = item.type;
+  elements.contentId.value = item.id;
+  elements.contentId.readOnly = true;
+  elements.contentDifficulty.value = String(item.difficulty);
+  elements.contentLocale.value = item.locale;
+  elements.contentPrompt.value = item.prompt;
+  elements.contentAnswer.value = item.answer;
+  elements.contentExplanation.value = item.explanation || '';
+  elements.contentChoices.value = item.choices.join('\n');
+  elements.contentTags.value = item.tags.join('，');
+  elements.contentActiveInput.checked = item.active;
+  elements.contentEditorTitle.textContent = '编辑内容';
+  elements.contentEditorState.textContent = `修订版 ${item.revision}`;
+  elements.cancelContentEditButton.hidden = false;
+  elements.saveContentButton.textContent = '保存修改';
+  elements.contentEditorForm.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  elements.contentPrompt.focus({ preventScroll: true });
+}
+
+function contentFormPayload() {
+  const choices = elements.contentChoices.value
+    .split('\n')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const tags = elements.contentTags.value
+    .split(/[,，\n]/)
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return {
+    ...(elements.contentId.value.trim() ? { id: elements.contentId.value.trim() } : {}),
+    type: elements.contentType.value,
+    prompt: elements.contentPrompt.value.trim(),
+    answer: elements.contentAnswer.value.trim(),
+    explanation: elements.contentExplanation.value.trim(),
+    choices,
+    tags,
+    difficulty: Number(elements.contentDifficulty.value),
+    locale: elements.contentLocale.value.trim(),
+    active: elements.contentActiveInput.checked
+  };
+}
+
+async function setContentActive(item, active) {
+  if (!active) {
+    const confirmed = await confirmAction({
+      title: `停用 ${item.id}`,
+      message: '停用后，新的批次和离线包将不再包含这条内容。',
+      confirmLabel: '停用内容',
+      danger: true
+    });
+    if (!confirmed) return;
+  }
+  try {
+    await api(`/api/admin/content/${encodeURIComponent(item.id)}`, active
+      ? { method: 'PATCH', body: { active: true } }
+      : { method: 'DELETE' });
+    showToast(active ? '内容已启用' : '内容已停用');
+    if (editingContentId === item.id) resetContentEditor();
+    await loadContent();
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
+function renderContent(payload) {
+  const summary = payload.summary || {};
+  elements.contentCatalogVersion.textContent = payload.catalog?.version || 0;
+  elements.contentActive.textContent = summary.active || 0;
+  elements.contentJokes.textContent = summary.jokes || 0;
+  elements.contentMath.textContent = summary.math || 0;
+  elements.contentTrivia.textContent = summary.trivia || 0;
+  elements.contentDisabled.textContent = summary.disabled || 0;
+  elements.contentRows.replaceChildren();
+  elements.emptyContent.hidden = payload.items.length > 0;
+
+  for (const item of payload.items) {
+    const row = document.createElement('tr');
+    if (!item.active) row.className = 'content-disabled-row';
+
+    const typeCell = cell('content-type-cell');
+    const type = document.createElement('strong');
+    type.textContent = contentTypeLabels[item.type] || item.type;
+    const status = document.createElement('span');
+    status.className = `status-badge ${item.active ? 'active' : 'revoked'}`;
+    status.textContent = item.active ? '启用' : '停用';
+    const id = document.createElement('code');
+    id.textContent = item.id;
+    typeCell.append(type, status, id);
+
+    const contentCell = cell('content-copy-cell');
+    const prompt = document.createElement('strong');
+    prompt.textContent = item.prompt;
+    const answer = document.createElement('span');
+    answer.textContent = `答案：${item.answer}`;
+    const explanation = document.createElement('span');
+    explanation.textContent = item.explanation || '无解释';
+    contentCell.append(prompt, answer, explanation);
+
+    const metaCell = cell('content-meta-cell');
+    const difficulty = document.createElement('strong');
+    difficulty.textContent = `难度 ${item.difficulty} · ${item.locale}`;
+    const tags = document.createElement('span');
+    tags.textContent = item.tags.length ? item.tags.join(' · ') : '无标签';
+    const choices = document.createElement('span');
+    choices.textContent = item.choices.length ? `${item.choices.length} 个选项` : '无选项';
+    metaCell.append(difficulty, tags, choices);
+
+    const revisionCell = cell('date-stack');
+    const revision = document.createElement('strong');
+    revision.textContent = `修订版 ${item.revision}`;
+    const updatedAt = document.createElement('span');
+    updatedAt.textContent = formatDate(item.updatedAt);
+    revisionCell.append(revision, updatedAt);
+
+    const actionsCell = cell();
+    const actions = document.createElement('div');
+    actions.className = 'row-actions';
+    actions.append(actionButton('编辑', 'button-secondary', () => editContent(item)));
+    actions.append(actionButton(
+      item.active ? '停用' : '启用',
+      item.active ? 'button-danger' : 'button-secondary',
+      () => setContentActive(item, !item.active)
+    ));
+    actionsCell.append(actions);
+
+    row.append(typeCell, contentCell, metaCell, revisionCell, actionsCell);
+    elements.contentRows.append(row);
+  }
+}
+
+async function loadContent() {
+  elements.refreshContentButton.disabled = true;
+  try {
+    renderContent(await api('/api/admin/content'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshContentButton.disabled = false;
+  }
+}
+
 async function loadDashboard() {
-  await Promise.all([loadReleases(), loadActivations(), loadInteractions(), loadFeedback()]);
+  await Promise.all([
+    loadReleases(),
+    loadActivations(),
+    loadInteractions(),
+    loadContent(),
+    loadFeedback()
+  ]);
 }
 
 async function loadReleases() {
@@ -794,7 +993,71 @@ elements.uploadForm.addEventListener('submit', async (event) => {
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
+elements.refreshContentButton.addEventListener('click', loadContent);
 elements.refreshFeedbackButton.addEventListener('click', loadFeedback);
+
+elements.contentEditorForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  elements.saveContentButton.disabled = true;
+  try {
+    const payload = contentFormPayload();
+    const editing = Boolean(editingContentId);
+    await api(
+      editing
+        ? `/api/admin/content/${encodeURIComponent(editingContentId)}`
+        : '/api/admin/content',
+      { method: editing ? 'PATCH' : 'POST', body: payload }
+    );
+    showToast(editing ? '内容已更新' : '内容已新增');
+    resetContentEditor();
+    await loadContent();
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.saveContentButton.disabled = false;
+  }
+});
+
+elements.cancelContentEditButton.addEventListener('click', resetContentEditor);
+
+elements.contentImportForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const file = elements.contentImportFile.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('导入文件不能超过 2 MB', 'error');
+    return;
+  }
+  if (elements.contentDisableMissing.checked) {
+    const confirmed = await confirmAction({
+      title: '导入并停用缺失内容',
+      message: '现有内容中未出现在本次文件里的条目会被停用。',
+      confirmLabel: '确认导入',
+      danger: true
+    });
+    if (!confirmed) return;
+  }
+  elements.importContentButton.disabled = true;
+  try {
+    const parsed = JSON.parse(await file.text());
+    const items = Array.isArray(parsed) ? parsed : parsed?.items;
+    const result = await api('/api/admin/content/import', {
+      method: 'POST',
+      body: {
+        items,
+        disableMissing: elements.contentDisableMissing.checked
+      }
+    });
+    showToast(`导入完成：新增 ${result.created}，更新 ${result.updated}，跳过 ${result.skipped}，停用 ${result.disabled}`);
+    elements.contentImportForm.reset();
+    resetContentEditor();
+    await loadContent();
+  } catch (error) {
+    showToast(error instanceof SyntaxError ? 'JSON 文件格式无效' : error.message, 'error');
+  } finally {
+    elements.importContentButton.disabled = false;
+  }
+});
 
 for (const item of elements.navItems) {
   item.addEventListener('click', () => navigateTo(item.dataset.page));

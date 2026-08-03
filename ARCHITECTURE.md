@@ -7,6 +7,7 @@
 - 管理员登录、版本上传和发布
 - 激活码、设备授权和撤销
 - 账号互动设置、事件去重和汇总统计
+- 在线互动内容、账号近期排重和签名离线包
 - 更新清单签名及安装包下载
 - 管理后台静态页面
 
@@ -46,6 +47,7 @@ update-server/
 │  │  ├─ activation-service.js       # 激活码、设备授权和激活限速
 │  │  ├─ feedback-service.js         # 客户端反馈与后台处理规则
 │  │  ├─ interaction-service.js      # 互动设置、事件校验和账号统计
+│  │  ├─ content-service.js          # 内容校验、账号排重、批次和签名离线包
 │  │  ├─ release-service.js          # 上传、发布、清单签名和下载规则
 │  │  └─ audit-service.js            # 审计日志写入
 │  ├─ middleware/
@@ -59,6 +61,7 @@ update-server/
 │  ├─ activation-store.js            # SQLite 激活码和设备授权
 │  ├─ feedback-store.js              # SQLite 用户反馈
 │  ├─ interaction-store.js           # SQLite 互动档案、事件和汇总
+│  ├─ content-store.js               # SQLite 内容目录、修订和启停状态
 │  ├─ sqlite-migrations.js            # 顺序、幂等、事务化数据库迁移
 │  └─ security.js                    # 密码哈希、会话、令牌和限速器
 ├─ public/                            # 无构建步骤的管理后台页面
@@ -106,6 +109,15 @@ IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后�
 5. 心情回答、笑话查看、答题计入互动总数；内容展示只用于下一阶段的近期排重。
 6. 原始事件保留 90 天后可清理，精简回执继续阻止旧批次重复计数，账号汇总长期保留。
 
+## 互动内容流程
+
+1. 管理员单条维护内容，或导入带稳定 ID 的 JSON 文件；每个条目保存独立 `revision`。
+2. 只要内容或启停状态发生变化，全局 `catalogVersion` 就递增一次；重复导入相同数据不会递增。
+3. 客户端请求批次时，服务端从授权解析 `accountId`，排除客户端已有 ID 和该账号近 30 天上报过的 `content_shown`。
+4. 服务端在请求的内容类型之间轮流取样，避免单一类型占满批次；停用内容不会进入新批次或离线包。
+5. 批次和完整离线包都包含 `disabledIds`、SHA-256 与 Ed25519 签名。`signedPayload` 是签名原文的 Base64，解码后是包含 `schemaVersion`、`kind`、`catalogVersion`、`catalogUpdatedAt`、`items`、`disabledIds` 的 UTF-8 JSON。客户端直接验证并解析这份原文，不需要用 C# 或 Swift 重新序列化 JSON。
+6. 完整离线包使用内容哈希作为 `ETag`。客户端可发 `If-None-Match`，目录没有变化时取得 `304` 并继续使用本地副本。
+
 ## 更新与下载流程
 
 - 未带授权的客户端只能获得 `DESKPET_BOOTSTRAP_VERSION` 指定的公开过渡版本。
@@ -126,6 +138,7 @@ activation.db*               激活码和授权 SQLite 数据
                               同库包含 accounts 与 schema_migrations
 feedback.db*                 问题反馈与处理状态
 interaction.db*              互动档案、事件回执和账号汇总
+content.db*                  在线内容目录、条目修订和启停状态
 activation-pepper.key        激活码 HMAC 密钥
 activation-encryption.key    激活码加密密钥
 signing-private.pem          更新清单 Ed25519 私钥
@@ -146,6 +159,8 @@ audit.jsonl                  管理操作审计日志
 | `GET/PATCH` | `/api/interactions/profile` | 设备授权 | 读取或更新账号互动设置 |
 | `POST` | `/api/interactions/events` | 设备授权 | 幂等批量上报互动事件 |
 | `GET` | `/api/interactions/stats` | 设备授权 | 查询当前账号互动汇总 |
+| `POST` | `/api/content/batch` | 设备授权 | 获取按账号排重的签名内容批次 |
+| `GET` | `/api/content/offline-pack` | 设备授权 | 获取带 ETag 的完整签名离线包 |
 | `GET/POST` | `/api/feedback` | 设备授权 | 查询或提交设备反馈 |
 | `GET` | `/api/update/latest` | 过渡版公开，正式版需授权 | 获取签名更新清单 |
 | `GET/HEAD` | `/downloads/:fileName` | 过渡版公开，正式版需授权 | 下载安装包 |
@@ -160,6 +175,9 @@ audit.jsonl                  管理操作审计日志
 | `POST` | `/api/admin/licenses/:id/revoke` | 管理会话 + CSRF | 撤销授权 |
 | `POST` | `/api/admin/accounts/:id/rebind-code` | 管理会话 + CSRF | 为已有账号生成一次性换机码 |
 | `GET` | `/api/admin/interactions` | 管理会话 | 查询全部账号互动汇总 |
+| `GET/POST` | `/api/admin/content` | 管理会话 | 查询或新增互动内容 |
+| `POST` | `/api/admin/content/import` | 管理会话 + CSRF | 批量导入最多 500 条内容 |
+| `PATCH/DELETE` | `/api/admin/content/:id` | 管理会话 + CSRF | 更新或停用互动内容 |
 | `GET` | `/api/admin/feedback` | 管理会话 | 查询用户反馈 |
 | `PATCH` | `/api/admin/feedback/:id` | 管理会话 + CSRF | 更新反馈处理状态 |
 

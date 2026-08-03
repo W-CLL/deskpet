@@ -1,0 +1,44 @@
+{
+  "items": [
+    {
+      "id": "joke:sample:polar-bear-001",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "什么动物最容易感冒？",
+      "answer": "北极熊，因为它经常着凉（极凉）。",
+      "explanation": "“极凉”和“着凉”组成谐音梗。",
+      "choices": [],
+      "tags": ["动物", "谐音"],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:sample:sequence-001",
+      "type": "math",
+      "revision": 1,
+      "prompt": "数列 2、4、8、16 的下一项是多少？",
+      "answer": "32",
+      "explanation": "后一项都是前一项的 2 倍。",
+      "choices": ["24", "30", "32", "36"],
+      "tags": ["数列", "基础"],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:sample:calendar-001",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "一年中至少有多少个月包含 28 天？",
+      "answer": "12 个",
+      "explanation": "每个月都至少包含 28 天。",
+      "choices": ["1 个", "2 个", "11 个", "12 个"],
+      "tags": ["趣味", "常识"],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

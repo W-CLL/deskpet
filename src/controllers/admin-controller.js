@@ -2,6 +2,7 @@ const { HttpError } = require('../errors/http-error');
 
 const UUID_PATTERN = /^[0-9a-f-]{36}$/i;
 const UPLOAD_ID_PATTERN = /^[A-Za-z0-9_-]{20,80}$/;
+const CONTENT_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
 function requireParam(value, pattern) {
   if (!pattern.test(String(value || ''))) {
@@ -11,12 +12,20 @@ function requireParam(value, pattern) {
 }
 
 class AdminController {
-  constructor({ authService, activationService, releaseService, feedbackService, interactionService }) {
+  constructor({
+    authService,
+    activationService,
+    releaseService,
+    feedbackService,
+    interactionService,
+    contentService
+  }) {
     this.authService = authService;
     this.activationService = activationService;
     this.releaseService = releaseService;
     this.feedbackService = feedbackService;
     this.interactionService = interactionService;
+    this.contentService = contentService;
   }
 
   async login(req, res) {
@@ -73,6 +82,28 @@ class AdminController {
 
   interactions(_req, res) {
     res.status(200).json(this.interactionService.listAll());
+  }
+
+  content(_req, res) {
+    res.status(200).json(this.contentService.listAll());
+  }
+
+  async createContent(req, res) {
+    res.status(201).json(await this.contentService.create(req, req.body));
+  }
+
+  async updateContent(req, res) {
+    const contentId = requireParam(req.params.id, CONTENT_ID_PATTERN);
+    res.status(200).json(await this.contentService.update(req, contentId, req.body));
+  }
+
+  async disableContent(req, res) {
+    const contentId = requireParam(req.params.id, CONTENT_ID_PATTERN);
+    res.status(200).json(await this.contentService.disable(req, contentId));
+  }
+
+  async importContent(req, res) {
+    res.status(200).json(await this.contentService.import(req, req.body));
   }
 
   async updateFeedback(req, res) {

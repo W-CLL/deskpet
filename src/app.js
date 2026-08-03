@@ -6,6 +6,7 @@ const { ReleaseStore } = require('../lib/storage');
 const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
+const { ContentStore } = require('../lib/content-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -18,6 +19,7 @@ const { AdminAuthService } = require('./services/admin-auth-service');
 const { AuditService } = require('./services/audit-service');
 const { FeedbackService } = require('./services/feedback-service');
 const { InteractionService } = require('./services/interaction-service');
+const { ContentService } = require('./services/content-service');
 const { ReleaseService } = require('./services/release-service');
 
 function serveFile(filePath, cacheControl) {
@@ -41,6 +43,8 @@ async function createApplication(options = {}) {
   const interactionStore = new InteractionStore(config.dataDirectory);
   await interactionStore.initialize();
   interactionStore.pruneRawEvents();
+  const contentStore = new ContentStore(config.dataDirectory);
+  await contentStore.initialize();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -82,18 +86,28 @@ async function createApplication(options = {}) {
     interactionStore,
     activationService
   });
+  const contentService = new ContentService({
+    config,
+    contentStore,
+    interactionStore,
+    activationService,
+    auditService,
+    signingPrivateKey
+  });
   const adminController = new AdminController({
     authService,
     activationService,
     releaseService,
     feedbackService,
-    interactionService
+    interactionService,
+    contentService
   });
   const publicController = new PublicController({
     authService,
     activationService,
     feedbackService,
     interactionService,
+    contentService,
     releaseService,
     releaseStore
   });
@@ -149,11 +163,13 @@ async function createApplication(options = {}) {
     activationStore,
     feedbackStore,
     interactionStore,
+    contentStore,
     services: {
       activationService,
       authService,
       feedbackService,
       interactionService,
+      contentService,
       releaseService
     },
     close() {
@@ -161,6 +177,7 @@ async function createApplication(options = {}) {
       closed = true;
       clearInterval(maintenanceTimer);
       clearInterval(interactionCleanupTimer);
+      contentStore.close();
       interactionStore.close();
       feedbackStore.close();
       activationStore.close();

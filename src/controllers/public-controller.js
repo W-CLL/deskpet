@@ -6,6 +6,7 @@ class PublicController {
     activationService,
     feedbackService,
     interactionService,
+    contentService,
     releaseService,
     releaseStore
   }) {
@@ -13,6 +14,7 @@ class PublicController {
     this.activationService = activationService;
     this.feedbackService = feedbackService;
     this.interactionService = interactionService;
+    this.contentService = contentService;
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
     this.startedAt = new Date().toISOString();
@@ -56,6 +58,22 @@ class PublicController {
 
   recordInteractionEvents(req, res) {
     res.status(200).json(this.interactionService.recordEvents(req, req.body));
+  }
+
+  contentBatch(req, res) {
+    res.status(200).json(this.contentService.batch(req, req.body));
+  }
+
+  contentOfflinePack(req, res) {
+    const payload = this.contentService.offlinePack(req);
+    const etag = `"${payload.sha256}"`;
+    res.setHeader('Cache-Control', 'private, max-age=300');
+    res.setHeader('ETag', etag);
+    if (req.headers['if-none-match'] === etag) {
+      res.status(304).end();
+      return;
+    }
+    res.status(200).json(payload);
   }
 
   latest(req, res) {

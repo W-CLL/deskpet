@@ -6,6 +6,7 @@
 
 - 管理员登录、版本上传和发布
 - 激活码、设备授权和撤销
+- 账号互动设置、事件去重和汇总统计
 - 更新清单签名及安装包下载
 - 管理后台静态页面
 
@@ -43,6 +44,8 @@ update-server/
 │  ├─ services/
 │  │  ├─ admin-auth-service.js       # 登录、会话、CSRF 和登录限速
 │  │  ├─ activation-service.js       # 激活码、设备授权和激活限速
+│  │  ├─ feedback-service.js         # 客户端反馈与后台处理规则
+│  │  ├─ interaction-service.js      # 互动设置、事件校验和账号统计
 │  │  ├─ release-service.js          # 上传、发布、清单签名和下载规则
 │  │  └─ audit-service.js            # 审计日志写入
 │  ├─ middleware/
@@ -54,6 +57,9 @@ update-server/
 ├─ lib/
 │  ├─ storage.js                     # 版本元数据、安装包和审计文件
 │  ├─ activation-store.js            # SQLite 激活码和设备授权
+│  ├─ feedback-store.js              # SQLite 用户反馈
+│  ├─ interaction-store.js           # SQLite 互动档案、事件和汇总
+│  ├─ sqlite-migrations.js            # 顺序、幂等、事务化数据库迁移
 │  └─ security.js                    # 密码哈希、会话、令牌和限速器
 ├─ public/                            # 无构建步骤的管理后台页面
 ├─ scripts/                           # 密码、签名密钥和版本导入工具
@@ -91,6 +97,15 @@ SQLite 迁移由每个 Store 启动时自动执行，并记录在 `schema_migrat
 
 IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后清空。
 
+## 账号互动流程
+
+1. 客户端用现有设备 Bearer 凭据读取互动档案，服务端从授权解析 `accountId`。
+2. 安静、标准、热闹模式和总开关存入账号档案，换机后仍沿用同一账号设置。
+3. 客户端为每条互动生成 UUID，并以最多 50 条一批上报；服务端先写去重回执。
+4. 新事件和账号汇总在同一 SQLite 事务中提交，重试同一 `eventId` 不会重复计数。
+5. 心情回答、笑话查看、答题计入互动总数；内容展示只用于下一阶段的近期排重。
+6. 原始事件保留 90 天后可清理，精简回执继续阻止旧批次重复计数，账号汇总长期保留。
+
 ## 更新与下载流程
 
 - 未带授权的客户端只能获得 `DESKPET_BOOTSTRAP_VERSION` 指定的公开过渡版本。
@@ -109,6 +124,8 @@ IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后�
 auth.json                    管理员密码哈希
 activation.db*               激活码和授权 SQLite 数据
                               同库包含 accounts 与 schema_migrations
+feedback.db*                 问题反馈与处理状态
+interaction.db*              互动档案、事件回执和账号汇总
 activation-pepper.key        激活码 HMAC 密钥
 activation-encryption.key    激活码加密密钥
 signing-private.pem          更新清单 Ed25519 私钥
@@ -126,6 +143,10 @@ audit.jsonl                  管理操作审计日志
 | --- | --- | --- | --- |
 | `GET` | `/healthz` | 公开 | 进程和配置状态 |
 | `POST` | `/api/activate` | 公开、限速 | 激活设备 |
+| `GET/PATCH` | `/api/interactions/profile` | 设备授权 | 读取或更新账号互动设置 |
+| `POST` | `/api/interactions/events` | 设备授权 | 幂等批量上报互动事件 |
+| `GET` | `/api/interactions/stats` | 设备授权 | 查询当前账号互动汇总 |
+| `GET/POST` | `/api/feedback` | 设备授权 | 查询或提交设备反馈 |
 | `GET` | `/api/update/latest` | 过渡版公开，正式版需授权 | 获取签名更新清单 |
 | `GET/HEAD` | `/downloads/:fileName` | 过渡版公开，正式版需授权 | 下载安装包 |
 | `POST` | `/api/admin/login` | 公开、限速 | 管理员登录 |
@@ -138,6 +159,9 @@ audit.jsonl                  管理操作审计日志
 | `POST` | `/api/admin/activation-codes/:id/reveal` | 管理会话 + CSRF | 查看完整激活码 |
 | `POST` | `/api/admin/licenses/:id/revoke` | 管理会话 + CSRF | 撤销授权 |
 | `POST` | `/api/admin/accounts/:id/rebind-code` | 管理会话 + CSRF | 为已有账号生成一次性换机码 |
+| `GET` | `/api/admin/interactions` | 管理会话 | 查询全部账号互动汇总 |
+| `GET` | `/api/admin/feedback` | 管理会话 | 查询用户反馈 |
+| `PATCH` | `/api/admin/feedback/:id` | 管理会话 + CSRF | 更新反馈处理状态 |
 
 API 错误统一返回：
 

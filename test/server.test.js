@@ -90,7 +90,9 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(adminPage.status, 200);
   assert.equal(adminPage.headers.get('x-frame-options'), 'DENY');
   assert.match(adminPage.headers.get('content-security-policy'), /frame-ancestors 'none'/);
-  assert.match(await adminPage.text(), /class="admin-shell"/);
+  const adminMarkup = await adminPage.text();
+  assert.match(adminMarkup, /class="admin-shell"/);
+  assert.match(adminMarkup, /data-page-panel="interactions"/);
 
   const adminCss = await fetch(`${baseUrl}/assets/admin.css?v=sidebar-1`);
   assert.equal(adminCss.status, 200);

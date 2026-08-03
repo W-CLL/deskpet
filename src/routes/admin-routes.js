@@ -76,6 +76,7 @@ function createAdminRouter({ controller, authService }) {
   );
 
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
+  router.get('/interactions', requireSession, (req, res) => controller.interactions(req, res));
   router.patch(
     '/feedback/:id',
     requireWriteSession,

@@ -939,6 +939,7 @@ progress {
 
 .releases-section,
 .activation-section,
+.interaction-section,
 .feedback-section {
   display: grid;
   min-width: 0;
@@ -958,6 +959,10 @@ progress {
 
 .feedback-summary {
   grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.interaction-summary {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .summary-item {
@@ -1054,6 +1059,40 @@ table {
 .feedback-table {
   min-width: 900px;
   table-layout: fixed;
+}
+
+.interaction-table {
+  min-width: 980px;
+}
+
+.interaction-table th:last-child,
+.interaction-table td:last-child {
+  position: static;
+  box-shadow: none;
+}
+
+.interaction-account strong,
+.interaction-settings strong,
+.interaction-detail strong {
+  display: block;
+  color: var(--ink-strong);
+}
+
+.interaction-account span,
+.interaction-settings span,
+.interaction-detail span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.interaction-number {
+  color: var(--ink-strong);
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .feedback-table th:nth-child(2) {
@@ -1353,6 +1392,10 @@ dialog p {
   }
 
   .quick-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .interaction-summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 

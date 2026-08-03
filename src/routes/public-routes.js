@@ -12,6 +12,24 @@ function createPublicRouter(controller) {
     ...jsonBody(MAX_JSON_BODY),
     (req, res) => controller.submitFeedback(req, res)
   );
+  router.get(
+    '/api/interactions/profile',
+    (req, res) => controller.interactionProfile(req, res)
+  );
+  router.patch(
+    '/api/interactions/profile',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updateInteractionProfile(req, res)
+  );
+  router.get(
+    '/api/interactions/stats',
+    (req, res) => controller.interactionStats(req, res)
+  );
+  router.post(
+    '/api/interactions/events',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.recordInteractionEvents(req, res)
+  );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
   router.get('/downloads/:fileName', (req, res, next) => controller.download(req, res, next));
   return router;

@@ -1,10 +1,18 @@
 const fs = require('node:fs');
 
 class PublicController {
-  constructor({ authService, activationService, feedbackService, releaseService, releaseStore }) {
+  constructor({
+    authService,
+    activationService,
+    feedbackService,
+    interactionService,
+    releaseService,
+    releaseStore
+  }) {
     this.authService = authService;
     this.activationService = activationService;
     this.feedbackService = feedbackService;
+    this.interactionService = interactionService;
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
     this.startedAt = new Date().toISOString();
@@ -32,6 +40,22 @@ class PublicController {
 
   async submitFeedback(req, res) {
     res.status(201).json(await this.feedbackService.submit(req, req.body));
+  }
+
+  interactionProfile(req, res) {
+    res.status(200).json(this.interactionService.profile(req));
+  }
+
+  updateInteractionProfile(req, res) {
+    res.status(200).json(this.interactionService.updateProfile(req, req.body));
+  }
+
+  interactionStats(req, res) {
+    res.status(200).json(this.interactionService.stats(req));
+  }
+
+  recordInteractionEvents(req, res) {
+    res.status(200).json(this.interactionService.recordEvents(req, req.body));
   }
 
   latest(req, res) {

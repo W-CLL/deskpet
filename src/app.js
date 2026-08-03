@@ -5,6 +5,7 @@ const express = require('express');
 const { ReleaseStore } = require('../lib/storage');
 const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
+const { InteractionStore } = require('../lib/interaction-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -16,6 +17,7 @@ const { ActivationService } = require('./services/activation-service');
 const { AdminAuthService } = require('./services/admin-auth-service');
 const { AuditService } = require('./services/audit-service');
 const { FeedbackService } = require('./services/feedback-service');
+const { InteractionService } = require('./services/interaction-service');
 const { ReleaseService } = require('./services/release-service');
 
 function serveFile(filePath, cacheControl) {
@@ -36,6 +38,9 @@ async function createApplication(options = {}) {
   await activationStore.initialize();
   const feedbackStore = new FeedbackStore(config.dataDirectory);
   await feedbackStore.initialize();
+  const interactionStore = new InteractionStore(config.dataDirectory);
+  await interactionStore.initialize();
+  interactionStore.pruneRawEvents();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -73,16 +78,22 @@ async function createApplication(options = {}) {
     activationService,
     auditService
   });
+  const interactionService = new InteractionService({
+    interactionStore,
+    activationService
+  });
   const adminController = new AdminController({
     authService,
     activationService,
     releaseService,
-    feedbackService
+    feedbackService,
+    interactionService
   });
   const publicController = new PublicController({
     authService,
     activationService,
     feedbackService,
+    interactionService,
     releaseService,
     releaseStore
   });
@@ -124,6 +135,10 @@ async function createApplication(options = {}) {
     releaseService.cleanup();
   }, 60_000);
   maintenanceTimer.unref();
+  const interactionCleanupTimer = setInterval(() => {
+    interactionService.cleanup();
+  }, 6 * 60 * 60 * 1000);
+  interactionCleanupTimer.unref();
 
   let closed = false;
   return {
@@ -133,16 +148,20 @@ async function createApplication(options = {}) {
     store: releaseStore,
     activationStore,
     feedbackStore,
+    interactionStore,
     services: {
       activationService,
       authService,
       feedbackService,
+      interactionService,
       releaseService
     },
     close() {
       if (closed) return;
       closed = true;
       clearInterval(maintenanceTimer);
+      clearInterval(interactionCleanupTimer);
+      interactionStore.close();
       feedbackStore.close();
       activationStore.close();
     }

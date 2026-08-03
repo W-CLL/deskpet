@@ -196,6 +196,8 @@ chmod 700 /www/deskpet-data
 ```text
 auth.json
 activation.db*
+feedback.db*
+interaction.db*
 activation-pepper.key
 activation-encryption.key
 signing-private.pem

@@ -11,11 +11,12 @@ function requireParam(value, pattern) {
 }
 
 class AdminController {
-  constructor({ authService, activationService, releaseService, feedbackService }) {
+  constructor({ authService, activationService, releaseService, feedbackService, interactionService }) {
     this.authService = authService;
     this.activationService = activationService;
     this.releaseService = releaseService;
     this.feedbackService = feedbackService;
+    this.interactionService = interactionService;
   }
 
   async login(req, res) {
@@ -68,6 +69,10 @@ class AdminController {
 
   feedback(_req, res) {
     res.status(200).json(this.feedbackService.listAll());
+  }
+
+  interactions(_req, res) {
+    res.status(200).json(this.interactionService.listAll());
   }
 
   async updateFeedback(req, res) {

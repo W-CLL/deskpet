@@ -1,0 +1,2105 @@
+{
+  "items": [
+    {
+      "id": "trivia:zhcn2026:001",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "太阳系中体积最大的行星是哪一颗？",
+      "answer": "木星",
+      "explanation": "木星是太阳系中体积和质量最大的行星。",
+      "choices": [
+        "木星",
+        "不能",
+        "亚洲",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:002",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "离地球最近的恒星是哪一颗？",
+      "answer": "太阳",
+      "explanation": "太阳是地球所在行星系统的中心恒星。",
+      "choices": [
+        "银河系",
+        "南极洲",
+        "光传播得更快",
+        "太阳"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:003",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "哪颗行星常被称为“红色星球”？",
+      "answer": "火星",
+      "explanation": "火星表面的氧化铁使它呈现红色。",
+      "choices": [
+        "马里亚纳海沟",
+        "铜",
+        "火星",
+        "约六分之一"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:004",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "月相变化主要由什么造成？",
+      "answer": "日地月相对位置变化",
+      "explanation": "月球被太阳照亮的部分始终约占一半，我们看到的角度随位置变化。",
+      "choices": [
+        "光的色散",
+        "日地月相对位置变化",
+        "太平洋",
+        "南极沙漠"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:005",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "地球自转一周大约需要多久？",
+      "answer": "24 小时",
+      "explanation": "一个平均太阳日约为 24 小时。",
+      "choices": [
+        "24 小时",
+        "珠穆朗玛峰",
+        "长江",
+        "相互排斥"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:006",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "太阳光到达地球大约需要多久？",
+      "answer": "8 分 20 秒",
+      "explanation": "日地平均距离约一亿五千万千米，光约需 8 分 20 秒。",
+      "choices": [
+        "赤道",
+        "地理北方附近",
+        "牛顿",
+        "8 分 20 秒"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:007",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "土星环主要由什么组成？",
+      "answer": "冰块和岩石碎片",
+      "explanation": "土星环由大量大小不同的冰质与岩石颗粒构成。",
+      "choices": [
+        "100 摄氏度",
+        "瓦特",
+        "冰块和岩石碎片",
+        "0 度"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:008",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "声音能在完全真空中传播吗？",
+      "answer": "不能",
+      "explanation": "声音是机械波，需要介质传播。",
+      "choices": [
+        "提高了水的沸点",
+        "不能",
+        "亚洲",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:009",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "太阳系位于哪个星系？",
+      "answer": "银河系",
+      "explanation": "太阳系位于银河系的猎户臂附近。",
+      "choices": [
+        "银河系",
+        "南极洲",
+        "光传播得更快",
+        "凸透镜"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:010",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "月球表面重力大约是地球的多少？",
+      "answer": "约六分之一",
+      "explanation": "月球表面重力约为地球表面的六分之一。",
+      "choices": [
+        "马里亚纳海沟",
+        "铜",
+        "细胞",
+        "约六分之一"
+      ],
+      "tags": [
+        "天文",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:011",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "地球上面积最大的海洋是哪一个？",
+      "answer": "太平洋",
+      "explanation": "太平洋是地球上面积最大的海洋。",
+      "choices": [
+        "光的色散",
+        "储存遗传信息",
+        "太平洋",
+        "南极沙漠"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:012",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "海拔最高的山峰是哪一座？",
+      "answer": "珠穆朗玛峰",
+      "explanation": "珠穆朗玛峰是海拔最高的山峰。",
+      "choices": [
+        "二氧化碳",
+        "珠穆朗玛峰",
+        "长江",
+        "相互排斥"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:013",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "地球上最长的纬线是什么？",
+      "answer": "赤道",
+      "explanation": "赤道是纬度为零度的最大纬圈。",
+      "choices": [
+        "赤道",
+        "地理北方附近",
+        "牛顿",
+        "叶绿素"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:014",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "本初子午线的经度是多少？",
+      "answer": "0 度",
+      "explanation": "经过格林尼治附近的本初子午线定义为零度经线。",
+      "choices": [
+        "100 摄氏度",
+        "瓦特",
+        "空气",
+        "0 度"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:015",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "面积最大的洲是哪一个？",
+      "answer": "亚洲",
+      "explanation": "亚洲是面积最大、人口最多的洲。",
+      "choices": [
+        "提高了水的沸点",
+        "真菌",
+        "亚洲",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:016",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "地球上平均最寒冷的大陆是哪一个？",
+      "answer": "南极洲",
+      "explanation": "南极洲海拔高且大部分被冰盖覆盖。",
+      "choices": [
+        "是",
+        "南极洲",
+        "光传播得更快",
+        "凸透镜"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:017",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "已知最深的海沟是哪一个？",
+      "answer": "马里亚纳海沟",
+      "explanation": "马里亚纳海沟包含目前已知海洋最深处。",
+      "choices": [
+        "马里亚纳海沟",
+        "铜",
+        "细胞",
+        "传粉"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:018",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "按气候学定义，面积最大的沙漠是什么？",
+      "answer": "南极沙漠",
+      "explanation": "沙漠按降水稀少定义，南极洲是最大的沙漠。",
+      "choices": [
+        "光的色散",
+        "储存遗传信息",
+        "水和无机盐",
+        "南极沙漠"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:019",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "中国长度最长的河流是哪一条？",
+      "answer": "长江",
+      "explanation": "长江是中国长度最长的河流。",
+      "choices": [
+        "二氧化碳",
+        "气体交换和蒸腾",
+        "长江",
+        "相互排斥"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:020",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "指南针标记为北的一端通常指向哪里？",
+      "answer": "地理北方附近",
+      "explanation": "指南针沿地磁场定向，指北端通常指向地理北方附近。",
+      "choices": [
+        "3 颗",
+        "地理北方附近",
+        "牛顿",
+        "叶绿素"
+      ],
+      "tags": [
+        "地理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:021",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "标准大气压下水的沸点约是多少？",
+      "answer": "100 摄氏度",
+      "explanation": "在标准大气压下，纯水约在 100 摄氏度沸腾。",
+      "choices": [
+        "100 摄氏度",
+        "瓦特",
+        "空气",
+        "蝙蝠"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:022",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "标准大气压下水的冰点是多少？",
+      "answer": "0 摄氏度",
+      "explanation": "纯水在标准大气压下约在 0 摄氏度结冰。",
+      "choices": [
+        "提高了水的沸点",
+        "真菌",
+        "蓝鲸",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:023",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "闪电和雷声同时产生时，为什么先看到闪电？",
+      "answer": "光传播得更快",
+      "explanation": "光速远高于声音在空气中的传播速度。",
+      "choices": [
+        "是",
+        "用肺呼吸",
+        "光传播得更快",
+        "凸透镜"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:024",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "铜和木头相比，哪一种通常导热更快？",
+      "answer": "铜",
+      "explanation": "金属中的自由电子使铜具有较好的导热性。",
+      "choices": [
+        "8 条",
+        "铜",
+        "细胞",
+        "传粉"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:025",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "彩虹的颜色分开主要与什么现象有关？",
+      "answer": "光的色散",
+      "explanation": "不同颜色的光在水滴中折射程度不同，形成色散。",
+      "choices": [
+        "光的色散",
+        "储存遗传信息",
+        "水和无机盐",
+        "6 条"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:026",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "磁铁的同名磁极靠近时会怎样？",
+      "answer": "相互排斥",
+      "explanation": "同名磁极相斥，异名磁极相吸。",
+      "choices": [
+        "二氧化碳",
+        "气体交换和蒸腾",
+        "摇摆舞",
+        "相互排斥"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:027",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "力的国际单位是什么？",
+      "answer": "牛顿",
+      "explanation": "国际单位制中力的单位是牛顿，符号 N。",
+      "choices": [
+        "3 颗",
+        "南半球",
+        "牛顿",
+        "叶绿素"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:028",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "功率的国际单位是什么？",
+      "answer": "瓦特",
+      "explanation": "国际单位制中功率的单位是瓦特，符号 W。",
+      "choices": [
+        "不是",
+        "瓦特",
+        "空气",
+        "蝙蝠"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:029",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "压力锅为什么能让食物更快熟？",
+      "answer": "提高了水的沸点",
+      "explanation": "锅内气压升高后水的沸点提高，烹饪温度也随之提高。",
+      "choices": [
+        "提高了水的沸点",
+        "真菌",
+        "蓝鲸",
+        "感知周围空间"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:030",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "放大镜通常使用哪种透镜？",
+      "answer": "凸透镜",
+      "explanation": "物体位于凸透镜焦距以内时可形成放大的虚像。",
+      "choices": [
+        "是",
+        "用肺呼吸",
+        "草本植物",
+        "凸透镜"
+      ],
+      "tags": [
+        "物理",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:031",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "生物体结构和功能的基本单位是什么？",
+      "answer": "细胞",
+      "explanation": "细胞是绝大多数生物体结构和功能的基本单位。",
+      "choices": [
+        "8 条",
+        "果实",
+        "细胞",
+        "传粉"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:032",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "DNA 的主要作用是什么？",
+      "answer": "储存遗传信息",
+      "explanation": "DNA 携带生物的遗传信息。",
+      "choices": [
+        "不是",
+        "储存遗传信息",
+        "水和无机盐",
+        "6 条"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:033",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "绿色植物光合作用主要吸收哪种气体？",
+      "answer": "二氧化碳",
+      "explanation": "植物利用二氧化碳和水制造有机物并释放氧气。",
+      "choices": [
+        "二氧化碳",
+        "气体交换和蒸腾",
+        "摇摆舞",
+        "叶"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:034",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "叶片呈绿色主要因为含有什么？",
+      "answer": "叶绿素",
+      "explanation": "叶绿素对绿光吸收较少，因此叶片常呈绿色。",
+      "choices": [
+        "3 颗",
+        "南半球",
+        "生长年份和环境变化",
+        "叶绿素"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:035",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "种子萌发通常需要水、适宜温度和什么？",
+      "answer": "空气",
+      "explanation": "多数种子萌发还需要氧气进行呼吸作用。",
+      "choices": [
+        "不是",
+        "阴湿环境",
+        "空气",
+        "蝙蝠"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:036",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "蘑菇在生物分类上属于什么？",
+      "answer": "真菌",
+      "explanation": "蘑菇属于真菌，不属于植物。",
+      "choices": [
+        "不能",
+        "真菌",
+        "蓝鲸",
+        "感知周围空间"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:037",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "细菌通常是单细胞生物吗？",
+      "answer": "是",
+      "explanation": "绝大多数细菌由一个细胞构成。",
+      "choices": [
+        "是",
+        "用肺呼吸",
+        "草本植物",
+        "风"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:038",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "花粉从花药到柱头的过程叫什么？",
+      "answer": "传粉",
+      "explanation": "传粉可以由风、昆虫或其他媒介完成。",
+      "choices": [
+        "8 条",
+        "果实",
+        "地下茎",
+        "传粉"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:039",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "植物根的主要吸收对象是什么？",
+      "answer": "水和无机盐",
+      "explanation": "根毛区域是植物吸收水和无机盐的重要部位。",
+      "choices": [
+        "不是",
+        "地下",
+        "水和无机盐",
+        "6 条"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:040",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "叶片上的气孔主要参与什么过程？",
+      "answer": "气体交换和蒸腾",
+      "explanation": "气孔调节二氧化碳、氧气和水蒸气的交换。",
+      "choices": [
+        "皮肤",
+        "气体交换和蒸腾",
+        "摇摆舞",
+        "叶"
+      ],
+      "tags": [
+        "生物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:041",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "章鱼通常有几颗心脏？",
+      "answer": "3 颗",
+      "explanation": "两颗负责鳃循环，一颗负责全身循环。",
+      "choices": [
+        "3 颗",
+        "南半球",
+        "生长年份和环境变化",
+        "4 个"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:042",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "唯一能够持续主动飞行的哺乳动物是什么？",
+      "answer": "蝙蝠",
+      "explanation": "蝙蝠的前肢演化成翼，可进行持续动力飞行。",
+      "choices": [
+        "不是",
+        "阴湿环境",
+        "206 块",
+        "蝙蝠"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:043",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "现存体型最大的动物是什么？",
+      "answer": "蓝鲸",
+      "explanation": "蓝鲸是目前已知体型最大的动物。",
+      "choices": [
+        "不能",
+        "血红蛋白",
+        "蓝鲸",
+        "感知周围空间"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:044",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "海豚用肺呼吸还是用鳃呼吸？",
+      "answer": "用肺呼吸",
+      "explanation": "海豚是哺乳动物，需要到水面换气。",
+      "choices": [
+        "进行气体交换",
+        "用肺呼吸",
+        "草本植物",
+        "风"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:045",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "蜘蛛通常有几条腿？",
+      "answer": "8 条",
+      "explanation": "蜘蛛属于蛛形纲，通常有四对足。",
+      "choices": [
+        "8 条",
+        "果实",
+        "地下茎",
+        "虹膜"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:046",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "昆虫成虫通常有几条腿？",
+      "answer": "6 条",
+      "explanation": "昆虫胸部通常有三对足。",
+      "choices": [
+        "不是",
+        "地下",
+        "小肠",
+        "6 条"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:047",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "蜜蜂用什么动作传递蜜源方向？",
+      "answer": "摇摆舞",
+      "explanation": "工蜂通过摇摆舞的方向和持续时间传递蜜源信息。",
+      "choices": [
+        "皮肤",
+        "不属于",
+        "摇摆舞",
+        "叶"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:048",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "野生企鹅自然分布主要在哪个半球？",
+      "answer": "南半球",
+      "explanation": "野生企鹅的自然分布都位于南半球。",
+      "choices": [
+        "约 37 摄氏度",
+        "南半球",
+        "生长年份和环境变化",
+        "4 个"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:049",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "变色龙改变体色只为了伪装吗？",
+      "answer": "不是",
+      "explanation": "交流、体温调节和情绪状态也会影响体色。",
+      "choices": [
+        "不是",
+        "阴湿环境",
+        "206 块",
+        "湿润并保护眼球表面"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:050",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "猫的胡须主要有什么作用？",
+      "answer": "感知周围空间",
+      "explanation": "胡须是敏感的触觉毛，可帮助感知环境和狭窄空间。",
+      "choices": [
+        "不能",
+        "血红蛋白",
+        "0 和 1",
+        "感知周围空间"
+      ],
+      "tags": [
+        "动物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:051",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "从植物学分类看，竹子属于什么？",
+      "answer": "草本植物",
+      "explanation": "竹子属于禾本科，仍是草本植物。",
+      "choices": [
+        "进行气体交换",
+        "中央处理器",
+        "草本植物",
+        "风"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:052",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "从植物学角度看，番茄是什么？",
+      "answer": "果实",
+      "explanation": "番茄由花的子房发育而来并含有种子。",
+      "choices": [
+        "丢失",
+        "果实",
+        "地下茎",
+        "虹膜"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:053",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "向日葵的花盘是一朵花吗？",
+      "answer": "不是",
+      "explanation": "向日葵花盘由许多小花组成，是头状花序。",
+      "choices": [
+        "不是",
+        "地下",
+        "小肠",
+        "定位互联网资源"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:054",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "仙人掌的刺主要由什么结构演化而来？",
+      "answer": "叶",
+      "explanation": "叶退化成刺有助于减少水分散失。",
+      "choices": [
+        "皮肤",
+        "不属于",
+        "加密和身份验证",
+        "叶"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:055",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "年轮通常记录树木的什么信息？",
+      "answer": "生长年份和环境变化",
+      "explanation": "树木每年的生长层可反映年龄及部分环境条件。",
+      "choices": [
+        "约 37 摄氏度",
+        "Quick",
+        "生长年份和环境变化",
+        "4 个"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:056",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "苔藓通常喜欢怎样的环境？",
+      "answer": "阴湿环境",
+      "explanation": "苔藓缺少发达的输导组织，常见于阴湿处。",
+      "choices": [
+        "导航卫星信号",
+        "阴湿环境",
+        "206 块",
+        "湿润并保护眼球表面"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:057",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "食虫植物能完全不进行光合作用吗？",
+      "answer": "不能",
+      "explanation": "食虫植物仍通过光合作用获取能量，捕虫主要补充矿质营养。",
+      "choices": [
+        "不能",
+        "血红蛋白",
+        "0 和 1",
+        "无线电波"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:058",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "蒲公英主要借助什么传播种子？",
+      "answer": "风",
+      "explanation": "蒲公英果实带有冠毛，便于随风传播。",
+      "choices": [
+        "进行气体交换",
+        "中央处理器",
+        "远程服务器和服务",
+        "风"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:059",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "土豆食用的主要部分是什么？",
+      "answer": "地下茎",
+      "explanation": "土豆块茎是膨大的地下茎。",
+      "choices": [
+        "丢失",
+        "保留三份数据",
+        "地下茎",
+        "虹膜"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:060",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "花生的果实通常在哪里成熟？",
+      "answer": "地下",
+      "explanation": "花生完成受精后，果针伸入土中，果实在地下发育。",
+      "choices": [
+        "是",
+        "地下",
+        "小肠",
+        "定位互联网资源"
+      ],
+      "tags": [
+        "植物",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:061",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "人体面积最大的器官是什么？",
+      "answer": "皮肤",
+      "explanation": "皮肤覆盖全身，是人体面积最大的器官。",
+      "choices": [
+        "皮肤",
+        "不属于",
+        "加密和身份验证",
+        "12 个月"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:062",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "人的心脏通常有几个腔室？",
+      "answer": "4 个",
+      "explanation": "心脏有左右心房和左右心室。",
+      "choices": [
+        "约 37 摄氏度",
+        "Quick",
+        "24 小时",
+        "4 个"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:063",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "成年人的骨骼通常约有多少块骨头？",
+      "answer": "206 块",
+      "explanation": "典型成年人的骨骼通常由约 206 块骨组成。",
+      "choices": [
+        "导航卫星信号",
+        "100 年",
+        "206 块",
+        "湿润并保护眼球表面"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:064",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "血液呈红色主要与什么有关？",
+      "answer": "血红蛋白",
+      "explanation": "红细胞中的血红蛋白使血液呈红色。",
+      "choices": [
+        "12 个",
+        "血红蛋白",
+        "0 和 1",
+        "无线电波"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:065",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "肺的主要功能是什么？",
+      "answer": "进行气体交换",
+      "explanation": "肺把氧气送入血液，并排出二氧化碳。",
+      "choices": [
+        "进行气体交换",
+        "中央处理器",
+        "远程服务器和服务",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:066",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "眼睛颜色主要由哪个结构决定？",
+      "answer": "虹膜",
+      "explanation": "虹膜中的色素数量和分布影响眼睛颜色。",
+      "choices": [
+        "丢失",
+        "保留三份数据",
+        "膨胀",
+        "虹膜"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:067",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "人体吸收大部分营养物质的部位是哪里？",
+      "answer": "小肠",
+      "explanation": "小肠内表面积大，是营养吸收的主要场所。",
+      "choices": [
+        "是",
+        "密度比水小且不易相溶",
+        "小肠",
+        "定位互联网资源"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:068",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "牙齿属于骨头吗？",
+      "answer": "不属于",
+      "explanation": "牙齿和骨骼的组织结构与更新方式不同。",
+      "choices": [
+        "降低水的冰点",
+        "不属于",
+        "加密和身份验证",
+        "12 个月"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:069",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "正常成年人安静时体温通常约是多少？",
+      "answer": "约 37 摄氏度",
+      "explanation": "体温会随测量部位、时间和个体而有正常波动。",
+      "choices": [
+        "约 37 摄氏度",
+        "Quick",
+        "24 小时",
+        "水蒸气凝结"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:070",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "人眨眼的主要作用是什么？",
+      "answer": "湿润并保护眼球表面",
+      "explanation": "眨眼会把泪液铺开并帮助清除微小异物。",
+      "choices": [
+        "导航卫星信号",
+        "100 年",
+        "更多",
+        "湿润并保护眼球表面"
+      ],
+      "tags": [
+        "人体",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:071",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "计算机二进制主要使用哪两个数字？",
+      "answer": "0 和 1",
+      "explanation": "二进制的基本数字只有 0 和 1。",
+      "choices": [
+        "12 个",
+        "热传导",
+        "0 和 1",
+        "无线电波"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:072",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "CPU 的中文常用名称是什么？",
+      "answer": "中央处理器",
+      "explanation": "CPU 负责执行指令并协调计算机主要运算。",
+      "choices": [
+        "空气流动加快蒸发",
+        "中央处理器",
+        "远程服务器和服务",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:073",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "断电后 RAM 中的数据通常会怎样？",
+      "answer": "丢失",
+      "explanation": "常见 RAM 属于易失性存储器。",
+      "choices": [
+        "丢失",
+        "保留三份数据",
+        "膨胀",
+        "同时亲水和亲油"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:074",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "URL 的主要作用是什么？",
+      "answer": "定位互联网资源",
+      "explanation": "URL 用来标识资源的位置和访问方式。",
+      "choices": [
+        "是",
+        "密度比水小且不易相溶",
+        "传导和对流",
+        "定位互联网资源"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:075",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "HTTPS 相比 HTTP 主要增加了什么？",
+      "answer": "加密和身份验证",
+      "explanation": "HTTPS 通常通过 TLS 保护传输并验证服务端身份。",
+      "choices": [
+        "降低水的冰点",
+        "左右相反",
+        "加密和身份验证",
+        "12 个月"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:076",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "二维码英文 QR 中的 Q 代表什么？",
+      "answer": "Quick",
+      "explanation": "QR 是 Quick Response 的缩写。",
+      "choices": [
+        "氧化反应",
+        "Quick",
+        "24 小时",
+        "水蒸气凝结"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:077",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "GPS 定位主要依靠什么？",
+      "answer": "导航卫星信号",
+      "explanation": "接收机根据多颗导航卫星信号计算位置。",
+      "choices": [
+        "导航卫星信号",
+        "100 年",
+        "更多",
+        "二氧化碳"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:078",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "Wi-Fi 主要通过什么传输数据？",
+      "answer": "无线电波",
+      "explanation": "Wi-Fi 使用特定频段的无线电波传输数据。",
+      "choices": [
+        "12 个",
+        "热传导",
+        "是",
+        "无线电波"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:079",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "云计算中的“云”通常指什么？",
+      "answer": "远程服务器和服务",
+      "explanation": "计算与存储资源由网络另一端的数据中心提供。",
+      "choices": [
+        "空气流动加快蒸发",
+        "光源方向",
+        "远程服务器和服务",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:080",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "“3-2-1 备份”中的 3 指什么？",
+      "answer": "保留三份数据",
+      "explanation": "通常建议三份数据、两种介质，其中一份异地保存。",
+      "choices": [
+        "木星",
+        "保留三份数据",
+        "膨胀",
+        "同时亲水和亲油"
+      ],
+      "tags": [
+        "科技",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:081",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "按照公历规则，2000 年是闰年吗？",
+      "answer": "是",
+      "explanation": "整百年份能被 400 整除时是闰年。",
+      "choices": [
+        "是",
+        "密度比水小且不易相溶",
+        "传导和对流",
+        "太阳"
+      ],
+      "tags": [
+        "时间",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:082",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "一年中有多少个月至少有 28 天？",
+      "answer": "12 个月",
+      "explanation": "每个月都有至少 28 天。",
+      "choices": [
+        "降低水的冰点",
+        "左右相反",
+        "火星",
+        "12 个月"
+      ],
+      "tags": [
+        "时间",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:083",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "一昼夜通常分为多少小时？",
+      "answer": "24 小时",
+      "explanation": "现代常用计时把一昼夜分成 24 小时。",
+      "choices": [
+        "氧化反应",
+        "日地月相对位置变化",
+        "24 小时",
+        "水蒸气凝结"
+      ],
+      "tags": [
+        "时间",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:084",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "一个世纪通常是多少年？",
+      "answer": "100 年",
+      "explanation": "一个世纪是连续的一百年。",
+      "choices": [
+        "24 小时",
+        "100 年",
+        "更多",
+        "二氧化碳"
+      ],
+      "tags": [
+        "时间",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:085",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "一打物品通常是多少个？",
+      "answer": "12 个",
+      "explanation": "“一打”是常用数量单位，表示十二个。",
+      "choices": [
+        "12 个",
+        "热传导",
+        "是",
+        "8 分 20 秒"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:086",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "摄氏温标中冰水混合物的温度约是多少？",
+      "answer": "0 摄氏度",
+      "explanation": "标准条件下冰水共存时温度约为 0 摄氏度。",
+      "choices": [
+        "空气流动加快蒸发",
+        "光源方向",
+        "冰块和岩石碎片",
+        "0 摄氏度"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:087",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "水结冰时体积通常会怎样？",
+      "answer": "膨胀",
+      "explanation": "水形成冰晶结构后体积增大、密度降低。",
+      "choices": [
+        "木星",
+        "不能",
+        "膨胀",
+        "同时亲水和亲油"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:088",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "食用油通常为什么浮在水面？",
+      "answer": "密度比水小且不易相溶",
+      "explanation": "多数食用油密度低于水，并且与水不易混合。",
+      "choices": [
+        "银河系",
+        "密度比水小且不易相溶",
+        "传导和对流",
+        "太阳"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:089",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "冬天在路面撒盐主要有什么作用？",
+      "answer": "降低水的冰点",
+      "explanation": "盐水的凝固点低于纯水，有助于融冰。",
+      "choices": [
+        "降低水的冰点",
+        "左右相反",
+        "火星",
+        "约六分之一"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:090",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "露珠主要由什么过程形成？",
+      "answer": "水蒸气凝结",
+      "explanation": "空气中的水蒸气遇冷后凝结成小水滴。",
+      "choices": [
+        "氧化反应",
+        "日地月相对位置变化",
+        "太平洋",
+        "水蒸气凝结"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:091",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "深色物体在阳光下通常吸热更多还是更少？",
+      "answer": "更多",
+      "explanation": "深色表面通常吸收更多可见光辐射。",
+      "choices": [
+        "24 小时",
+        "珠穆朗玛峰",
+        "更多",
+        "二氧化碳"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:092",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "金属勺放进热汤后勺柄变热，主要是哪种传热方式？",
+      "answer": "热传导",
+      "explanation": "热量沿金属从高温处传向低温处。",
+      "choices": [
+        "赤道",
+        "热传导",
+        "是",
+        "8 分 20 秒"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:093",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "湿衣服晾在通风处通常为什么干得更快？",
+      "answer": "空气流动加快蒸发",
+      "explanation": "流动空气带走衣物表面的水蒸气。",
+      "choices": [
+        "空气流动加快蒸发",
+        "光源方向",
+        "冰块和岩石碎片",
+        "0 度"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:094",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "肥皂帮助去除油污主要依靠什么特点？",
+      "answer": "同时亲水和亲油",
+      "explanation": "表面活性剂可包裹油污并让它随水被带走。",
+      "choices": [
+        "木星",
+        "不能",
+        "亚洲",
+        "同时亲水和亲油"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:095",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "保温杯的真空层主要减少哪两种传热？",
+      "answer": "传导和对流",
+      "explanation": "真空中缺少物质，可显著减少传导和对流。",
+      "choices": [
+        "银河系",
+        "南极洲",
+        "传导和对流",
+        "太阳"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:096",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "镜子中的像与物体左右关系看起来怎样？",
+      "answer": "左右相反",
+      "explanation": "平面镜形成正立、等大的虚像，视觉上呈左右反向。",
+      "choices": [
+        "马里亚纳海沟",
+        "左右相反",
+        "火星",
+        "约六分之一"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:097",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "削开的苹果放久后变褐，主要与什么有关？",
+      "answer": "氧化反应",
+      "explanation": "果肉中的物质在酶参与下与氧气反应而褐变。",
+      "choices": [
+        "氧化反应",
+        "日地月相对位置变化",
+        "太平洋",
+        "南极沙漠"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:098",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "汽水开瓶后冒泡，主要释放什么气体？",
+      "answer": "二氧化碳",
+      "explanation": "压力降低后溶解在饮料中的二氧化碳逸出。",
+      "choices": [
+        "24 小时",
+        "珠穆朗玛峰",
+        "长江",
+        "二氧化碳"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:099",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "高海拔地区水通常更容易沸腾吗？",
+      "answer": "是",
+      "explanation": "高海拔气压较低，水的沸点也较低。",
+      "choices": [
+        "赤道",
+        "地理北方附近",
+        "是",
+        "8 分 20 秒"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "trivia:zhcn2026:100",
+      "type": "trivia",
+      "revision": 1,
+      "prompt": "影子的方向主要与什么有关？",
+      "answer": "光源方向",
+      "explanation": "影子通常出现在物体背向光源的一侧。",
+      "choices": [
+        "100 摄氏度",
+        "光源方向",
+        "冰块和岩石碎片",
+        "0 度"
+      ],
+      "tags": [
+        "常识",
+        "趣味知识"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

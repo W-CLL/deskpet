@@ -1,0 +1,2105 @@
+{
+  "items": [
+    {
+      "id": "math:zhcn2026:001",
+      "type": "math",
+      "revision": 1,
+      "prompt": "14 + 7 等于多少？",
+      "answer": "21",
+      "explanation": "14 + 7 = 21。",
+      "choices": [
+        "21",
+        "23",
+        "19",
+        "25"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:002",
+      "type": "math",
+      "revision": 1,
+      "prompt": "17 + 12 等于多少？",
+      "answer": "29",
+      "explanation": "17 + 12 = 29。",
+      "choices": [
+        "32",
+        "26",
+        "35",
+        "29"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:003",
+      "type": "math",
+      "revision": 1,
+      "prompt": "20 + 17 等于多少？",
+      "answer": "37",
+      "explanation": "20 + 17 = 37。",
+      "choices": [
+        "33",
+        "45",
+        "37",
+        "41"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:004",
+      "type": "math",
+      "revision": 1,
+      "prompt": "23 + 22 等于多少？",
+      "answer": "45",
+      "explanation": "23 + 22 = 45。",
+      "choices": [
+        "55",
+        "45",
+        "50",
+        "40"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:005",
+      "type": "math",
+      "revision": 1,
+      "prompt": "26 + 27 等于多少？",
+      "answer": "53",
+      "explanation": "26 + 27 = 53。",
+      "choices": [
+        "53",
+        "55",
+        "51",
+        "57"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:006",
+      "type": "math",
+      "revision": 1,
+      "prompt": "29 + 8 等于多少？",
+      "answer": "37",
+      "explanation": "29 + 8 = 37。",
+      "choices": [
+        "40",
+        "34",
+        "43",
+        "37"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:007",
+      "type": "math",
+      "revision": 1,
+      "prompt": "32 + 13 等于多少？",
+      "answer": "45",
+      "explanation": "32 + 13 = 45。",
+      "choices": [
+        "41",
+        "53",
+        "45",
+        "49"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:008",
+      "type": "math",
+      "revision": 1,
+      "prompt": "35 + 18 等于多少？",
+      "answer": "53",
+      "explanation": "35 + 18 = 53。",
+      "choices": [
+        "63",
+        "53",
+        "58",
+        "48"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:009",
+      "type": "math",
+      "revision": 1,
+      "prompt": "38 + 23 等于多少？",
+      "answer": "61",
+      "explanation": "38 + 23 = 61。",
+      "choices": [
+        "61",
+        "63",
+        "59",
+        "65"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:010",
+      "type": "math",
+      "revision": 1,
+      "prompt": "41 + 28 等于多少？",
+      "answer": "69",
+      "explanation": "41 + 28 = 69。",
+      "choices": [
+        "72",
+        "66",
+        "75",
+        "69"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:011",
+      "type": "math",
+      "revision": 1,
+      "prompt": "44 + 9 等于多少？",
+      "answer": "53",
+      "explanation": "44 + 9 = 53。",
+      "choices": [
+        "49",
+        "61",
+        "53",
+        "57"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:012",
+      "type": "math",
+      "revision": 1,
+      "prompt": "47 + 14 等于多少？",
+      "answer": "61",
+      "explanation": "47 + 14 = 61。",
+      "choices": [
+        "71",
+        "61",
+        "66",
+        "56"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:013",
+      "type": "math",
+      "revision": 1,
+      "prompt": "50 + 19 等于多少？",
+      "answer": "69",
+      "explanation": "50 + 19 = 69。",
+      "choices": [
+        "69",
+        "71",
+        "67",
+        "73"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:014",
+      "type": "math",
+      "revision": 1,
+      "prompt": "53 + 24 等于多少？",
+      "answer": "77",
+      "explanation": "53 + 24 = 77。",
+      "choices": [
+        "80",
+        "74",
+        "83",
+        "77"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:015",
+      "type": "math",
+      "revision": 1,
+      "prompt": "56 + 29 等于多少？",
+      "answer": "85",
+      "explanation": "56 + 29 = 85。",
+      "choices": [
+        "81",
+        "93",
+        "85",
+        "89"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:016",
+      "type": "math",
+      "revision": 1,
+      "prompt": "59 + 10 等于多少？",
+      "answer": "69",
+      "explanation": "59 + 10 = 69。",
+      "choices": [
+        "79",
+        "69",
+        "74",
+        "64"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:017",
+      "type": "math",
+      "revision": 1,
+      "prompt": "62 + 15 等于多少？",
+      "answer": "77",
+      "explanation": "62 + 15 = 77。",
+      "choices": [
+        "77",
+        "79",
+        "75",
+        "81"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:018",
+      "type": "math",
+      "revision": 1,
+      "prompt": "65 + 20 等于多少？",
+      "answer": "85",
+      "explanation": "65 + 20 = 85。",
+      "choices": [
+        "88",
+        "82",
+        "91",
+        "85"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:019",
+      "type": "math",
+      "revision": 1,
+      "prompt": "68 + 25 等于多少？",
+      "answer": "93",
+      "explanation": "68 + 25 = 93。",
+      "choices": [
+        "89",
+        "101",
+        "93",
+        "97"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:020",
+      "type": "math",
+      "revision": 1,
+      "prompt": "71 + 30 等于多少？",
+      "answer": "101",
+      "explanation": "71 + 30 = 101。",
+      "choices": [
+        "111",
+        "101",
+        "106",
+        "96"
+      ],
+      "tags": [
+        "加法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:021",
+      "type": "math",
+      "revision": 1,
+      "prompt": "3 × 5 等于多少？",
+      "answer": "15",
+      "explanation": "3 × 5 = 15。",
+      "choices": [
+        "18",
+        "12",
+        "21",
+        "15"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:022",
+      "type": "math",
+      "revision": 1,
+      "prompt": "4 × 6 等于多少？",
+      "answer": "24",
+      "explanation": "4 × 6 = 24。",
+      "choices": [
+        "20",
+        "32",
+        "24",
+        "28"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:023",
+      "type": "math",
+      "revision": 1,
+      "prompt": "5 × 7 等于多少？",
+      "answer": "35",
+      "explanation": "5 × 7 = 35。",
+      "choices": [
+        "45",
+        "35",
+        "40",
+        "30"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:024",
+      "type": "math",
+      "revision": 1,
+      "prompt": "6 × 8 等于多少？",
+      "answer": "48",
+      "explanation": "6 × 8 = 48。",
+      "choices": [
+        "48",
+        "54",
+        "42",
+        "60"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:025",
+      "type": "math",
+      "revision": 1,
+      "prompt": "7 × 9 等于多少？",
+      "answer": "63",
+      "explanation": "7 × 9 = 63。",
+      "choices": [
+        "70",
+        "56",
+        "77",
+        "63"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:026",
+      "type": "math",
+      "revision": 1,
+      "prompt": "8 × 10 等于多少？",
+      "answer": "80",
+      "explanation": "8 × 10 = 80。",
+      "choices": [
+        "72",
+        "96",
+        "80",
+        "88"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:027",
+      "type": "math",
+      "revision": 1,
+      "prompt": "9 × 11 等于多少？",
+      "answer": "99",
+      "explanation": "9 × 11 = 99。",
+      "choices": [
+        "117",
+        "99",
+        "108",
+        "90"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:028",
+      "type": "math",
+      "revision": 1,
+      "prompt": "10 × 12 等于多少？",
+      "answer": "120",
+      "explanation": "10 × 12 = 120。",
+      "choices": [
+        "120",
+        "130",
+        "110",
+        "140"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:029",
+      "type": "math",
+      "revision": 1,
+      "prompt": "3 × 13 等于多少？",
+      "answer": "39",
+      "explanation": "3 × 13 = 39。",
+      "choices": [
+        "42",
+        "36",
+        "45",
+        "39"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:030",
+      "type": "math",
+      "revision": 1,
+      "prompt": "4 × 14 等于多少？",
+      "answer": "56",
+      "explanation": "4 × 14 = 56。",
+      "choices": [
+        "52",
+        "64",
+        "56",
+        "60"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:031",
+      "type": "math",
+      "revision": 1,
+      "prompt": "5 × 15 等于多少？",
+      "answer": "75",
+      "explanation": "5 × 15 = 75。",
+      "choices": [
+        "85",
+        "75",
+        "80",
+        "70"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:032",
+      "type": "math",
+      "revision": 1,
+      "prompt": "6 × 16 等于多少？",
+      "answer": "96",
+      "explanation": "6 × 16 = 96。",
+      "choices": [
+        "96",
+        "102",
+        "90",
+        "108"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:033",
+      "type": "math",
+      "revision": 1,
+      "prompt": "7 × 17 等于多少？",
+      "answer": "119",
+      "explanation": "7 × 17 = 119。",
+      "choices": [
+        "126",
+        "112",
+        "133",
+        "119"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:034",
+      "type": "math",
+      "revision": 1,
+      "prompt": "8 × 18 等于多少？",
+      "answer": "144",
+      "explanation": "8 × 18 = 144。",
+      "choices": [
+        "136",
+        "160",
+        "144",
+        "152"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:035",
+      "type": "math",
+      "revision": 1,
+      "prompt": "9 × 19 等于多少？",
+      "answer": "171",
+      "explanation": "9 × 19 = 171。",
+      "choices": [
+        "189",
+        "171",
+        "180",
+        "162"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:036",
+      "type": "math",
+      "revision": 1,
+      "prompt": "10 × 20 等于多少？",
+      "answer": "200",
+      "explanation": "10 × 20 = 200。",
+      "choices": [
+        "200",
+        "210",
+        "190",
+        "220"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:037",
+      "type": "math",
+      "revision": 1,
+      "prompt": "3 × 21 等于多少？",
+      "answer": "63",
+      "explanation": "3 × 21 = 63。",
+      "choices": [
+        "66",
+        "60",
+        "69",
+        "63"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:038",
+      "type": "math",
+      "revision": 1,
+      "prompt": "4 × 22 等于多少？",
+      "answer": "88",
+      "explanation": "4 × 22 = 88。",
+      "choices": [
+        "84",
+        "96",
+        "88",
+        "92"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:039",
+      "type": "math",
+      "revision": 1,
+      "prompt": "5 × 23 等于多少？",
+      "answer": "115",
+      "explanation": "5 × 23 = 115。",
+      "choices": [
+        "125",
+        "115",
+        "120",
+        "110"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:040",
+      "type": "math",
+      "revision": 1,
+      "prompt": "6 × 24 等于多少？",
+      "answer": "144",
+      "explanation": "6 × 24 = 144。",
+      "choices": [
+        "144",
+        "150",
+        "138",
+        "156"
+      ],
+      "tags": [
+        "乘法",
+        "心算"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:041",
+      "type": "math",
+      "revision": 1,
+      "prompt": "40 的 10% 是多少？",
+      "answer": "4",
+      "explanation": "40 × 10% = 4。",
+      "choices": [
+        "2",
+        "8",
+        "4",
+        "6"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:042",
+      "type": "math",
+      "revision": 1,
+      "prompt": "40 的 20% 是多少？",
+      "answer": "8",
+      "explanation": "40 × 20% = 8。",
+      "choices": [
+        "12",
+        "8",
+        "10",
+        "6"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:043",
+      "type": "math",
+      "revision": 1,
+      "prompt": "40 的 25% 是多少？",
+      "answer": "10",
+      "explanation": "40 × 25% = 10。",
+      "choices": [
+        "10",
+        "12.5",
+        "7.5",
+        "15"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:044",
+      "type": "math",
+      "revision": 1,
+      "prompt": "40 的 50% 是多少？",
+      "answer": "20",
+      "explanation": "40 × 50% = 20。",
+      "choices": [
+        "25",
+        "15",
+        "30",
+        "20"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:045",
+      "type": "math",
+      "revision": 1,
+      "prompt": "80 的 10% 是多少？",
+      "answer": "8",
+      "explanation": "80 × 10% = 8。",
+      "choices": [
+        "6",
+        "12",
+        "8",
+        "10"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:046",
+      "type": "math",
+      "revision": 1,
+      "prompt": "80 的 20% 是多少？",
+      "answer": "16",
+      "explanation": "80 × 20% = 16。",
+      "choices": [
+        "24",
+        "16",
+        "20",
+        "12"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:047",
+      "type": "math",
+      "revision": 1,
+      "prompt": "80 的 25% 是多少？",
+      "answer": "20",
+      "explanation": "80 × 25% = 20。",
+      "choices": [
+        "20",
+        "25",
+        "15",
+        "30"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:048",
+      "type": "math",
+      "revision": 1,
+      "prompt": "80 的 50% 是多少？",
+      "answer": "40",
+      "explanation": "80 × 50% = 40。",
+      "choices": [
+        "50",
+        "30",
+        "60",
+        "40"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:049",
+      "type": "math",
+      "revision": 1,
+      "prompt": "120 的 10% 是多少？",
+      "answer": "12",
+      "explanation": "120 × 10% = 12。",
+      "choices": [
+        "9",
+        "18",
+        "12",
+        "15"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:050",
+      "type": "math",
+      "revision": 1,
+      "prompt": "120 的 20% 是多少？",
+      "answer": "24",
+      "explanation": "120 × 20% = 24。",
+      "choices": [
+        "36",
+        "24",
+        "30",
+        "18"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:051",
+      "type": "math",
+      "revision": 1,
+      "prompt": "120 的 25% 是多少？",
+      "answer": "30",
+      "explanation": "120 × 25% = 30。",
+      "choices": [
+        "30",
+        "37.5",
+        "22.5",
+        "45"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:052",
+      "type": "math",
+      "revision": 1,
+      "prompt": "120 的 50% 是多少？",
+      "answer": "60",
+      "explanation": "120 × 50% = 60。",
+      "choices": [
+        "75",
+        "45",
+        "90",
+        "60"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:053",
+      "type": "math",
+      "revision": 1,
+      "prompt": "160 的 10% 是多少？",
+      "answer": "16",
+      "explanation": "160 × 10% = 16。",
+      "choices": [
+        "12",
+        "24",
+        "16",
+        "20"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:054",
+      "type": "math",
+      "revision": 1,
+      "prompt": "160 的 20% 是多少？",
+      "answer": "32",
+      "explanation": "160 × 20% = 32。",
+      "choices": [
+        "48",
+        "32",
+        "40",
+        "24"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:055",
+      "type": "math",
+      "revision": 1,
+      "prompt": "160 的 25% 是多少？",
+      "answer": "40",
+      "explanation": "160 × 25% = 40。",
+      "choices": [
+        "40",
+        "50",
+        "30",
+        "60"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:056",
+      "type": "math",
+      "revision": 1,
+      "prompt": "160 的 50% 是多少？",
+      "answer": "80",
+      "explanation": "160 × 50% = 80。",
+      "choices": [
+        "100",
+        "60",
+        "120",
+        "80"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:057",
+      "type": "math",
+      "revision": 1,
+      "prompt": "200 的 10% 是多少？",
+      "answer": "20",
+      "explanation": "200 × 10% = 20。",
+      "choices": [
+        "15",
+        "30",
+        "20",
+        "25"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:058",
+      "type": "math",
+      "revision": 1,
+      "prompt": "200 的 20% 是多少？",
+      "answer": "40",
+      "explanation": "200 × 20% = 40。",
+      "choices": [
+        "60",
+        "40",
+        "50",
+        "30"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:059",
+      "type": "math",
+      "revision": 1,
+      "prompt": "200 的 25% 是多少？",
+      "answer": "50",
+      "explanation": "200 × 25% = 50。",
+      "choices": [
+        "50",
+        "62.5",
+        "37.5",
+        "75"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:060",
+      "type": "math",
+      "revision": 1,
+      "prompt": "200 的 50% 是多少？",
+      "answer": "100",
+      "explanation": "200 × 50% = 100。",
+      "choices": [
+        "125",
+        "75",
+        "150",
+        "100"
+      ],
+      "tags": [
+        "百分数",
+        "应用题"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:061",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 2x + 1 = 7，那么 x 等于多少？",
+      "answer": "3",
+      "explanation": "两边先减 1，再除以 2，得到 x = 3。",
+      "choices": [
+        "5",
+        "3",
+        "4",
+        "2"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:062",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 3x + 2 = 14，那么 x 等于多少？",
+      "answer": "4",
+      "explanation": "两边先减 2，再除以 3，得到 x = 4。",
+      "choices": [
+        "4",
+        "6",
+        "2",
+        "8"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:063",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 4x + 3 = 23，那么 x 等于多少？",
+      "answer": "5",
+      "explanation": "两边先减 3，再除以 4，得到 x = 5。",
+      "choices": [
+        "8",
+        "2",
+        "11",
+        "5"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:064",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 5x + 4 = 34，那么 x 等于多少？",
+      "answer": "6",
+      "explanation": "两边先减 4，再除以 5，得到 x = 6。",
+      "choices": [
+        "5",
+        "8",
+        "6",
+        "7"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:065",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 2x + 5 = 19，那么 x 等于多少？",
+      "answer": "7",
+      "explanation": "两边先减 5，再除以 2，得到 x = 7。",
+      "choices": [
+        "11",
+        "7",
+        "9",
+        "5"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:066",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 3x + 6 = 30，那么 x 等于多少？",
+      "answer": "8",
+      "explanation": "两边先减 6，再除以 3，得到 x = 8。",
+      "choices": [
+        "8",
+        "11",
+        "5",
+        "14"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:067",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 4x + 7 = 43，那么 x 等于多少？",
+      "answer": "9",
+      "explanation": "两边先减 7，再除以 4，得到 x = 9。",
+      "choices": [
+        "10",
+        "8",
+        "11",
+        "9"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:068",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 5x + 1 = 51，那么 x 等于多少？",
+      "answer": "10",
+      "explanation": "两边先减 1，再除以 5，得到 x = 10。",
+      "choices": [
+        "8",
+        "14",
+        "10",
+        "12"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:069",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 2x + 2 = 24，那么 x 等于多少？",
+      "answer": "11",
+      "explanation": "两边先减 2，再除以 2，得到 x = 11。",
+      "choices": [
+        "17",
+        "11",
+        "14",
+        "8"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:070",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 3x + 3 = 39，那么 x 等于多少？",
+      "answer": "12",
+      "explanation": "两边先减 3，再除以 3，得到 x = 12。",
+      "choices": [
+        "12",
+        "13",
+        "11",
+        "14"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:071",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 4x + 4 = 56，那么 x 等于多少？",
+      "answer": "13",
+      "explanation": "两边先减 4，再除以 4，得到 x = 13。",
+      "choices": [
+        "15",
+        "11",
+        "17",
+        "13"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:072",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 5x + 5 = 75，那么 x 等于多少？",
+      "answer": "14",
+      "explanation": "两边先减 5，再除以 5，得到 x = 14。",
+      "choices": [
+        "11",
+        "20",
+        "14",
+        "17"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:073",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 2x + 6 = 36，那么 x 等于多少？",
+      "answer": "15",
+      "explanation": "两边先减 6，再除以 2，得到 x = 15。",
+      "choices": [
+        "17",
+        "15",
+        "16",
+        "14"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:074",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 3x + 7 = 55，那么 x 等于多少？",
+      "answer": "16",
+      "explanation": "两边先减 7，再除以 3，得到 x = 16。",
+      "choices": [
+        "16",
+        "18",
+        "14",
+        "20"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:075",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 4x + 1 = 69，那么 x 等于多少？",
+      "answer": "17",
+      "explanation": "两边先减 1，再除以 4，得到 x = 17。",
+      "choices": [
+        "20",
+        "14",
+        "23",
+        "17"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:076",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 5x + 2 = 92，那么 x 等于多少？",
+      "answer": "18",
+      "explanation": "两边先减 2，再除以 5，得到 x = 18。",
+      "choices": [
+        "17",
+        "20",
+        "18",
+        "19"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:077",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 2x + 3 = 41，那么 x 等于多少？",
+      "answer": "19",
+      "explanation": "两边先减 3，再除以 2，得到 x = 19。",
+      "choices": [
+        "23",
+        "19",
+        "21",
+        "17"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:078",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 3x + 4 = 64，那么 x 等于多少？",
+      "answer": "20",
+      "explanation": "两边先减 4，再除以 3，得到 x = 20。",
+      "choices": [
+        "20",
+        "23",
+        "17",
+        "26"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:079",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 4x + 5 = 89，那么 x 等于多少？",
+      "answer": "21",
+      "explanation": "两边先减 5，再除以 4，得到 x = 21。",
+      "choices": [
+        "22",
+        "20",
+        "23",
+        "21"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:080",
+      "type": "math",
+      "revision": 1,
+      "prompt": "如果 5x + 6 = 116，那么 x 等于多少？",
+      "answer": "22",
+      "explanation": "两边先减 6，再除以 5，得到 x = 22。",
+      "choices": [
+        "20",
+        "26",
+        "22",
+        "24"
+      ],
+      "tags": [
+        "方程",
+        "代数"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:081",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 6 厘米、宽 3 厘米，周长是多少？",
+      "answer": "18 厘米",
+      "explanation": "周长 = 2 ×（6 + 3）= 18 厘米。",
+      "choices": [
+        "18 厘米",
+        "20 厘米",
+        "16 厘米",
+        "22 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:082",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 7 厘米、宽 4 厘米，周长是多少？",
+      "answer": "22 厘米",
+      "explanation": "周长 = 2 ×（7 + 4）= 22 厘米。",
+      "choices": [
+        "24 厘米",
+        "20 厘米",
+        "26 厘米",
+        "22 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:083",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 8 厘米、宽 5 厘米，周长是多少？",
+      "answer": "26 厘米",
+      "explanation": "周长 = 2 ×（8 + 5）= 26 厘米。",
+      "choices": [
+        "24 厘米",
+        "30 厘米",
+        "26 厘米",
+        "28 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:084",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 9 厘米、宽 6 厘米，周长是多少？",
+      "answer": "30 厘米",
+      "explanation": "周长 = 2 ×（9 + 6）= 30 厘米。",
+      "choices": [
+        "34 厘米",
+        "30 厘米",
+        "32 厘米",
+        "28 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:085",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 10 厘米、宽 7 厘米，周长是多少？",
+      "answer": "34 厘米",
+      "explanation": "周长 = 2 ×（10 + 7）= 34 厘米。",
+      "choices": [
+        "34 厘米",
+        "36 厘米",
+        "32 厘米",
+        "38 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:086",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 11 厘米、宽 3 厘米，周长是多少？",
+      "answer": "28 厘米",
+      "explanation": "周长 = 2 ×（11 + 3）= 28 厘米。",
+      "choices": [
+        "30 厘米",
+        "26 厘米",
+        "32 厘米",
+        "28 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:087",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 12 厘米、宽 4 厘米，周长是多少？",
+      "answer": "32 厘米",
+      "explanation": "周长 = 2 ×（12 + 4）= 32 厘米。",
+      "choices": [
+        "30 厘米",
+        "36 厘米",
+        "32 厘米",
+        "34 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:088",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 13 厘米、宽 5 厘米，周长是多少？",
+      "answer": "36 厘米",
+      "explanation": "周长 = 2 ×（13 + 5）= 36 厘米。",
+      "choices": [
+        "40 厘米",
+        "36 厘米",
+        "38 厘米",
+        "34 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:089",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 14 厘米、宽 6 厘米，周长是多少？",
+      "answer": "40 厘米",
+      "explanation": "周长 = 2 ×（14 + 6）= 40 厘米。",
+      "choices": [
+        "40 厘米",
+        "42 厘米",
+        "38 厘米",
+        "44 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:090",
+      "type": "math",
+      "revision": 1,
+      "prompt": "长方形长 15 厘米、宽 7 厘米，周长是多少？",
+      "answer": "44 厘米",
+      "explanation": "周长 = 2 ×（15 + 7）= 44 厘米。",
+      "choices": [
+        "46 厘米",
+        "42 厘米",
+        "48 厘米",
+        "44 厘米"
+      ],
+      "tags": [
+        "几何",
+        "周长"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:091",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 6 厘米、高为 4 厘米，面积是多少？",
+      "answer": "12 平方厘米",
+      "explanation": "面积 = 6 × 4 ÷ 2 = 12 平方厘米。",
+      "choices": [
+        "16 平方厘米",
+        "8 平方厘米",
+        "20 平方厘米",
+        "12 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:092",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 8 厘米、高为 5 厘米，面积是多少？",
+      "answer": "20 平方厘米",
+      "explanation": "面积 = 8 × 5 ÷ 2 = 20 平方厘米。",
+      "choices": [
+        "15 平方厘米",
+        "30 平方厘米",
+        "20 平方厘米",
+        "25 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:093",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 10 厘米、高为 6 厘米，面积是多少？",
+      "answer": "30 平方厘米",
+      "explanation": "面积 = 10 × 6 ÷ 2 = 30 平方厘米。",
+      "choices": [
+        "42 平方厘米",
+        "30 平方厘米",
+        "36 平方厘米",
+        "24 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:094",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 12 厘米、高为 7 厘米，面积是多少？",
+      "answer": "42 平方厘米",
+      "explanation": "面积 = 12 × 7 ÷ 2 = 42 平方厘米。",
+      "choices": [
+        "42 平方厘米",
+        "49 平方厘米",
+        "35 平方厘米",
+        "56 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:095",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 14 厘米、高为 8 厘米，面积是多少？",
+      "answer": "56 平方厘米",
+      "explanation": "面积 = 14 × 8 ÷ 2 = 56 平方厘米。",
+      "choices": [
+        "64 平方厘米",
+        "48 平方厘米",
+        "72 平方厘米",
+        "56 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:096",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 16 厘米、高为 4 厘米，面积是多少？",
+      "answer": "32 平方厘米",
+      "explanation": "面积 = 16 × 4 ÷ 2 = 32 平方厘米。",
+      "choices": [
+        "28 平方厘米",
+        "40 平方厘米",
+        "32 平方厘米",
+        "36 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:097",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 18 厘米、高为 5 厘米，面积是多少？",
+      "answer": "45 平方厘米",
+      "explanation": "面积 = 18 × 5 ÷ 2 = 45 平方厘米。",
+      "choices": [
+        "55 平方厘米",
+        "45 平方厘米",
+        "50 平方厘米",
+        "40 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:098",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 20 厘米、高为 6 厘米，面积是多少？",
+      "answer": "60 平方厘米",
+      "explanation": "面积 = 20 × 6 ÷ 2 = 60 平方厘米。",
+      "choices": [
+        "60 平方厘米",
+        "66 平方厘米",
+        "54 平方厘米",
+        "72 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:099",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 22 厘米、高为 7 厘米，面积是多少？",
+      "answer": "77 平方厘米",
+      "explanation": "面积 = 22 × 7 ÷ 2 = 77 平方厘米。",
+      "choices": [
+        "84 平方厘米",
+        "70 平方厘米",
+        "91 平方厘米",
+        "77 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "math:zhcn2026:100",
+      "type": "math",
+      "revision": 1,
+      "prompt": "三角形底为 24 厘米、高为 8 厘米，面积是多少？",
+      "answer": "96 平方厘米",
+      "explanation": "面积 = 24 × 8 ÷ 2 = 96 平方厘米。",
+      "choices": [
+        "88 平方厘米",
+        "112 平方厘米",
+        "96 平方厘米",
+        "104 平方厘米"
+      ],
+      "tags": [
+        "几何",
+        "面积"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

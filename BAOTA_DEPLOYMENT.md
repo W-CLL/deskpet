@@ -8,21 +8,21 @@
 
 ### 0.1 先确定对外地址
 
-`DESKPET_PUBLIC_URL` 是浏览器、更新清单和客户端实际使用的地址，必须写完整协议和 IP，不要以 `/` 结尾。
+`DESKPET_PUBLIC_URL` 是管理后台、更新清单内下载链接和新客户端使用的公开地址，必须写完整协议和域名，不要以 `/` 结尾。
 
-当前桌面客户端源码中的更新地址是：
+2.5.1 及之后的 Windows 客户端更新地址是：
 
 ```text
-https://8.134.130.155/api/update/latest
+https://in.desktoppet.online/api/update/latest
 ```
 
-因此，如果不修改客户端源码，宝塔环境应使用：
+因此，宝塔环境应使用：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://8.134.130.155
+DESKPET_PUBLIC_URL=https://in.desktoppet.online
 ```
 
-生产环境统一使用上面的 HTTPS 地址。服务端不会额外限制 Host、来源 IP 或请求协议，客户端和浏览器只需要访问这个公开地址即可。
+生产环境的新客户端和管理后台统一使用上面的 HTTPS 地址。2.5.0 及之前的 Windows 客户端仍会先访问写死的 IP 更新地址，`DESKPET_PUBLIC_URL` 不会改变旧程序的请求入口；迁移期间必须另外保留可用的 IP HTTPS 反向代理，由旧客户端取得指向域名安装包的桥接更新清单。
 
 ### 0.2 准备域名和宝塔组件
 
@@ -92,7 +92,7 @@ chmod 700 /www/deskpet-data
 
 ```dotenv
 NODE_ENV=production
-DESKPET_PUBLIC_URL=https://8.134.130.155
+DESKPET_PUBLIC_URL=https://in.desktoppet.online
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
@@ -109,7 +109,7 @@ DESKPET_BOOTSTRAP_VERSION=2.1.0
 
 ```bash
 curl -i http://127.0.0.1:3100/healthz
-curl -i https://8.134.130.155/healthz
+curl -i https://in.desktoppet.online/healthz
 ```
 
 第二条命令的返回 JSON 应包含：
@@ -118,7 +118,7 @@ curl -i https://8.134.130.155/healthz
 {"ok":true,"service":"deskpet-update","configured":true,"activeVersion":null}
 ```
 
-然后打开 `https://8.134.130.155/admin`，登录后依次测试生成激活码、上传草稿、发布版本和客户端下载。
+然后打开 `https://in.desktoppet.online/admin`，登录后依次测试生成激活码、上传草稿、发布版本和客户端下载。
 
 ## 1. 部署拓扑
 
@@ -260,7 +260,7 @@ chmod 700 /www/deskpet-data
 
 ```dotenv
 NODE_ENV=production
-DESKPET_PUBLIC_URL=https://8.134.130.155
+DESKPET_PUBLIC_URL=https://in.desktoppet.online
 DESKPET_DATA_DIR=/www/deskpet-data
 DESKPET_HTTP_HOST=127.0.0.1
 DESKPET_HTTP_PORT=3100
@@ -308,8 +308,8 @@ proxy_send_timeout 600s;
 先访问：
 
 ```text
-https://8.134.130.155/healthz
-https://8.134.130.155/admin
+https://in.desktoppet.online/healthz
+https://in.desktoppet.online/admin
 ```
 
 健康检查应类似：
@@ -420,7 +420,7 @@ native\dist\ZhuoDazi-Desktop-Pet-2.1.2.exe
 确认访问地址为当前 HTTPS 地址，并检查：
 
 ```dotenv
-DESKPET_PUBLIC_URL=https://8.134.130.155
+DESKPET_PUBLIC_URL=https://in.desktoppet.online
 DESKPET_TRUST_PROXY=true
 ```
 

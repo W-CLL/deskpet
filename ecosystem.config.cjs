@@ -10,7 +10,7 @@ module.exports = {
       max_memory_restart: '1024M',
       env: {
         NODE_ENV: 'production',
-        DESKPET_PUBLIC_URL: 'https://8.134.130.155',
+        DESKPET_PUBLIC_URL: 'https://in.desktoppet.online',
         DESKPET_DATA_DIR: '/www/deskpet-data',
         DESKPET_HTTP_HOST: '127.0.0.1',
         DESKPET_HTTP_PORT: '3100',

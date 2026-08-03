@@ -98,7 +98,7 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 ## 日常发布
 
 1. 在主项目根目录执行 `./native/scripts/build-native.ps1 -Version <版本号>`。
-2. 打开 `https://8.134.130.155/admin` 并登录。
+2. 打开 `https://in.desktoppet.online/admin` 并登录。
 3. 填写版本号和更新说明，上传 `native/dist` 中的 EXE。
 4. 上传完成后版本是草稿；点击发布时，服务端会自动验证版本与文件名、文件大小、SHA-256 和 Ed25519 清单签名。
 5. 已授权客户端下一次检查更新时取得带 Ed25519 签名的清单。
@@ -107,7 +107,7 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 
 | 环境变量 | 生产示例 | 说明 |
 | --- | --- | --- |
-| `DESKPET_PUBLIC_URL` | `https://8.134.130.155` | 对外地址，参与 Origin 和下载地址生成；本地运行时改为 `http://127.0.0.1:3100` |
+| `DESKPET_PUBLIC_URL` | `https://in.desktoppet.online` | 对外地址，参与 Origin 和下载地址生成；本地运行时改为 `http://127.0.0.1:3100` |
 | `DESKPET_DATA_DIR` | `/www/deskpet-data` | 生产数据目录，必须位于网站代码目录之外 |
 | `DESKPET_HTTP_HOST` | `127.0.0.1` | Node 监听地址 |
 | `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
@@ -131,7 +131,7 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 ## 安全约束
 
 - 应用不强制校验 HTTPS；公网部署仍建议使用 Nginx + HTTPS，Node 端口不要直接暴露到公网。
-- 当前桌面客户端默认连接 `https://8.134.130.155/api/update/latest`，更换服务地址或改用 HTTP 时必须同步修改客户端地址并重新打包。
+- 2.5.1 及之后的 Windows 客户端默认连接 `https://in.desktoppet.online/api/update/latest`；旧客户端仍需保留 IP HTTPS 入口以取得桥接更新。
 - 管理密码只保存 scrypt 哈希，会话 Cookie 使用 `HttpOnly`、`SameSite=Strict` 和生产环境 `Secure`。
 - 所有管理写操作同时验证会话、同源请求和 CSRF 令牌。
 - EXE 以流方式上传并限制为 300 MB，不会整体读入内存。

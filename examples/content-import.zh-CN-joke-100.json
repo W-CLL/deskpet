@@ -1,0 +1,1605 @@
+{
+  "items": [
+    {
+      "id": "joke:zhcn2026:001",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑为什么总喊冷？",
+      "answer": "因为它开了太多窗口。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:002",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑累了会做什么？",
+      "answer": "关掉几个正在跑的程序，原地休息。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:003",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑为什么记性特别好？",
+      "answer": "因为它一直在扩充内存。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:004",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑不舒服为什么先去找杀毒软件？",
+      "answer": "因为它怀疑自己中了病毒。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:005",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑睡着时是什么样子？",
+      "answer": "屏幕一黑，开始做云端的梦。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:006",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑去海边最爱做什么？",
+      "answer": "上网冲浪。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:007",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑最怕突然听到哪两个字？",
+      "answer": "断电。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:008",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑桌面为什么总能收拾整齐？",
+      "answer": "因为文件都被请进文件夹了。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:009",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑迟到会找什么理由？",
+      "answer": "刚才一直在加载。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:010",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电脑开会为什么很安静？",
+      "answer": "因为大家把它静音了。",
+      "explanation": "这是围绕“电脑”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电脑",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:011",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "键盘有那么多键，为什么打不开门？",
+      "answer": "因为它的键都只管输入。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:012",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "键盘最喜欢去哪里旅行？",
+      "answer": "太空，因为那里到处都是空格。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:013",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "回车键为什么总爱往前凑？",
+      "answer": "因为它听见别人说“请进”。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:014",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "鼠标为什么躲着猫？",
+      "answer": "它怕猫发现自己也叫鼠。",
+      "explanation": "这是围绕“鼠标”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "鼠标",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:015",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "鼠标去健身房练什么？",
+      "answer": "练点击，让手指更有力量。",
+      "explanation": "这是围绕“鼠标”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "鼠标",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:016",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "键盘吵架时最常喊谁来？",
+      "answer": "Ctrl，因为场面需要控制。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:017",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "删除键为什么偶尔会后悔？",
+      "answer": "因为有些话删掉就找不回来了。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:018",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "大写锁定键为什么说话特别响？",
+      "answer": "因为它一开口就是大写。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:019",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "Shift 键为什么总在搬家？",
+      "answer": "因为它的名字就叫换挡和移动。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:020",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "Esc 键为什么总是最早离场？",
+      "answer": "因为它擅长退出。",
+      "explanation": "这是围绕“键盘”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "键盘",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:021",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "手机减肥时会开什么模式？",
+      "answer": "飞行模式，感觉一下子轻了。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:022",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "手机下雨天为什么也带伞？",
+      "answer": "它怕自己一激动就进水。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:023",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电池充满电后为什么走路带风？",
+      "answer": "因为它觉得自己能量满格。",
+      "explanation": "这是围绕“电池”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "电池",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:024",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "路由器为什么喜欢站在高处？",
+      "answer": "它想把信号看得更远。",
+      "explanation": "这是围绕“网络”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "网络",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:025",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "Wi-Fi 为什么躲在角落？",
+      "answer": "因为大家都在追问它的密码。",
+      "explanation": "这是围绕“网络”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "网络",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:026",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "手机为什么睡不好？",
+      "answer": "因为通知一晚上都在敲门。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:027",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "二维码为什么不怕衣服撞色？",
+      "answer": "因为它本来就穿黑白格子。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:028",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "充电器为什么总陪着手机？",
+      "answer": "因为这段关系需要来电。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:029",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "手机开了飞行模式为什么还没起飞？",
+      "answer": "因为它忘了装翅膀。",
+      "explanation": "这是围绕“手机”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "手机",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:030",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "蓝牙为什么去看牙医？",
+      "answer": "因为它担心那颗蓝色的牙。",
+      "explanation": "这是围绕“网络”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "网络",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:031",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "冰箱为什么喜欢小声说话？",
+      "answer": "因为它怕冷气从嘴里跑掉。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:032",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "冰箱门一开，灯为什么马上亮？",
+      "answer": "因为它以为轮到自己登台了。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:033",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "洗衣机为什么很会跳舞？",
+      "answer": "因为它最熟悉旋转舞步。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:034",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "洗衣机为什么藏不住秘密？",
+      "answer": "因为转几圈就全洗出来了。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:035",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "吸尘器为什么总说自己胃口好？",
+      "answer": "因为地上的灰它都能吃下。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:036",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "空调遇到争吵为什么最冷静？",
+      "answer": "因为它擅长给现场降温。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:037",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电风扇转了半天为什么没迷路？",
+      "answer": "因为它一直在原地绕圈。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:038",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "微波炉为什么做事很干脆？",
+      "answer": "时间一到，它就“叮”一声交差。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:039",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电饭锅为什么从不怕生米？",
+      "answer": "因为它有把生米煮成熟饭的本事。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:040",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "面包机为什么喜欢晒太阳？",
+      "answer": "它想提前体验一下变成吐司。",
+      "explanation": "这是围绕“家电”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "家电",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:041",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "日历为什么一天比一天瘦？",
+      "answer": "因为它每天都少一页。",
+      "explanation": "这是围绕“时间”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "时间",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:042",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "钟表没有腿，为什么一直在走？",
+      "answer": "因为一停下来就得去修理。",
+      "explanation": "这是围绕“时间”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "时间",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:043",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "闹钟为什么朋友不多？",
+      "answer": "因为它总在人睡得正香时说话。",
+      "explanation": "这是围绕“时间”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "时间",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:044",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "电梯为什么不参加拔河？",
+      "answer": "因为别人一拉，它就上上下下。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:045",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "红绿灯为什么突然脸红？",
+      "answer": "因为马路对面的人一直盯着它。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:046",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "公交车为什么认路？",
+      "answer": "因为每一站它都记得停。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:047",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "出租车为什么喜欢做数学题？",
+      "answer": "因为一路都在打表。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:048",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "自行车为什么很讲义气？",
+      "answer": "因为两个轮子总互相撑着。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:049",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "火车为什么很少走偏？",
+      "answer": "因为它做事特别有轨道。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:050",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "雨伞晴天为什么不出门？",
+      "answer": "因为它在等一个下雨的工作日。",
+      "explanation": "这是围绕“出行”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "出行",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:051",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "铅笔旅行为什么带橡皮？",
+      "answer": "走错路时方便擦掉重画。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:052",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "铅笔为什么担心考试？",
+      "answer": "它怕自己的答案太尖锐。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:053",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "橡皮为什么记不住往事？",
+      "answer": "因为它总在把过去擦掉。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:054",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "尺子为什么争论得很认真？",
+      "answer": "因为它凡事都想量个明白。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:055",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "剪刀为什么做决定很快？",
+      "answer": "因为它习惯当机立剪。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:056",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "胶水为什么朋友多？",
+      "answer": "因为它特别会和大家粘在一起。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:057",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "订书机为什么擅长带队？",
+      "answer": "因为它能把大家装订成一组。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:058",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "笔记本为什么能保守秘密？",
+      "answer": "因为它把话全写在心里。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:059",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "书睡觉为什么折一个角？",
+      "answer": "它想给自己盖一小块被子。",
+      "explanation": "这是围绕“读书”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "读书",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:060",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "字典为什么总有说不完的话？",
+      "answer": "因为它肚子里装满了词。",
+      "explanation": "这是围绕“读书”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "读书",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:061",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "纸最怕听见什么？",
+      "answer": "“火速处理”。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:062",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "墨水为什么想回家？",
+      "answer": "因为墨盒一直在等它。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:063",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "钢笔开会为什么最认真？",
+      "answer": "因为它一直在做笔记。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:064",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "记号笔为什么容易出名？",
+      "answer": "因为它到哪里都留下记号。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:065",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "圆规思考问题为什么爱绕圈？",
+      "answer": "因为它总想画出一个圆满答案。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:066",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "计算器遇事为什么很淡定？",
+      "answer": "因为它按几下就有答案。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:067",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "信封为什么看起来很内向？",
+      "answer": "因为它把想说的话都封在里面。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:068",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "邮票为什么见过很多地方？",
+      "answer": "因为它总贴着信去旅行。",
+      "explanation": "这是围绕“文具”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "文具",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:069",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "书架为什么很可靠？",
+      "answer": "因为每本书它都在背后支持。",
+      "explanation": "这是围绕“读书”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "读书",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:070",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "书签为什么特别有耐心？",
+      "answer": "因为它愿意一直等你读回来。",
+      "explanation": "这是围绕“读书”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "读书",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:071",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "面包为什么不敢晒太久？",
+      "answer": "因为它怕被晒成吐司。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:072",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "面条讲故事为什么总讲不完？",
+      "answer": "因为它的故事太长了。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:073",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "饺子下锅后为什么浮起来？",
+      "answer": "因为它终于学会了水上漂。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:074",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "米饭为什么喜欢排队？",
+      "answer": "因为它们总是一粒接一粒。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:075",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "鸡蛋听完笑话为什么裂开了？",
+      "answer": "因为它笑破了壳。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:076",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "土豆拍完照为什么变成零食？",
+      "answer": "因为照片被做成了薯片。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:077",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "洋葱为什么总能演哭戏？",
+      "answer": "因为它一出场大家就流泪。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:078",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "辣椒为什么脾气急？",
+      "answer": "因为它心里一直火辣辣的。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:079",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "冰淇淋上台为什么紧张？",
+      "answer": "因为它一紧张就要融化。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:080",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "饼干为什么不喜欢压力测试？",
+      "answer": "因为压力一大它就碎了。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:081",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "咖啡为什么常陪人加班？",
+      "answer": "因为它负责把瞌睡叫醒。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:082",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "茶叶为什么遇事很从容？",
+      "answer": "因为它知道事情需要慢慢泡开。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:083",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "牛奶为什么不和酸奶争辩？",
+      "answer": "因为它知道再放一会儿就想通了。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:084",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "苹果为什么躲着医生？",
+      "answer": "因为它听说一天一个苹果会让医生走开。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:085",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "香蕉为什么适合演喜剧？",
+      "answer": "因为它一出场就有人担心滑倒。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:086",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "爆米花为什么特别兴奋？",
+      "answer": "因为它高兴得一颗颗跳开了。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:087",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "汤为什么消息灵通？",
+      "answer": "因为锅里的材料都在跟它交流。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:088",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "蛋糕为什么喜欢数学？",
+      "answer": "因为它很懂一层又一层。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:089",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "西瓜为什么最适合过夏天？",
+      "answer": "因为它肚子里准备了很多水。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:090",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "盐为什么很少单独行动？",
+      "answer": "因为它总喜欢混进菜里。",
+      "explanation": "这是围绕“食物”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "食物",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:091",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "云朵出门为什么背大包？",
+      "answer": "因为它随时准备下一场雨。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:092",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "太阳为什么每天准时上班？",
+      "answer": "因为它负责把早晨照亮。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:093",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "月亮为什么常换衣服？",
+      "answer": "因为它每晚展示的月相不同。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:094",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "星星为什么不马上回答问题？",
+      "answer": "因为它离得太远，消息还在路上。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:095",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "大山为什么很少插话？",
+      "answer": "因为它更擅长稳稳地听。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:096",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "河流为什么一直旅行？",
+      "answer": "因为它想去大海看看。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:097",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "雪花为什么喜欢组队？",
+      "answer": "因为大家一起才能铺成白被子。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:098",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "彩虹为什么出门很慢？",
+      "answer": "因为它要搭配好七种颜色。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:099",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "风为什么收不到快递？",
+      "answer": "因为它走到哪里都没有固定地址。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "joke:zhcn2026:100",
+      "type": "joke",
+      "revision": 1,
+      "prompt": "大树为什么网络稳定？",
+      "answer": "因为它的根一直连着地下。",
+      "explanation": "这是围绕“自然”特点展开的拟人化冷笑话。",
+      "choices": [],
+      "tags": [
+        "自然",
+        "冷笑话"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

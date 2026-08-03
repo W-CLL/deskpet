@@ -1,5 +1,6 @@
 const crypto = require('node:crypto');
 const { CONTENT_TYPES } = require('../../lib/content-store');
+const { compareVersions } = require('../../lib/storage');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
 
@@ -9,6 +10,8 @@ const MAX_BATCH_SIZE = 30;
 const MAX_CLIENT_EXCLUSIONS = 500;
 const MAX_IMPORT_ITEMS = 500;
 const RECENT_CONTENT_DAYS = 30;
+const LEGACY_CONTENT_TYPES = Object.freeze(['joke', 'math', 'trivia']);
+const SIX_TYPE_MINIMUM_VERSION = Object.freeze({ windows: '2.5.2' });
 
 function cleanSingleLine(value, maxLength) {
   return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength);
@@ -26,6 +29,20 @@ function cleanMultiline(value, maxLength) {
 
 function contentError(message, code = 'INVALID_CONTENT_ITEM') {
   return new HttpError(400, message, code);
+}
+
+function supportedContentTypes(req) {
+  const platform = cleanSingleLine(req.headers['x-deskpet-platform'], 20).toLowerCase();
+  const version = cleanSingleLine(req.headers['x-deskpet-version'], 40);
+  const minimumVersion = SIX_TYPE_MINIMUM_VERSION[platform];
+  if (!minimumVersion || !version) return [...LEGACY_CONTENT_TYPES];
+  try {
+    return compareVersions(version, minimumVersion) >= 0
+      ? [...CONTENT_TYPES]
+      : [...LEGACY_CONTENT_TYPES];
+  } catch {
+    return [...LEGACY_CONTENT_TYPES];
+  }
 }
 
 function normalizeStringArray(value, { maximum, itemLength, label }) {
@@ -147,12 +164,13 @@ class ContentService {
 
   batch(req, body) {
     const license = this.activationService.requireLicense(req);
-    const requestedTypes = body?.types === undefined ? [...CONTENT_TYPES] : body.types;
+    const supportedTypes = supportedContentTypes(req);
+    const requestedTypes = body?.types === undefined ? supportedTypes : body.types;
     if (!Array.isArray(requestedTypes) || requestedTypes.length < 1) {
       throw contentError('至少选择一种内容类型', 'INVALID_CONTENT_BATCH');
     }
     const types = [...new Set(requestedTypes.map((type) => cleanSingleLine(type, 20).toLowerCase()))];
-    if (types.some((type) => !CONTENT_TYPES.includes(type))) {
+    if (types.some((type) => !supportedTypes.includes(type))) {
       throw contentError('内容类型无效', 'INVALID_CONTENT_BATCH');
     }
     const limit = Number(body?.limit ?? 15);
@@ -180,7 +198,9 @@ class ContentService {
 
   offlinePack(req) {
     this.activationService.requireLicense(req);
-    return this.signedPayload('offline-pack', this.contentStore.activeItems());
+    const supportedTypes = new Set(supportedContentTypes(req));
+    const items = this.contentStore.activeItems().filter((item) => supportedTypes.has(item.type));
+    return this.signedPayload('offline-pack', items);
   }
 
   listAll() {
@@ -266,7 +286,9 @@ class ContentService {
 module.exports = {
   CONTENT_ID_PATTERN,
   MAX_IMPORT_ITEMS,
+  LEGACY_CONTENT_TYPES,
   ContentService,
   canonicalContentPayload,
-  normalizeContentItem
+  normalizeContentItem,
+  supportedContentTypes
 };

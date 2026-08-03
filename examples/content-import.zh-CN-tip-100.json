@@ -1,0 +1,1605 @@
+{
+  "items": [
+    {
+      "id": "tip:zhcn2026:001",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "屏幕看久了眼睛发干？",
+      "answer": "每隔一段时间看向远处，并有意识地多眨几次眼。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "用眼",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:002",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "坐着工作肩颈紧？",
+      "answer": "把屏幕上沿调到接近视线高度，让肩膀自然下沉。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "办公",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:003",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "打字时手腕容易累？",
+      "answer": "让前臂获得支撑，手腕尽量保持自然平直。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "办公",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:004",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "连续坐了很久？",
+      "answer": "起身走动两三分钟，再回来继续手头的事。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "活动",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:005",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "桌面总被杂物占满？",
+      "answer": "只留下今天会用到的物品，其余按类别归位。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:006",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "工作任务太多不知从哪开始？",
+      "answer": "先写下最重要的一件事，只推进它的第一个小步骤。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "效率",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:007",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "通知不断打断注意力？",
+      "answer": "给非紧急应用设置固定查看时段。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "专注",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:008",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "浏览器标签越开越多？",
+      "answer": "把稍后阅读内容集中收藏，再关闭暂时不用的标签。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "数字整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:009",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "文件总是找不到？",
+      "answer": "用“日期-项目-内容”这样的固定规则命名。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "数字整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:010",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "担心重要文件丢失？",
+      "answer": "至少保留一份本机之外的备份，并定期确认能恢复。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "备份",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:011",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "密码太多记不住？",
+      "answer": "使用可信的密码管理器，并为重要账号开启多重验证。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:012",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "收到催促转账的消息？",
+      "answer": "先通过另一个可靠渠道核实对方身份。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:013",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "公共电脑上登录了账号？",
+      "answer": "使用结束后退出账号，并避免保存密码。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:014",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "手机存储快满了？",
+      "answer": "先清理重复照片、离线缓存和不再使用的安装包。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "数字整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:015",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "充电线总缠在一起？",
+      "answer": "按使用地点分组，用短绑带固定每一根线。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:016",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "早上容易手忙脚乱？",
+      "answer": "睡前把钥匙、证件和第二天要穿的衣物放在固定位置。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "习惯",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:017",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "临出门才发现忘东西？",
+      "answer": "在门边设置一个“出门区”，集中放常带物品。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:018",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "待办事项越写越长？",
+      "answer": "把事项分成今天、等待和以后，再删掉没有价值的项目。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "效率",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:019",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "做事总被小任务拖走？",
+      "answer": "先记录小任务，完成当前时间块后再统一处理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "专注",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:020",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "开会容易漏掉结论？",
+      "answer": "结束前记下负责人、下一步和截止时间。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "效率",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:021",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "喝水总是想不起来？",
+      "answer": "把水杯放在视线可见处，并在自然休息点补水。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:022",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "早餐时间很紧？",
+      "answer": "提前准备容易取用的主食、蛋白质和水果。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "饮食",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:023",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "买菜经常重复或遗漏？",
+      "answer": "按冰箱、厨房和日用品三个区域列购物清单。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:024",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "蔬菜买回家容易忘？",
+      "answer": "把需要先吃的食材放到冰箱最显眼的位置。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "饮食",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:025",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "剩菜不知道放了多久？",
+      "answer": "密封后标注日期，无法确认状态时不要勉强食用。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "饮食",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:026",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "切菜板容易串味？",
+      "answer": "生食和即食食物尽量使用不同切菜板。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "厨房",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:027",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "冰箱有异味？",
+      "answer": "先检查过期和渗漏食物，再擦净内壁与密封条。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "厨房",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:028",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "烧水后水垢明显？",
+      "answer": "按设备说明定期除垢，并彻底冲洗干净。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:029",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "调味时容易放咸？",
+      "answer": "盐先少量加入，尝过后再逐步调整。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "厨房",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:030",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "吃饭速度太快？",
+      "answer": "每吃几口放下餐具片刻，让节奏慢一点。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "饮食",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:031",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "晚上总把时间刷过去？",
+      "answer": "给娱乐应用设一个结束提醒，到点先离开屏幕。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:032",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "准备睡觉却还很清醒？",
+      "answer": "把灯光调暗，做一段固定而安静的睡前流程。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:033",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "卧室光线影响休息？",
+      "answer": "遮住不必要的指示灯，并让窗帘尽量隔光。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:034",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "早晨很难清醒？",
+      "answer": "起床后拉开窗帘，让自然光帮助身体进入白天节奏。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:035",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "周末作息总被打乱？",
+      "answer": "起床时间尽量不要与平日相差太多。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:036",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "午后特别困？",
+      "answer": "先补水并短暂走动，若小睡则控制在较短时间。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "精力",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:037",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "睡前脑子里都是待办？",
+      "answer": "把想到的事情写下来，告诉自己明天再处理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:038",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "房间太热不易入睡？",
+      "answer": "睡前适度通风，把寝具调整到舒适温度。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:039",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "闹钟响了反复按掉？",
+      "answer": "把闹钟放到需要起身才能关闭的位置。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "习惯",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:040",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "衣柜总是找不到衣服？",
+      "answer": "按使用场景或品类分区，常穿的放在最顺手位置。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:041",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "抽屉越收拾越乱？",
+      "answer": "用小盒划分区域，让每类物品都有固定边界。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:042",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "纸质票据容易丢？",
+      "answer": "集中放进一个文件袋，并定期数字化重要票据。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:043",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "清洁任务看起来太大？",
+      "answer": "一次只处理一个台面或一个抽屉。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:044",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "灰尘总是很快回来？",
+      "answer": "先从高处清理，再处理地面，避免重复劳动。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:045",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "洗衣前容易染色？",
+      "answer": "深浅颜色分开，并先查看衣物洗涤标签。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:046",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "衣服口袋里总有纸巾？",
+      "answer": "放进洗衣机前逐个摸一遍口袋。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:047",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "浴室地面容易滑？",
+      "answer": "及时清理积水，并使用稳固的防滑垫。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:048",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "插线板周围很杂乱？",
+      "answer": "避免覆盖散热孔，也不要让多个大功率设备同时超负荷使用。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:049",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "家里闻到异常气味？",
+      "answer": "先远离可能的危险源，通风并按设备说明联系专业人员。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:050",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "出门旅行证件怕丢？",
+      "answer": "原件贴身保管，并留一份加密的电子备份。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:051",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "行李总是装得太满？",
+      "answer": "先按每天必需品列清单，再删掉可在目的地获得的物品。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:052",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "去陌生地点容易慌？",
+      "answer": "提前保存地址、路线和紧急联系方式的离线副本。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:053",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "长途乘车身体僵硬？",
+      "answer": "在安全条件下定时活动脚踝和腿部。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:054",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "旅行充电设备很多？",
+      "answer": "出发前确认插头规格，并把充电器集中收纳。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:055",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "雨天出门鞋子易湿？",
+      "answer": "准备防水袋，把湿物与其他物品分开。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "旅行",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:056",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "天气变化大不知道穿什么？",
+      "answer": "采用容易增减的分层穿法。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "穿搭",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:057",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "太阳强烈时要在户外久留？",
+      "answer": "选择遮阳处并准备帽子、合适的防晒用品和饮水。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "户外",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:058",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "冬天室内空气干？",
+      "answer": "适度通风并关注环境湿度，避免加湿设备积水发霉。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:059",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "每月支出看不清？",
+      "answer": "先记录固定支出和大额支出，再观察可调整部分。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "财务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:060",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "冲动购物后常后悔？",
+      "answer": "非急需物品先放入清单，隔一天再决定。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:061",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "订阅服务越积越多？",
+      "answer": "每月检查一次账单，取消长期不用的订阅。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "财务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:062",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "优惠活动让人买太多？",
+      "answer": "先看是否本来就在购物清单上，再比较实际单价。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:063",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "现金票据难核对？",
+      "answer": "当日简单记录用途，避免月底靠回忆补账。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "财务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:064",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "共同费用容易说不清？",
+      "answer": "提前约定分摊规则，并保留清晰记录。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "财务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:065",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "大额购买难决定？",
+      "answer": "写下必须条件、预算上限和总使用成本再比较。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:066",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "总被“限时”催着下单？",
+      "answer": "先离开页面几分钟，确认需求不会因倒计时改变。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:067",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "家中物品常重复购买？",
+      "answer": "采购前先查看库存，并给消耗品设最低补充量。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "购物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:068",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "计划总是排得太满？",
+      "answer": "给每段安排留出缓冲，重要事项之间不要无缝衔接。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "时间",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:069",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "开始一件事很困难？",
+      "answer": "把目标缩小到五分钟内能完成的动作。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "效率",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:070",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "任务做到一半容易忘上下文？",
+      "answer": "暂停前写下一句“下一步做什么”。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "效率",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:071",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "一天结束却不知道做了什么？",
+      "answer": "下班前记录三项已完成事项和明天第一步。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "复盘",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:072",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "信息收藏很多却不再看？",
+      "answer": "收藏时顺手写一句用途，并定期清理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:073",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "学新东西记不牢？",
+      "answer": "用自己的话复述，再隔一段时间主动回忆。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:074",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "阅读容易走神？",
+      "answer": "每读完一小节，用一句话概括重点。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:075",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "复杂问题理不清？",
+      "answer": "把已知、未知和限制条件分别写出来。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "思考",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:076",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "做选择时反复纠结？",
+      "answer": "先确定最重要的两个标准，再按标准比较。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "决策",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:077",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "邮箱未读越来越多？",
+      "answer": "按回复、行动、存档三类快速处理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "数字整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:078",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "相册里重复照片很多？",
+      "answer": "按月份分批清理，每次只处理一个小范围。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "数字整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:079",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "软件总弹升级提醒？",
+      "answer": "从官方渠道更新，并在更新前保存正在编辑的内容。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:080",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "要丢弃旧设备？",
+      "answer": "先备份需要的数据，再退出账号并执行可靠的数据清除。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:081",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "二维码来源不明？",
+      "answer": "确认来源和跳转地址后再输入账号或付款信息。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:082",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "收到陌生附件？",
+      "answer": "不要急着打开，先核对发件人和文件用途。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:083",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "电脑准备长时间不用？",
+      "answer": "保存工作、正常关机，并妥善放置电源与设备。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "设备",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:084",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "耳机线和充电线容易损坏？",
+      "answer": "拔插时握住接头，不要直接拉扯线材。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "设备",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:085",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "键盘缝隙容易积灰？",
+      "answer": "断开电源后按设备说明使用合适工具清洁。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "设备",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:086",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "手机进水后很着急？",
+      "answer": "立即停止使用和充电，按厂商建议处理或送修。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "设备",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:087",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "电池鼓包怎么办？",
+      "answer": "停止使用和挤压，远离热源并交给专业渠道处理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:088",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "出门前总担心门窗？",
+      "answer": "固定按“火、电、门、窗”顺序检查一次。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:089",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "钥匙常找不到？",
+      "answer": "回家后始终放进同一个托盘或挂钩。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "习惯",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:090",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "垃圾分类总记混？",
+      "answer": "按当地规则在垃圾桶附近贴一张简短对照。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "环保",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:091",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "空调开着又觉得闷？",
+      "answer": "按环境情况短时通风，并定期清洁滤网。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:092",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "白天房间一直开灯？",
+      "answer": "先利用自然光，离开时顺手关闭不需要的灯。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "节能",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:093",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "水龙头有轻微滴漏？",
+      "answer": "尽早检查密封件或联系维修，避免长期浪费。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "节能",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:094",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "打印文件经常浪费纸？",
+      "answer": "先用打印预览检查页数、方向和范围。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "办公",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:095",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "快递包装越积越多？",
+      "answer": "拆包后及时清除个人信息，再按当地规则分类。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:096",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "植物总忘记浇水？",
+      "answer": "按品种需求设置检查提醒，不要只按固定天数机械浇水。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "植物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:097",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "室内植物叶片积灰？",
+      "answer": "用柔软湿布轻轻擦拭，并避免损伤叶片。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "植物",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:098",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "做完家务腰背累？",
+      "answer": "把常用工具调到合适长度，减少长时间弯腰。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "家务",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:099",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "搬重物时不好发力？",
+      "answer": "先确认路线，靠近物体并用腿部力量平稳起身。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "安全",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "tip:zhcn2026:100",
+      "type": "tip",
+      "revision": 1,
+      "prompt": "想养成新习惯？",
+      "answer": "把新动作接在一个已有习惯之后，并从很小的次数开始。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "习惯",
+        "生活小贴士"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

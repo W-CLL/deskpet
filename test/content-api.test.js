@@ -100,12 +100,15 @@ test('content administration, signed delivery and account history work end to en
           choices: ['3', '4', '5'],
           answer: '4'
         }),
-        content('trivia:first', 'trivia')
+        content('trivia:first', 'trivia'),
+        content('riddle:first', 'riddle'),
+        content('tip:first', 'tip'),
+        content('care:first', 'care')
       ]
     })
   }));
   assert.equal(imported.response.status, 200);
-  assert.equal(imported.payload.created, 3);
+  assert.equal(imported.payload.created, 6);
   assert.equal(imported.payload.catalog.version, 1);
 
   const created = await jsonResponse(await fetch(`${baseUrl}/api/admin/content`, {
@@ -138,12 +141,15 @@ test('content administration, signed delivery and account history work end to en
   }));
   assert.equal(listing.response.status, 200);
   assert.deepEqual(listing.payload.summary, {
-    total: 4,
-    active: 3,
+    total: 7,
+    active: 6,
     disabled: 1,
     jokes: 2,
     math: 1,
-    trivia: 0
+    trivia: 0,
+    riddles: 1,
+    tips: 1,
+    care: 1
   });
   assert.equal(listing.payload.catalog.version, 4);
 
@@ -179,6 +185,21 @@ test('content administration, signed delivery and account history work end to en
   );
   assert.deepEqual(firstBatch.payload.disabledIds, ['trivia:first']);
   verifyPayload(firstBatch.payload, publicKey);
+
+  const sixTypeBatch = await jsonResponse(await fetch(`${baseUrl}/api/content/batch`, {
+    method: 'POST',
+    headers: { ...licenseHeaders, 'X-DeskPet-Version': '2.5.2' },
+    body: JSON.stringify({
+      types: ['joke', 'math', 'trivia', 'riddle', 'tip', 'care'],
+      limit: 10
+    })
+  }));
+  assert.equal(sixTypeBatch.response.status, 200);
+  assert.deepEqual(
+    new Set(sixTypeBatch.payload.items.map((entry) => entry.id)),
+    new Set(['joke:first', 'joke:second', 'math:first', 'riddle:first', 'tip:first', 'care:first'])
+  );
+  verifyPayload(sixTypeBatch.payload, publicKey);
 
   const shownId = firstBatch.payload.items[0].id;
   const recorded = await jsonResponse(await fetch(`${baseUrl}/api/interactions/events`, {
@@ -218,4 +239,32 @@ test('content administration, signed delivery and account history work end to en
     headers: { ...licenseHeaders, 'If-None-Match': etag }
   });
   assert.equal(cached.status, 304);
+
+  const sixTypePackResponse = await fetch(`${baseUrl}/api/content/offline-pack`, {
+    headers: { ...licenseHeaders, 'X-DeskPet-Version': '2.5.2' }
+  });
+  const sixTypePack = await sixTypePackResponse.json();
+  assert.equal(sixTypePackResponse.status, 200);
+  assert.equal(sixTypePack.items.length, 6);
+  assert.deepEqual(
+    new Set(sixTypePack.items.map((entry) => entry.type)),
+    new Set(['joke', 'math', 'riddle', 'tip', 'care'])
+  );
+  verifyPayload(sixTypePack, publicKey);
+
+  const generatedImportPath = path.join(
+    __dirname,
+    '..',
+    'examples',
+    'content-import.zh-CN-trivia-100.json'
+  );
+  const generatedImportBody = await fs.promises.readFile(generatedImportPath, 'utf8');
+  assert.ok(Buffer.byteLength(generatedImportBody) > 32 * 1024);
+  const generatedImport = await jsonResponse(await fetch(`${baseUrl}/api/admin/content/import`, {
+    method: 'POST',
+    headers: adminHeaders,
+    body: generatedImportBody
+  }));
+  assert.equal(generatedImport.response.status, 200);
+  assert.equal(generatedImport.payload.created, 100);
 });

@@ -62,6 +62,9 @@ const elements = {
   contentJokes: document.querySelector('#contentJokes'),
   contentMath: document.querySelector('#contentMath'),
   contentTrivia: document.querySelector('#contentTrivia'),
+  contentRiddles: document.querySelector('#contentRiddles'),
+  contentTips: document.querySelector('#contentTips'),
+  contentCare: document.querySelector('#contentCare'),
   contentDisabled: document.querySelector('#contentDisabled'),
   contentEditorForm: document.querySelector('#contentEditorForm'),
   contentEditorTitle: document.querySelector('#contentEditorTitle'),
@@ -217,6 +220,142 @@ function actionButton(label, className, handler) {
   return button;
 }
 
+function createListView(name, { emptyElement, renderPage, matches }) {
+  const controls = document.querySelector(`[data-list-controls="${name}"]`);
+  const pagination = document.querySelector(`[data-list-pagination="${name}"]`);
+  const filterElements = Array.from(controls?.querySelectorAll('[data-list-filter]') || []);
+  const pageSize = document.createElement('select');
+  pageSize.setAttribute('aria-label', '每页显示条数');
+  for (const value of [10, 20, 50, 100]) {
+    const option = document.createElement('option');
+    option.value = String(value);
+    option.textContent = String(value);
+    option.selected = value === 20;
+    pageSize.append(option);
+  }
+  const pageSizeLabel = document.createElement('label');
+  pageSizeLabel.className = 'page-size-control';
+  const pageSizeText = document.createElement('span');
+  pageSizeText.textContent = '每页';
+  pageSizeLabel.append(pageSizeText, pageSize);
+
+  const range = document.createElement('span');
+  range.className = 'pagination-range';
+  const pageLabel = document.createElement('span');
+  pageLabel.className = 'pagination-page';
+  const previous = document.createElement('button');
+  previous.type = 'button';
+  previous.className = 'button button-secondary pagination-button';
+  previous.textContent = '←';
+  previous.title = '上一页';
+  previous.setAttribute('aria-label', '上一页');
+  const next = document.createElement('button');
+  next.type = 'button';
+  next.className = 'button button-secondary pagination-button';
+  next.textContent = '→';
+  next.title = '下一页';
+  next.setAttribute('aria-label', '下一页');
+  const navigation = document.createElement('div');
+  navigation.className = 'pagination-navigation';
+  navigation.append(previous, pageLabel, next);
+  pagination.replaceChildren(pageSizeLabel, range, navigation);
+
+  let items = [];
+  let currentPage = 1;
+
+  function filterValues() {
+    return Object.fromEntries(filterElements.map((element) => [element.dataset.listFilter, element.value]));
+  }
+
+  function render() {
+    const filters = filterValues();
+    const filtered = matches ? items.filter((item) => matches(item, filters)) : [...items];
+    const size = Number(pageSize.value);
+    const pageCount = Math.max(1, Math.ceil(filtered.length / size));
+    currentPage = Math.min(currentPage, pageCount);
+    const start = (currentPage - 1) * size;
+    const visibleItems = filtered.slice(start, start + size);
+    renderPage(visibleItems);
+    emptyElement.hidden = filtered.length > 0;
+    range.textContent = filtered.length
+      ? `${start + 1}-${start + visibleItems.length} / ${filtered.length} 条`
+      : '0 条';
+    pageLabel.textContent = `${currentPage} / ${pageCount}`;
+    previous.disabled = currentPage <= 1;
+    next.disabled = currentPage >= pageCount;
+  }
+
+  for (const element of filterElements) {
+    element.addEventListener('change', () => {
+      currentPage = 1;
+      render();
+    });
+  }
+  pageSize.addEventListener('change', () => {
+    currentPage = 1;
+    render();
+  });
+  previous.addEventListener('click', () => {
+    if (currentPage <= 1) return;
+    currentPage -= 1;
+    render();
+  });
+  next.addEventListener('click', () => {
+    currentPage += 1;
+    render();
+  });
+
+  return {
+    setItems(nextItems) {
+      items = Array.isArray(nextItems) ? nextItems : [];
+      render();
+    }
+  };
+}
+
+function releaseStatusKey(release) {
+  if (release.active) return 'active';
+  return release.publishedAt ? 'published' : 'draft';
+}
+
+function activationStatusKey(item) {
+  return item.license?.status === 'revoked' ? 'revoked' : item.status;
+}
+
+const listViews = {
+  releases: createListView('releases', {
+    emptyElement: elements.emptyReleases,
+    renderPage: renderReleaseRows,
+    matches: (item, filters) => (!filters.platform || item.platform === filters.platform)
+      && (!filters.status || releaseStatusKey(item) === filters.status)
+  }),
+  activations: createListView('activations', {
+    emptyElement: elements.emptyActivations,
+    renderPage: renderActivationRows,
+    matches: (item, filters) => (!filters.status || activationStatusKey(item) === filters.status)
+      && (!filters.purpose || (item.purpose || 'new_account') === filters.purpose)
+  }),
+  interactions: createListView('interactions', {
+    emptyElement: elements.emptyInteractions,
+    renderPage: renderInteractionRows,
+    matches: (item, filters) => (!filters.mode || item.profile.mode === filters.mode)
+      && (!filters.enabled
+        || (item.profile.promptsEnabled ? 'enabled' : 'disabled') === filters.enabled)
+  }),
+  content: createListView('content', {
+    emptyElement: elements.emptyContent,
+    renderPage: renderContentRows,
+    matches: (item, filters) => (!filters.type || item.type === filters.type)
+      && (!filters.active || (item.active ? 'active' : 'disabled') === filters.active)
+  }),
+  feedback: createListView('feedback', {
+    emptyElement: elements.emptyFeedback,
+    renderPage: renderFeedbackRows,
+    matches: (item, filters) => (!filters.type || item.type === filters.type)
+      && (!filters.status || item.status === filters.status)
+  })
+};
+
 function releaseApiPath(release) {
   return `/api/admin/releases/${encodeURIComponent(release.platform)}/${encodeURIComponent(release.architecture)}/${encodeURIComponent(release.version)}`;
 }
@@ -307,10 +446,13 @@ function renderReleases(payload) {
   elements.releasePageDrafts.textContent = payload.releases
     .filter((release) => !release.publishedAt).length;
   elements.manifestUrl.value = payload.manifestUrl || '';
-  elements.releaseRows.replaceChildren();
-  elements.emptyReleases.hidden = payload.releases.length > 0;
+  listViews.releases.setItems(payload.releases);
+}
 
-  for (const release of payload.releases) {
+function renderReleaseRows(releases) {
+  elements.releaseRows.replaceChildren();
+
+  for (const release of releases) {
     const row = document.createElement('tr');
 
     const versionCell = cell('version-cell');
@@ -416,11 +558,14 @@ function renderActivations(payload) {
   elements.activationUnused.textContent = summary.unused || 0;
   elements.activationActive.textContent = summary.active || 0;
   elements.activationRevoked.textContent = summary.revoked || 0;
+  listViews.activations.setItems(payload.codes);
+}
+
+function renderActivationRows(codes) {
   elements.activationRows.replaceChildren();
-  elements.emptyActivations.hidden = payload.codes.length > 0;
   const accountsWithRebindAction = new Set();
 
-  for (const item of payload.codes) {
+  for (const item of codes) {
     const row = document.createElement('tr');
     const codeCell = cell('activation-code');
     const code = document.createElement('strong');
@@ -437,7 +582,7 @@ function renderActivations(payload) {
       codeCell.append(legacyHint);
     }
 
-    const effectiveStatus = item.license?.status === 'revoked' ? 'revoked' : item.status;
+    const effectiveStatus = activationStatusKey(item);
     const [statusLabel, statusClass] = activationStatus[effectiveStatus] || ['未知', ''];
     const statusCell = cell();
     const status = document.createElement('span');
@@ -571,10 +716,13 @@ function renderFeedback(payload) {
   elements.feedbackInProgress.textContent = summary.inProgress || 0;
   elements.feedbackResolved.textContent = summary.resolved || 0;
   elements.feedbackClosed.textContent = summary.closed || 0;
-  elements.feedbackRows.replaceChildren();
-  elements.emptyFeedback.hidden = payload.items.length > 0;
+  listViews.feedback.setItems(payload.items);
+}
 
-  for (const item of payload.items) {
+function renderFeedbackRows(items) {
+  elements.feedbackRows.replaceChildren();
+
+  for (const item of items) {
     const row = document.createElement('tr');
     const feedbackCell = cell('feedback-content');
     const type = document.createElement('span');
@@ -650,10 +798,13 @@ function renderInteractions(payload) {
   elements.interactionHappy.textContent = summary.moodHappy || 0;
   elements.interactionJokes.textContent = summary.jokesRevealed || 0;
   elements.interactionQuizzes.textContent = summary.quizzesAnswered || 0;
-  elements.interactionRows.replaceChildren();
-  elements.emptyInteractions.hidden = payload.accounts.length > 0;
+  listViews.interactions.setItems(payload.accounts);
+}
 
-  for (const item of payload.accounts) {
+function renderInteractionRows(accounts) {
+  elements.interactionRows.replaceChildren();
+
+  for (const item of accounts) {
     const row = document.createElement('tr');
     const accountCell = cell('interaction-account');
     const account = document.createElement('strong');
@@ -712,7 +863,10 @@ async function loadInteractions() {
 const contentTypeLabels = {
   joke: '冷笑话',
   math: '数学题',
-  trivia: '趣味题'
+  trivia: '趣味知识',
+  riddle: '脑筋急转弯',
+  tip: '生活小贴士',
+  care: '关怀内容'
 };
 
 function resetContentEditor() {
@@ -802,11 +956,17 @@ function renderContent(payload) {
   elements.contentJokes.textContent = summary.jokes || 0;
   elements.contentMath.textContent = summary.math || 0;
   elements.contentTrivia.textContent = summary.trivia || 0;
+  elements.contentRiddles.textContent = summary.riddles || 0;
+  elements.contentTips.textContent = summary.tips || 0;
+  elements.contentCare.textContent = summary.care || 0;
   elements.contentDisabled.textContent = summary.disabled || 0;
-  elements.contentRows.replaceChildren();
-  elements.emptyContent.hidden = payload.items.length > 0;
+  listViews.content.setItems(payload.items);
+}
 
-  for (const item of payload.items) {
+function renderContentRows(items) {
+  elements.contentRows.replaceChildren();
+
+  for (const item of items) {
     const row = document.createElement('tr');
     if (!item.active) row.className = 'content-disabled-row';
 

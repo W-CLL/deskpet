@@ -1,0 +1,1605 @@
+{
+  "items": [
+    {
+      "id": "care:zhcn2026:001",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天是不是忙了很久？",
+      "answer": "先把肩膀放下来，慢慢呼一口气。你不需要一直绷着。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "放松",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:002",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚才一直盯着屏幕吗？",
+      "answer": "看看远处，让眼睛休息一会儿。手头的事可以稍等片刻。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:003",
+      "type": "care",
+      "revision": 1,
+      "prompt": "现在有点累了吗？",
+      "answer": "哪怕只停两分钟，也算是在认真照顾自己。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:004",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天喝水了吗？",
+      "answer": "顺手喝几口水吧，不用等到很渴才想起来。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:005",
+      "type": "care",
+      "revision": 1,
+      "prompt": "是不是坐了很久？",
+      "answer": "起来伸伸腿，走几步再回来，我在这里等你。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "活动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:006",
+      "type": "care",
+      "revision": 1,
+      "prompt": "肩颈有点紧吗？",
+      "answer": "轻轻转动肩膀，动作舒服就好，不必勉强。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "放松",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:007",
+      "type": "care",
+      "revision": 1,
+      "prompt": "眉头是不是又皱起来了？",
+      "answer": "先松开额头和下巴，让脸也歇一会儿。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "放松",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:008",
+      "type": "care",
+      "revision": 1,
+      "prompt": "手头事情很多吗？",
+      "answer": "先选最重要的一件，其他事情暂时排队就好。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "减压",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:009",
+      "type": "care",
+      "revision": 1,
+      "prompt": "感觉脑子塞满了吗？",
+      "answer": "把想到的事写下来，别让大脑一直替你保管。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "减压",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:010",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天一直在赶时间？",
+      "answer": "慢一点不会让努力失效，稳稳做好下一步就够了。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "减压",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:011",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚完成一件事吗？",
+      "answer": "先承认一下自己的进展，再去处理下一件。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:012",
+      "type": "care",
+      "revision": 1,
+      "prompt": "事情推进得不顺利？",
+      "answer": "卡住不代表你不行，它只说明这里需要换一种方法。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:013",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天状态一般？",
+      "answer": "普通的一天也值得好好过，不必每时每刻都高效。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "接纳",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:014",
+      "type": "care",
+      "revision": 1,
+      "prompt": "现在不太有动力？",
+      "answer": "先做一个小到不会拒绝的动作，动力可以在行动后再来。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:015",
+      "type": "care",
+      "revision": 1,
+      "prompt": "计划被打乱了吗？",
+      "answer": "重新安排不是失败，是在根据现实调整路线。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "接纳",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:016",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有件事做错了？",
+      "answer": "把能修正的部分修正，剩下的就留给经验。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "接纳",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:017",
+      "type": "care",
+      "revision": 1,
+      "prompt": "是不是对自己要求太高了？",
+      "answer": "你可以认真，也可以给自己留一点余地。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "接纳",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:018",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天进度比预想慢？",
+      "answer": "慢一点仍然是在向前，不需要拿每一天互相比较。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:019",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚被否定了吗？",
+      "answer": "一次评价只是一个视角，不是对你的完整定义。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "支持",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:020",
+      "type": "care",
+      "revision": 1,
+      "prompt": "心里有点乱？",
+      "answer": "先分清什么能马上处理，什么可以稍后再想。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "减压",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:021",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有点不开心吗？",
+      "answer": "不用急着把情绪赶走，先允许它在这里待一会儿。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "情绪",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:022",
+      "type": "care",
+      "revision": 1,
+      "prompt": "现在有点烦躁？",
+      "answer": "离开当前画面片刻，换口空气，再决定下一步。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "情绪",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:023",
+      "type": "care",
+      "revision": 1,
+      "prompt": "心情低低的？",
+      "answer": "今天可以把目标调小一些，照顾好基本需要就很好。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "情绪",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:024",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有点失落吗？",
+      "answer": "失落说明你曾经认真期待过，先对这份期待温柔一点。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "情绪",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:025",
+      "type": "care",
+      "revision": 1,
+      "prompt": "想法一直绕来绕去？",
+      "answer": "把最担心的一句写下来，再看看它是否真要现在解决。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "情绪",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:026",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚和别人闹别扭？",
+      "answer": "等情绪平稳一点再表达，比立刻争出结果更重要。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:027",
+      "type": "care",
+      "revision": 1,
+      "prompt": "担心自己说错话？",
+      "answer": "真诚地说明本意和感受，通常比反复猜测更有帮助。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:028",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天有点孤单？",
+      "answer": "可以给信任的人发一句简单问候，不必等到有完整话题。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:029",
+      "type": "care",
+      "revision": 1,
+      "prompt": "不好意思开口求助？",
+      "answer": "说明具体需要什么，会让对方更容易回应你。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:030",
+      "type": "care",
+      "revision": 1,
+      "prompt": "一直在照顾别人？",
+      "answer": "也留一点注意力给自己，你的需要同样重要。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:031",
+      "type": "care",
+      "revision": 1,
+      "prompt": "别人没有及时回复？",
+      "answer": "先别急着把沉默解释成拒绝，对方也许只是在忙。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:032",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天听到了刺耳的话？",
+      "answer": "先保护好自己的边界，不必马上接受别人的判断。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:033",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有话憋在心里？",
+      "answer": "找一个安全的方式说出来、写下来，别让它一直挤着你。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:034",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚刚帮助了别人？",
+      "answer": "你的善意很珍贵，也记得不要耗尽自己。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:035",
+      "type": "care",
+      "revision": 1,
+      "prompt": "需要拒绝一件事？",
+      "answer": "清楚而礼貌地说“不”，也是在认真管理自己的精力。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "边界",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:036",
+      "type": "care",
+      "revision": 1,
+      "prompt": "午饭是不是又推迟了？",
+      "answer": "忙碌不能替代吃饭，先给身体补充一点能量。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:037",
+      "type": "care",
+      "revision": 1,
+      "prompt": "早饭还没顾上？",
+      "answer": "找点方便入口的食物，别让自己空着肚子硬撑。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:038",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天吃得太匆忙？",
+      "answer": "下一口慢一点，给身体一点跟上节奏的时间。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:039",
+      "type": "care",
+      "revision": 1,
+      "prompt": "咖啡已经喝了好几杯？",
+      "answer": "先换成水，看看疲惫真正需要的是不是休息。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:040",
+      "type": "care",
+      "revision": 1,
+      "prompt": "房间有点闷吗？",
+      "answer": "条件允许的话开窗换换空气，让环境也松快一点。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:041",
+      "type": "care",
+      "revision": 1,
+      "prompt": "是不是忘了看看窗外？",
+      "answer": "抬头找一处远景，让注意力从小小的屏幕里出来。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:042",
+      "type": "care",
+      "revision": 1,
+      "prompt": "耳机戴了很久？",
+      "answer": "摘下来安静几分钟，让耳朵休息一下。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:043",
+      "type": "care",
+      "revision": 1,
+      "prompt": "手指一直在敲键盘？",
+      "answer": "张开手掌再轻轻握拳几次，给双手换个动作。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "活动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:044",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天几乎没动过？",
+      "answer": "不用专门训练，先在房间里走一小圈。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "活动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:045",
+      "type": "care",
+      "revision": 1,
+      "prompt": "呼吸有点急吗？",
+      "answer": "试着把呼气放慢，不必追求某个固定节奏。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "放松",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:046",
+      "type": "care",
+      "revision": 1,
+      "prompt": "准备熬夜赶进度？",
+      "answer": "先评估真正必须今晚完成的部分，把其余留给清醒的明天。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:047",
+      "type": "care",
+      "revision": 1,
+      "prompt": "已经很晚了？",
+      "answer": "保存好工作，给今天安排一个明确的结束。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:048",
+      "type": "care",
+      "revision": 1,
+      "prompt": "躺下还在想工作？",
+      "answer": "把明天第一件事记下来，然后允许今天到此为止。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:049",
+      "type": "care",
+      "revision": 1,
+      "prompt": "早上没睡醒吗？",
+      "answer": "先接触一点自然光，喝几口水，再慢慢进入状态。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:050",
+      "type": "care",
+      "revision": 1,
+      "prompt": "昨晚休息得不够？",
+      "answer": "今天适当降低任务强度，不要用自责继续消耗精力。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:051",
+      "type": "care",
+      "revision": 1,
+      "prompt": "做了很多却觉得不够？",
+      "answer": "把已经完成的事情列出来，你的努力需要被看见。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:052",
+      "type": "care",
+      "revision": 1,
+      "prompt": "正在学一个很难的东西？",
+      "answer": "不理解是学习过程的一部分，不是能力的判决。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:053",
+      "type": "care",
+      "revision": 1,
+      "prompt": "练习时又出错了？",
+      "answer": "错误把薄弱的位置标了出来，这正是下一次练习的方向。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:054",
+      "type": "care",
+      "revision": 1,
+      "prompt": "记不住刚学的内容？",
+      "answer": "先休息一下，再用自己的话回忆，效果可能更好。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:055",
+      "type": "care",
+      "revision": 1,
+      "prompt": "遇到一个大问题？",
+      "answer": "把它切成几个可以单独回答的小问题。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:056",
+      "type": "care",
+      "revision": 1,
+      "prompt": "担心问的问题太简单？",
+      "answer": "能让自己继续前进的问题，就是值得问的问题。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "学习",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:057",
+      "type": "care",
+      "revision": 1,
+      "prompt": "看到别人进步很快？",
+      "answer": "你看到的是对方的一段结果，不是全部过程。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "接纳",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:058",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天没达到目标？",
+      "answer": "复盘一个原因，调整下一步，比否定自己更有用。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "成长",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:059",
+      "type": "care",
+      "revision": 1,
+      "prompt": "准备重新开始吗？",
+      "answer": "不需要等完美时机，从眼前最小的一步开始。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "成长",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:060",
+      "type": "care",
+      "revision": 1,
+      "prompt": "最近在培养新习惯？",
+      "answer": "偶尔中断不等于归零，下一次继续就好。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "成长",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:061",
+      "type": "care",
+      "revision": 1,
+      "prompt": "工作告一段落了吗？",
+      "answer": "站起来看看远处，让这段专注有一个清楚的句号。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:062",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚开完一场长会？",
+      "answer": "先整理三条结论，再让大脑短暂放空。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "工作",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:063",
+      "type": "care",
+      "revision": 1,
+      "prompt": "消息一下子涌进来？",
+      "answer": "先处理真正紧急的，其他消息可以按顺序来。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "工作",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:064",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天一直在切换任务？",
+      "answer": "给接下来的一小段时间只留一个目标。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "专注",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:065",
+      "type": "care",
+      "revision": 1,
+      "prompt": "被一个细节卡了很久？",
+      "answer": "给它设一个时间界限，到点就换角度或寻求帮助。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "工作",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:066",
+      "type": "care",
+      "revision": 1,
+      "prompt": "准备发送重要消息？",
+      "answer": "读一遍语气和关键信息，确认清楚后再发送。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "工作",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:067",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚做完一个决定？",
+      "answer": "如果依据已经足够，就给决定一点执行和观察的时间。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "决策",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:068",
+      "type": "care",
+      "revision": 1,
+      "prompt": "选择太多反而动不了？",
+      "answer": "先排除明显不合适的，再从剩下的选一个可行方案。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "决策",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:069",
+      "type": "care",
+      "revision": 1,
+      "prompt": "担心错过机会？",
+      "answer": "不是每个机会都适合现在的你，匹配比数量更重要。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "决策",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:070",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天花了不少钱？",
+      "answer": "先记录下来，不急着责备自己，再看是否需要调整。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:071",
+      "type": "care",
+      "revision": 1,
+      "prompt": "房间有点乱影响心情？",
+      "answer": "只收拾手边一小块，让环境先出现一个清爽角落。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:072",
+      "type": "care",
+      "revision": 1,
+      "prompt": "积了很多家务？",
+      "answer": "选一个十分钟能结束的任务，完成后再决定要不要继续。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:073",
+      "type": "care",
+      "revision": 1,
+      "prompt": "东西又找不到了？",
+      "answer": "先回想最后一次使用的位置，按路径找，不要同时翻遍所有地方。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "整理",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:074",
+      "type": "care",
+      "revision": 1,
+      "prompt": "天气不错吗？",
+      "answer": "有条件的话去窗边或户外待一会儿，感受一下今天。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:075",
+      "type": "care",
+      "revision": 1,
+      "prompt": "外面下雨了？",
+      "answer": "走路慢一点，注意脚下，也别忘了把自己照顾暖和。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:076",
+      "type": "care",
+      "revision": 1,
+      "prompt": "天气忽然变冷？",
+      "answer": "加一件衣服不麻烦，舒服比硬扛更重要。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:077",
+      "type": "care",
+      "revision": 1,
+      "prompt": "天气很热？",
+      "answer": "尽量避开暴晒，及时补水，给身体留出降温时间。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:078",
+      "type": "care",
+      "revision": 1,
+      "prompt": "准备出门了吗？",
+      "answer": "检查钥匙、手机和需要的证件，路上不用太赶。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "出行",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:079",
+      "type": "care",
+      "revision": 1,
+      "prompt": "正在通勤路上？",
+      "answer": "把肩膀放松一点，今天的事情到了再一件件处理。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "出行",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:080",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚回到家？",
+      "answer": "先放下随身物品，换个舒服的状态，再处理其他事情。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:081",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天见了很多人？",
+      "answer": "给自己留一段安静时间，社交后的疲惫也需要恢复。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "休息",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:082",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天独处了很久？",
+      "answer": "如果你愿意，可以听点熟悉的声音，或联系一个安心的人。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "关系",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:083",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有件事一直拖着？",
+      "answer": "先判断它是困难、模糊还是不重要，再决定下一步。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "行动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:084",
+      "type": "care",
+      "revision": 1,
+      "prompt": "害怕开始后做不好？",
+      "answer": "第一次只负责开始，不负责完美。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "行动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:085",
+      "type": "care",
+      "revision": 1,
+      "prompt": "已经反复修改很多次？",
+      "answer": "先定义“足够好”的标准，达到后就让它向前走。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "行动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:086",
+      "type": "care",
+      "revision": 1,
+      "prompt": "想放弃正在做的事？",
+      "answer": "先休息，再区分是暂时疲惫，还是目标真的需要调整。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "行动",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:087",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天被突发事情打断？",
+      "answer": "处理完后重新写下当前下一步，帮助自己接回节奏。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "专注",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:088",
+      "type": "care",
+      "revision": 1,
+      "prompt": "觉得今天毫无进展？",
+      "answer": "维持生活、处理琐事也是进展，只是它们不总显眼。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "鼓励",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:089",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚收到一个好消息？",
+      "answer": "允许自己高兴一会儿，不用马上奔向下一件事。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开心",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:090",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天心情不错？",
+      "answer": "把这份轻松记住，也可以分享给你在意的人。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开心",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:091",
+      "type": "care",
+      "revision": 1,
+      "prompt": "完成了期待很久的事？",
+      "answer": "好好庆祝一下，哪怕只是给自己一个安静的肯定。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开心",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:092",
+      "type": "care",
+      "revision": 1,
+      "prompt": "遇到一件小幸运？",
+      "answer": "停一下感受它，小小的快乐也值得收藏。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开心",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:093",
+      "type": "care",
+      "revision": 1,
+      "prompt": "刚被人夸奖了吗？",
+      "answer": "试着直接说声谢谢，不必急着把自己的优点推开。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开心",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:094",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天帮助自己做了个好选择？",
+      "answer": "把这个选择记下来，它会成为下次的参考。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "成长",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:095",
+      "type": "care",
+      "revision": 1,
+      "prompt": "正在等待结果？",
+      "answer": "在结果到来前，把注意力放回此刻能做的小事。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "等待",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:096",
+      "type": "care",
+      "revision": 1,
+      "prompt": "等待让你有点焦虑？",
+      "answer": "给查看消息设一个间隔，不必每分钟确认一次。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "等待",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:097",
+      "type": "care",
+      "revision": 1,
+      "prompt": "有些事情暂时没有答案？",
+      "answer": "可以先带着不确定继续生活，答案不一定要马上出现。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "等待",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:098",
+      "type": "care",
+      "revision": 1,
+      "prompt": "今天就快结束了？",
+      "answer": "无论完成多少，都可以为今天画一个温和的句号。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "睡眠",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:099",
+      "type": "care",
+      "revision": 1,
+      "prompt": "准备开始新一天？",
+      "answer": "不用一次想完所有事情，先照顾好眼前这一小时。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "开始",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "care:zhcn2026:100",
+      "type": "care",
+      "revision": 1,
+      "prompt": "现在一切都还好吗？",
+      "answer": "先确认自己有没有饿、渴、冷或累，从最基本的需要开始照顾。",
+      "explanation": "",
+      "choices": [],
+      "tags": [
+        "生活",
+        "关怀"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    }
+  ],
+  "disableMissing": false
+}

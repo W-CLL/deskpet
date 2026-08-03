@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
+const { InteractionStore } = require('../lib/interaction-store');
 
 function validateDataDirectory(dataDirectory, requireExisting) {
   if (!requireExisting) {
@@ -41,17 +42,21 @@ async function main(args = process.argv.slice(2)) {
   validateDataDirectory(dataDirectory, args.includes('--require-existing'));
   const activationStore = new ActivationStore(dataDirectory);
   const feedbackStore = new FeedbackStore(dataDirectory);
+  const interactionStore = new InteractionStore(dataDirectory);
 
   try {
     await activationStore.initialize();
     await feedbackStore.initialize();
+    await interactionStore.initialize();
     const result = {
       dataDirectory,
       activation: activationStore.migrationState,
-      feedback: feedbackStore.migrationState
+      feedback: feedbackStore.migrationState,
+      interaction: interactionStore.migrationState
     };
     console.log(JSON.stringify(result, null, 2));
   } finally {
+    interactionStore.close();
     feedbackStore.close();
     activationStore.close();
   }

@@ -47,6 +47,15 @@ const elements = {
   activationRevoked: document.querySelector('#activationRevoked'),
   activationRows: document.querySelector('#activationRows'),
   emptyActivations: document.querySelector('#emptyActivations'),
+  refreshInteractionButton: document.querySelector('#refreshInteractionButton'),
+  interactionAccounts: document.querySelector('#interactionAccounts'),
+  interactionActiveAccounts: document.querySelector('#interactionActiveAccounts'),
+  interactionTotal: document.querySelector('#interactionTotal'),
+  interactionHappy: document.querySelector('#interactionHappy'),
+  interactionJokes: document.querySelector('#interactionJokes'),
+  interactionQuizzes: document.querySelector('#interactionQuizzes'),
+  interactionRows: document.querySelector('#interactionRows'),
+  emptyInteractions: document.querySelector('#emptyInteractions'),
   refreshFeedbackButton: document.querySelector('#refreshFeedbackButton'),
   feedbackTotal: document.querySelector('#feedbackTotal'),
   feedbackPending: document.querySelector('#feedbackPending'),
@@ -72,6 +81,7 @@ const pages = {
   overview: ['概览', '发布与授权运行状态'],
   releases: ['版本发布', '上传安装包并维护发布记录'],
   activations: ['激活授权', '管理激活码与设备授权'],
+  interactions: ['互动统计', '查看账号互动、心情与内容记录'],
   feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
 
@@ -596,8 +606,81 @@ async function loadFeedback() {
   }
 }
 
+const interactionModes = {
+  quiet: '安静',
+  standard: '标准',
+  lively: '热闹'
+};
+
+function renderInteractions(payload) {
+  const summary = payload.summary || {};
+  elements.interactionAccounts.textContent = summary.accounts || 0;
+  elements.interactionActiveAccounts.textContent = summary.interactingAccounts || 0;
+  elements.interactionTotal.textContent = summary.totalInteractions || 0;
+  elements.interactionHappy.textContent = summary.moodHappy || 0;
+  elements.interactionJokes.textContent = summary.jokesRevealed || 0;
+  elements.interactionQuizzes.textContent = summary.quizzesAnswered || 0;
+  elements.interactionRows.replaceChildren();
+  elements.emptyInteractions.hidden = payload.accounts.length > 0;
+
+  for (const item of payload.accounts) {
+    const row = document.createElement('tr');
+    const accountCell = cell('interaction-account');
+    const account = document.createElement('strong');
+    account.textContent = `账号 …${item.accountSuffix}`;
+    const created = document.createElement('span');
+    created.textContent = `建档 ${formatDate(item.profile.createdAt)}`;
+    accountCell.append(account, created);
+
+    const settingsCell = cell('interaction-settings');
+    const mode = document.createElement('strong');
+    mode.textContent = `${interactionModes[item.profile.mode] || item.profile.mode}模式`;
+    const enabled = document.createElement('span');
+    enabled.textContent = item.profile.promptsEnabled ? '随机互动已开启' : '随机互动已关闭';
+    settingsCell.append(mode, enabled);
+
+    const totalCell = cell('interaction-number');
+    totalCell.textContent = item.summary.totalInteractions;
+
+    const moodCell = cell('interaction-detail');
+    const moodTotal = document.createElement('strong');
+    moodTotal.textContent = `共 ${item.summary.moodResponses} 次`;
+    const moodBreakdown = document.createElement('span');
+    moodBreakdown.textContent = `开心 ${item.summary.moodHappy} · 一般 ${item.summary.moodOkay} · 低落 ${item.summary.moodLow}`;
+    moodCell.append(moodTotal, moodBreakdown);
+
+    const contentCell = cell('interaction-detail');
+    const contentTotal = document.createElement('strong');
+    contentTotal.textContent = `笑话 ${item.summary.jokesRevealed} · 答题 ${item.summary.quizzesAnswered}`;
+    const correct = document.createElement('span');
+    correct.textContent = `答对 ${item.summary.quizzesCorrect} · 展示 ${item.summary.contentShown}`;
+    contentCell.append(contentTotal, correct);
+
+    const recentCell = cell('date-stack');
+    const recent = document.createElement('span');
+    recent.textContent = item.summary.lastInteractionAt
+      ? formatDate(item.summary.lastInteractionAt)
+      : '尚无互动';
+    recentCell.append(recent);
+
+    row.append(accountCell, settingsCell, totalCell, moodCell, contentCell, recentCell);
+    elements.interactionRows.append(row);
+  }
+}
+
+async function loadInteractions() {
+  elements.refreshInteractionButton.disabled = true;
+  try {
+    renderInteractions(await api('/api/admin/interactions'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshInteractionButton.disabled = false;
+  }
+}
+
 async function loadDashboard() {
-  await Promise.all([loadReleases(), loadActivations(), loadFeedback()]);
+  await Promise.all([loadReleases(), loadActivations(), loadInteractions(), loadFeedback()]);
 }
 
 async function loadReleases() {
@@ -710,6 +793,7 @@ elements.uploadForm.addEventListener('submit', async (event) => {
 
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
+elements.refreshInteractionButton.addEventListener('click', loadInteractions);
 elements.refreshFeedbackButton.addEventListener('click', loadFeedback);
 
 for (const item of elements.navItems) {

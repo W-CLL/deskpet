@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-5">
+  <link rel="stylesheet" href="/assets/admin.css?v=admin-ui-6">
 </head>
 <body>
   <main class="app-root">
@@ -16,7 +16,7 @@
           <img src="/assets/app-icon.png" width="44" height="44" alt="">
           <div>
             <strong>桌搭子管理后台</strong>
-            <span>更新、授权与用户反馈</span>
+            <span>更新、授权、互动与用户反馈</span>
           </div>
         </div>
         <div class="section-heading login-heading">
@@ -59,6 +59,10 @@
           <button class="nav-item" type="button" data-page="activations">
             <span>激活授权</span>
             <small>激活码与设备</small>
+          </button>
+          <button class="nav-item" type="button" data-page="interactions">
+            <span>互动统计</span>
+            <small>账号行为与心情</small>
           </button>
           <button class="nav-item" type="button" data-page="feedback">
             <span>问题反馈</span>
@@ -146,6 +150,10 @@
                   <button class="quick-action" type="button" data-go-to="feedback">
                     <strong>处理用户反馈</strong>
                     <span>查看问题、建议并更新处理状态</span>
+                  </button>
+                  <button class="quick-action" type="button" data-go-to="interactions">
+                    <strong>查看互动统计</strong>
+                    <span>核对心情选择、笑话和答题记录</span>
                   </button>
                 </div>
               </section>
@@ -313,6 +321,44 @@
             </section>
           </section>
 
+          <section class="admin-page" data-page-panel="interactions" hidden>
+            <section class="tool-panel interaction-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">账号互动数据</p>
+                  <h2>互动统计</h2>
+                </div>
+                <button id="refreshInteractionButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="summary-strip interaction-summary" aria-label="互动统计汇总">
+                <span class="summary-item" data-tone="neutral">已建档账号 <strong id="interactionAccounts">0</strong></span>
+                <span class="summary-item" data-tone="info">有互动账号 <strong id="interactionActiveAccounts">0</strong></span>
+                <span class="summary-item" data-tone="success">互动次数 <strong id="interactionTotal">0</strong></span>
+                <span class="summary-item" data-tone="success">开心次数 <strong id="interactionHappy">0</strong></span>
+                <span class="summary-item" data-tone="warning">笑话查看 <strong id="interactionJokes">0</strong></span>
+                <span class="summary-item" data-tone="info">答题次数 <strong id="interactionQuizzes">0</strong></span>
+              </div>
+
+              <div class="table-wrap interaction-table-wrap">
+                <table class="interaction-table">
+                  <thead>
+                    <tr>
+                      <th>账号</th>
+                      <th>互动设置</th>
+                      <th>互动总数</th>
+                      <th>心情选择</th>
+                      <th>内容互动</th>
+                      <th>最近互动</th>
+                    </tr>
+                  </thead>
+                  <tbody id="interactionRows"></tbody>
+                </table>
+                <p id="emptyInteractions" class="empty-state" hidden>暂无互动账号</p>
+              </div>
+            </section>
+          </section>
+
           <section class="admin-page" data-page-panel="feedback" hidden>
             <section class="tool-panel feedback-section">
               <div class="panel-heading inline-heading">
@@ -376,6 +422,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=admin-ui-5" defer></script>
+  <script src="/assets/admin.js?v=admin-ui-6" defer></script>
 </body>
 </html>

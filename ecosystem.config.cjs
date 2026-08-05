@@ -16,7 +16,8 @@ module.exports = {
         DESKPET_HTTP_PORT: '3100',
         DESKPET_TRUST_PROXY: 'true',
         DESKPET_SIGNING_PRIVATE_KEY: '/www/deskpet-data/signing-private.pem',
-        DESKPET_BOOTSTRAP_VERSION: '2.1.0'
+        DESKPET_BOOTSTRAP_VERSION: '2.5.2',
+        DESKPET_MACOS_BOOTSTRAP_VERSION: '2.1.3'
       }
     }
   ]

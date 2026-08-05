@@ -93,6 +93,12 @@ function createAdminRouter({ controller, authService }) {
     (req, res) => controller.importContent(req, res)
   );
   router.patch(
+    '/content/bulk-disable',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.bulkDisableContent(req, res)
+  );
+  router.patch(
     '/content/:id',
     requireWriteSession,
     ...jsonBody(MAX_JSON_BODY),

@@ -76,6 +76,59 @@ test('content catalog versions changes and imports idempotently', async (context
   assert.deepEqual(store.activeItems().map((entry) => entry.id), ['trivia:first']);
 });
 
+test('content items can be disabled in one transaction by ids or type', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-content-disable-'));
+  const store = new ContentStore(dataDirectory);
+  context.after(async () => {
+    store.close();
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+  await store.initialize();
+
+  store.importItems([
+    item('joke:one', 'joke'),
+    item('joke:two', 'joke'),
+    item('math:one', 'math'),
+    item('math:two', 'math', { active: false })
+  ]);
+  assert.equal(store.catalog().version, 1);
+
+  const selected = store.disableMany({ ids: ['joke:one', 'math:one', 'missing:item'] });
+  assert.deepEqual(
+    {
+      mode: selected.mode,
+      requested: selected.requested,
+      disabled: selected.disabled,
+      unchanged: selected.unchanged,
+      changed: selected.changed
+    },
+    { mode: 'ids', requested: 3, disabled: 2, unchanged: 1, changed: true }
+  );
+  assert.equal(selected.catalog.version, 2);
+  assert.equal(store.get('joke:one').revision, 2);
+  assert.equal(store.get('math:one').revision, 2);
+
+  const byType = store.disableMany({ type: 'joke' });
+  assert.deepEqual(
+    {
+      mode: byType.mode,
+      type: byType.type,
+      requested: byType.requested,
+      disabled: byType.disabled,
+      unchanged: byType.unchanged,
+      changed: byType.changed
+    },
+    { mode: 'type', type: 'joke', requested: 2, disabled: 1, unchanged: 1, changed: true }
+  );
+  assert.equal(byType.catalog.version, 3);
+
+  const repeated = store.disableMany({ type: 'joke' });
+  assert.equal(repeated.disabled, 0);
+  assert.equal(repeated.unchanged, 2);
+  assert.equal(repeated.changed, false);
+  assert.equal(repeated.catalog.version, 3);
+});
+
 test('content batches balance requested types and honor exclusions', async (context) => {
   const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-content-batch-'));
   const store = new ContentStore(dataDirectory);

@@ -9,6 +9,7 @@ const LOCALE_PATTERN = /^[A-Za-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/;
 const MAX_BATCH_SIZE = 30;
 const MAX_CLIENT_EXCLUSIONS = 500;
 const MAX_IMPORT_ITEMS = 500;
+const MAX_BULK_CONTENT_IDS = 500;
 const RECENT_CONTENT_DAYS = 30;
 const LEGACY_CONTENT_TYPES = Object.freeze(['joke', 'math', 'trivia']);
 const SIX_TYPE_MINIMUM_VERSION = Object.freeze({ windows: '2.5.2' });
@@ -250,6 +251,56 @@ class ContentService {
     return this.update(req, id, { active: false }, 'content-disable');
   }
 
+  async bulkDisable(req, body) {
+    const hasIds = Object.hasOwn(body || {}, 'ids');
+    const hasType = Object.hasOwn(body || {}, 'type');
+    if (hasIds === hasType) {
+      throw contentError(
+        '必须且只能提供 ids 或 type',
+        'INVALID_CONTENT_BULK_DISABLE'
+      );
+    }
+
+    let selection;
+    if (hasIds) {
+      if (!Array.isArray(body.ids) || body.ids.length < 1
+        || body.ids.length > MAX_BULK_CONTENT_IDS) {
+        throw contentError(
+          `ids 必须包含 1 至 ${MAX_BULK_CONTENT_IDS} 个内容 ID`,
+          'INVALID_CONTENT_BULK_DISABLE'
+        );
+      }
+      const ids = body.ids.map((id) => cleanSingleLine(id, 128));
+      if (ids.some((id) => !CONTENT_ID_PATTERN.test(id))) {
+        throw contentError('ids 包含无效内容 ID', 'INVALID_CONTENT_BULK_DISABLE');
+      }
+      if (new Set(ids).size !== ids.length) {
+        throw contentError('ids 包含重复内容 ID', 'INVALID_CONTENT_BULK_DISABLE');
+      }
+      selection = { ids };
+    } else {
+      const type = cleanSingleLine(body.type, 20).toLowerCase();
+      if (!CONTENT_TYPES.includes(type)) {
+        throw contentError('内容类型无效', 'INVALID_CONTENT_BULK_DISABLE');
+      }
+      selection = { type };
+    }
+
+    const result = this.contentStore.disableMany(selection);
+    await this.auditService.write({
+      action: 'content-bulk-disable',
+      outcome: 'success',
+      ip: clientIp(req, this.config),
+      mode: result.mode,
+      ...(result.type ? { contentType: result.type } : {}),
+      requested: result.requested,
+      disabled: result.disabled,
+      unchanged: result.unchanged,
+      catalogVersion: result.catalog.version
+    });
+    return result;
+  }
+
   async import(req, body) {
     if (!Array.isArray(body?.items) || body.items.length < 1
       || body.items.length > MAX_IMPORT_ITEMS) {
@@ -285,6 +336,7 @@ class ContentService {
 
 module.exports = {
   CONTENT_ID_PATTERN,
+  MAX_BULK_CONTENT_IDS,
   MAX_IMPORT_ITEMS,
   LEGACY_CONTENT_TYPES,
   ContentService,

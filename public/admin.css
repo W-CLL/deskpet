@@ -1192,6 +1192,51 @@ progress {
   padding: 5px 28px 5px 9px;
 }
 
+.content-bulk-toolbar,
+.content-selection-summary,
+.content-type-disable {
+  display: flex;
+  min-width: 0;
+  align-items: end;
+  gap: 8px;
+}
+
+.content-bulk-toolbar {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 11px 13px;
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.content-selection-summary {
+  align-items: center;
+}
+
+.content-selection-summary strong {
+  min-width: 64px;
+  color: var(--ink-strong);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.content-type-disable label {
+  display: grid;
+  gap: 5px;
+}
+
+.content-type-disable label > span {
+  color: #59635d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.content-type-disable select {
+  min-width: 150px;
+  min-height: 38px;
+}
+
 .list-pagination {
   display: grid;
   min-height: 42px;
@@ -1276,23 +1321,46 @@ table {
 }
 
 .content-table th:nth-child(1) {
-  width: 180px;
+  width: 44px;
 }
 
 .content-table th:nth-child(2) {
-  width: auto;
+  width: 180px;
 }
 
 .content-table th:nth-child(3) {
-  width: 190px;
+  width: auto;
 }
 
 .content-table th:nth-child(4) {
+  width: 190px;
+}
+
+.content-table th:nth-child(5) {
   width: 170px;
 }
 
 .content-table .actions-column {
   width: 150px;
+}
+
+.selection-column,
+.content-selection-cell {
+  text-align: center;
+}
+
+.selection-column input,
+.content-selection-cell input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.selection-column input:disabled,
+.content-selection-cell input:disabled {
+  cursor: not-allowed;
 }
 
 .content-type-cell strong,
@@ -1871,6 +1939,14 @@ dialog p {
     border-bottom: 0;
   }
 
+  .content-bulk-toolbar {
+    align-items: stretch;
+  }
+
+  .content-type-disable {
+    margin-left: auto;
+  }
+
 }
 
 @media (max-width: 640px) {
@@ -1951,6 +2027,31 @@ dialog p {
   .content-form-actions,
   .content-form-actions .button,
   .content-import-form .button {
+    width: 100%;
+  }
+
+  .content-bulk-toolbar,
+  .content-selection-summary,
+  .content-type-disable {
+    width: 100%;
+  }
+
+  .content-selection-summary,
+  .content-type-disable {
+    flex-wrap: wrap;
+  }
+
+  .content-type-disable {
+    margin-left: 0;
+  }
+
+  .content-type-disable label {
+    min-width: 0;
+    flex: 1 1 170px;
+  }
+
+  .content-type-disable select,
+  .content-type-disable .button {
     width: 100%;
   }
 

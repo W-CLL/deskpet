@@ -68,6 +68,13 @@ const elements = {
   contentTips: document.querySelector('#contentTips'),
   contentCare: document.querySelector('#contentCare'),
   contentDisabled: document.querySelector('#contentDisabled'),
+  contentTypeFilter: document.querySelector('#contentTypeFilter'),
+  contentSelectionCount: document.querySelector('#contentSelectionCount'),
+  clearContentSelectionButton: document.querySelector('#clearContentSelectionButton'),
+  disableSelectedContentButton: document.querySelector('#disableSelectedContentButton'),
+  contentBulkType: document.querySelector('#contentBulkType'),
+  disableContentTypeButton: document.querySelector('#disableContentTypeButton'),
+  contentSelectVisible: document.querySelector('#contentSelectVisible'),
   contentEditorForm: document.querySelector('#contentEditorForm'),
   contentEditorTitle: document.querySelector('#contentEditorTitle'),
   contentEditorState: document.querySelector('#contentEditorState'),
@@ -110,6 +117,10 @@ const elements = {
 let csrfToken = '';
 let toastTimer;
 let editingContentId = '';
+let contentItems = [];
+let visibleActiveContentIds = [];
+let contentBulkPending = false;
+const selectedContentIds = new Set();
 
 const pages = {
   overview: ['概览', '发布与授权运行状态'],
@@ -310,6 +321,9 @@ function createListView(name, { emptyElement, renderPage, matches }) {
   return {
     setItems(nextItems) {
       items = Array.isArray(nextItems) ? nextItems : [];
+      render();
+    },
+    refresh() {
       render();
     }
   };
@@ -930,6 +944,102 @@ function contentFormPayload() {
   };
 }
 
+function selectedActiveContentIds() {
+  const activeIds = new Set(contentItems.filter((item) => item.active).map((item) => item.id));
+  return [...selectedContentIds].filter((id) => activeIds.has(id));
+}
+
+function updateContentBulkControls() {
+  const selectedIds = selectedActiveContentIds();
+  const selectedVisible = visibleActiveContentIds.filter((id) => selectedContentIds.has(id));
+  const type = elements.contentBulkType.value;
+  const activeTypeCount = type
+    ? contentItems.filter((item) => item.active && item.type === type).length
+    : 0;
+
+  elements.contentSelectionCount.textContent = `已选 ${selectedIds.length} 条`;
+  elements.clearContentSelectionButton.disabled = contentBulkPending || selectedIds.length === 0;
+  elements.disableSelectedContentButton.disabled = contentBulkPending
+    || selectedIds.length === 0
+    || selectedIds.length > 500;
+  elements.disableSelectedContentButton.title = selectedIds.length > 500
+    ? '单次最多批量禁用 500 条内容'
+    : '';
+  elements.disableContentTypeButton.disabled = contentBulkPending || !type || activeTypeCount === 0;
+  elements.disableContentTypeButton.textContent = activeTypeCount
+    ? `禁用该类型 (${activeTypeCount})`
+    : '禁用该类型';
+  elements.contentSelectVisible.disabled = contentBulkPending || visibleActiveContentIds.length === 0;
+  elements.contentSelectVisible.checked = visibleActiveContentIds.length > 0
+    && selectedVisible.length === visibleActiveContentIds.length;
+  elements.contentSelectVisible.indeterminate = selectedVisible.length > 0
+    && selectedVisible.length < visibleActiveContentIds.length;
+}
+
+async function disableSelectedContent() {
+  const ids = selectedActiveContentIds();
+  if (!ids.length || ids.length > 500) return;
+  const confirmed = await confirmAction({
+    title: `批量禁用 ${ids.length} 条内容`,
+    message: '禁用后，新的在线批次和离线包将不再包含这些内容。',
+    confirmLabel: '确认批量禁用',
+    danger: true
+  });
+  if (!confirmed) return;
+
+  contentBulkPending = true;
+  updateContentBulkControls();
+  try {
+    const result = await api('/api/admin/content/bulk-disable', {
+      method: 'PATCH',
+      body: { ids }
+    });
+    for (const id of ids) selectedContentIds.delete(id);
+    if (ids.includes(editingContentId)) resetContentEditor();
+    showToast(`批量禁用完成：停用 ${result.disabled} 条，未变更 ${result.unchanged} 条`);
+    await loadContent();
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    contentBulkPending = false;
+    updateContentBulkControls();
+  }
+}
+
+async function disableContentType() {
+  const type = elements.contentBulkType.value;
+  if (!type) return;
+  const activeCount = contentItems.filter((item) => item.active && item.type === type).length;
+  if (!activeCount) return;
+  const typeLabel = contentTypeLabels[type] || type;
+  const confirmed = await confirmAction({
+    title: `禁用全部${typeLabel}`,
+    message: `当前 ${activeCount} 条启用中的${typeLabel}都会被停用。`,
+    confirmLabel: '确认按类型禁用',
+    danger: true
+  });
+  if (!confirmed) return;
+
+  contentBulkPending = true;
+  updateContentBulkControls();
+  try {
+    const result = await api('/api/admin/content/bulk-disable', {
+      method: 'PATCH',
+      body: { type }
+    });
+    if (contentItems.find((item) => item.id === editingContentId)?.type === type) {
+      resetContentEditor();
+    }
+    showToast(`${typeLabel}已批量禁用：停用 ${result.disabled} 条，未变更 ${result.unchanged} 条`);
+    await loadContent();
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    contentBulkPending = false;
+    updateContentBulkControls();
+  }
+}
+
 async function setContentActive(item, active) {
   if (!active) {
     const confirmed = await confirmAction({
@@ -954,6 +1064,11 @@ async function setContentActive(item, active) {
 
 function renderContent(payload) {
   const summary = payload.summary || {};
+  contentItems = Array.isArray(payload.items) ? payload.items : [];
+  const activeIds = new Set(contentItems.filter((item) => item.active).map((item) => item.id));
+  for (const id of selectedContentIds) {
+    if (!activeIds.has(id)) selectedContentIds.delete(id);
+  }
   elements.contentCatalogVersion.textContent = payload.catalog?.version || 0;
   elements.contentActive.textContent = summary.active || 0;
   elements.contentJokes.textContent = summary.jokes || 0;
@@ -963,15 +1078,30 @@ function renderContent(payload) {
   elements.contentTips.textContent = summary.tips || 0;
   elements.contentCare.textContent = summary.care || 0;
   elements.contentDisabled.textContent = summary.disabled || 0;
-  listViews.content.setItems(payload.items);
+  listViews.content.setItems(contentItems);
+  updateContentBulkControls();
 }
 
 function renderContentRows(items) {
   elements.contentRows.replaceChildren();
+  visibleActiveContentIds = items.filter((item) => item.active).map((item) => item.id);
 
   for (const item of items) {
     const row = document.createElement('tr');
     if (!item.active) row.className = 'content-disabled-row';
+
+    const selectionCell = cell('content-selection-cell');
+    const selection = document.createElement('input');
+    selection.type = 'checkbox';
+    selection.checked = item.active && selectedContentIds.has(item.id);
+    selection.disabled = !item.active || contentBulkPending;
+    selection.setAttribute('aria-label', `选择 ${item.id}`);
+    selection.addEventListener('change', () => {
+      if (selection.checked) selectedContentIds.add(item.id);
+      else selectedContentIds.delete(item.id);
+      updateContentBulkControls();
+    });
+    selectionCell.append(selection);
 
     const typeCell = cell('content-type-cell');
     const type = document.createElement('strong');
@@ -1019,9 +1149,10 @@ function renderContentRows(items) {
     ));
     actionsCell.append(actions);
 
-    row.append(typeCell, contentCell, metaCell, revisionCell, actionsCell);
+    row.append(selectionCell, typeCell, contentCell, metaCell, revisionCell, actionsCell);
     elements.contentRows.append(row);
   }
+  updateContentBulkControls();
 }
 
 async function loadContent() {
@@ -1158,6 +1289,26 @@ elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
 elements.refreshContentButton.addEventListener('click', loadContent);
 elements.refreshFeedbackButton.addEventListener('click', loadFeedback);
+elements.contentSelectVisible.addEventListener('change', () => {
+  for (const id of visibleActiveContentIds) {
+    if (elements.contentSelectVisible.checked) selectedContentIds.add(id);
+    else selectedContentIds.delete(id);
+  }
+  listViews.content.refresh();
+});
+elements.clearContentSelectionButton.addEventListener('click', () => {
+  selectedContentIds.clear();
+  listViews.content.refresh();
+});
+elements.disableSelectedContentButton.addEventListener('click', disableSelectedContent);
+elements.contentBulkType.addEventListener('change', updateContentBulkControls);
+elements.disableContentTypeButton.addEventListener('click', disableContentType);
+elements.contentTypeFilter.addEventListener('change', () => {
+  if (elements.contentTypeFilter.value) {
+    elements.contentBulkType.value = elements.contentTypeFilter.value;
+  }
+  updateContentBulkControls();
+});
 
 elements.contentEditorForm.addEventListener('submit', async (event) => {
   event.preventDefault();

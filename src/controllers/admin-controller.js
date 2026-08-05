@@ -102,6 +102,10 @@ class AdminController {
     res.status(200).json(await this.contentService.disable(req, contentId));
   }
 
+  async bulkDisableContent(req, res) {
+    res.status(200).json(await this.contentService.bulkDisable(req, req.body));
+  }
+
   async importContent(req, res) {
     res.status(200).json(await this.contentService.import(req, req.body));
   }

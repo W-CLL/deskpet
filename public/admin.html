@@ -555,7 +555,7 @@
               <div class="list-toolbar" data-list-controls="content">
                 <label>
                   <span>内容类型</span>
-                  <select data-list-filter="type">
+                  <select id="contentTypeFilter" data-list-filter="type">
                     <option value="">全部类型</option>
                     <option value="joke">冷笑话</option>
                     <option value="math">数学题</option>
@@ -574,10 +574,35 @@
                   </select>
                 </label>
               </div>
+              <div class="content-bulk-toolbar" aria-label="内容批量操作">
+                <div class="content-selection-summary">
+                  <strong id="contentSelectionCount">已选 0 条</strong>
+                  <button id="clearContentSelectionButton" class="button button-secondary" type="button" disabled>清除选择</button>
+                  <button id="disableSelectedContentButton" class="button button-danger" type="button" disabled>批量禁用</button>
+                </div>
+                <div class="content-type-disable">
+                  <label>
+                    <span>按类型禁用</span>
+                    <select id="contentBulkType">
+                      <option value="">选择内容类型</option>
+                      <option value="joke">冷笑话</option>
+                      <option value="math">数学题</option>
+                      <option value="trivia">趣味知识</option>
+                      <option value="riddle">脑筋急转弯</option>
+                      <option value="tip">生活小贴士</option>
+                      <option value="care">关怀内容</option>
+                    </select>
+                  </label>
+                  <button id="disableContentTypeButton" class="button button-danger" type="button" disabled>禁用该类型</button>
+                </div>
+              </div>
               <div class="table-wrap content-table-wrap">
                 <table class="content-table">
                   <thead>
                     <tr>
+                      <th class="selection-column">
+                        <input id="contentSelectVisible" type="checkbox" aria-label="选择当前页启用内容" title="选择当前页启用内容">
+                      </th>
                       <th>类型与状态</th>
                       <th>题面与答案</th>
                       <th>难度与标签</th>

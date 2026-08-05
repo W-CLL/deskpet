@@ -267,4 +267,69 @@ test('content administration, signed delivery and account history work end to en
   }));
   assert.equal(generatedImport.response.status, 200);
   assert.equal(generatedImport.payload.created, 100);
+
+  const invalidBulkDisable = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/content/bulk-disable`,
+    {
+      method: 'PATCH',
+      headers: adminHeaders,
+      body: JSON.stringify({ ids: ['joke:first'], type: 'joke' })
+    }
+  ));
+  assert.equal(invalidBulkDisable.response.status, 400);
+  assert.equal(invalidBulkDisable.payload.code, 'INVALID_CONTENT_BULK_DISABLE');
+
+  const selectedDisable = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/content/bulk-disable`,
+    {
+      method: 'PATCH',
+      headers: adminHeaders,
+      body: JSON.stringify({
+        ids: ['joke:first', 'math:first', 'trivia:first', 'missing:item']
+      })
+    }
+  ));
+  assert.equal(selectedDisable.response.status, 200);
+  assert.deepEqual(
+    {
+      mode: selectedDisable.payload.mode,
+      requested: selectedDisable.payload.requested,
+      disabled: selectedDisable.payload.disabled,
+      unchanged: selectedDisable.payload.unchanged
+    },
+    { mode: 'ids', requested: 4, disabled: 2, unchanged: 2 }
+  );
+
+  const typeDisable = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/content/bulk-disable`,
+    {
+      method: 'PATCH',
+      headers: adminHeaders,
+      body: JSON.stringify({ type: 'care' })
+    }
+  ));
+  assert.equal(typeDisable.response.status, 200);
+  assert.deepEqual(
+    {
+      mode: typeDisable.payload.mode,
+      type: typeDisable.payload.type,
+      requested: typeDisable.payload.requested,
+      disabled: typeDisable.payload.disabled,
+      unchanged: typeDisable.payload.unchanged
+    },
+    { mode: 'type', type: 'care', requested: 1, disabled: 1, unchanged: 0 }
+  );
+
+  const repeatedTypeDisable = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/content/bulk-disable`,
+    {
+      method: 'PATCH',
+      headers: adminHeaders,
+      body: JSON.stringify({ type: 'care' })
+    }
+  ));
+  assert.equal(repeatedTypeDisable.response.status, 200);
+  assert.equal(repeatedTypeDisable.payload.disabled, 0);
+  assert.equal(repeatedTypeDisable.payload.changed, false);
+  assert.equal(repeatedTypeDisable.payload.catalog.version, typeDisable.payload.catalog.version);
 });

@@ -42,13 +42,13 @@ test('legacy Windows release metadata migrates to the platform-aware schema', as
   const store = new ReleaseStore(dataDirectory);
   await store.initialize();
 
-  assert.equal(store.data.schemaVersion, 2);
+  assert.equal(store.data.schemaVersion, 3);
   assert.equal(store.data.activeVersions['windows/x64'], '2.4.3');
   assert.equal(store.active('windows', 'x64')?.version, '2.4.3');
   assert.deepEqual(store.list()[0].platform, 'windows');
   assert.deepEqual(store.list()[0].architecture, 'x64');
   const persisted = JSON.parse(await fs.promises.readFile(path.join(dataDirectory, 'releases.json'), 'utf8'));
-  assert.equal(persisted.schemaVersion, 2);
+  assert.equal(persisted.schemaVersion, 3);
 });
 
 test('public and admin requests use the canonical HTTPS domain', async (context) => {
@@ -73,6 +73,7 @@ test('public and admin requests use the canonical HTTPS domain', async (context)
     manifestUrl: 'https://in.desktoppet.online/api/update/latest',
     bootstrapVersions: { 'windows/x64': '2.1.0' },
     activeVersions: {},
+    publicVersions: {},
     releases: []
   });
   const requestWithHost = (requestPath, headers, options = {}) => new Promise((resolve, reject) => {
@@ -428,6 +429,12 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(retry.payload.licenseId, licenseId);
   assert.equal(retry.payload.alreadyActivated, true);
 
+  const analytics = await jsonResponse(await fetch(`${baseUrl}/api/admin/analytics`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(analytics.response.status, 200);
+  assert.equal(analytics.payload.funnel.activatedInstallations, 1);
+
   const activationList = await jsonResponse(await fetch(`${baseUrl}/api/admin/activation-codes`, {
     headers: { Cookie: cookie }
   }));
@@ -453,9 +460,9 @@ test('one-time activation gates current manifests and downloads', async (context
     await application.store.publish('windows', 'x64', version);
   }
 
-  const bootstrapManifest = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`));
-  assert.equal(bootstrapManifest.response.status, 200);
-  assert.equal(bootstrapManifest.payload.version, '2.1.0');
+  const publicManifest = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`));
+  assert.equal(publicManifest.response.status, 200);
+  assert.equal(publicManifest.payload.version, '2.2.0');
 
   const authorization = `Bearer ${licenseId}.${winner.credential}`;
   const currentManifest = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
@@ -465,11 +472,17 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(currentManifest.payload.version, '2.2.0');
 
   const currentDownloadPath = new URL(currentManifest.payload.url).pathname;
-  const deniedDownload = await jsonResponse(await fetch(`${baseUrl}${currentDownloadPath}`));
-  assert.equal(deniedDownload.response.status, 401);
-  const allowedDownload = await fetch(`${baseUrl}${currentDownloadPath}`, { headers: { Authorization: authorization } });
+  const stableDownload = await fetch(`${baseUrl}/downloads/latest/windows/x64`, { redirect: 'manual' });
+  assert.equal(stableDownload.status, 302);
+  assert.equal(stableDownload.headers.get('location'), currentDownloadPath);
+  const allowedDownload = await fetch(`${baseUrl}${currentDownloadPath}`);
   assert.equal(allowedDownload.status, 200);
   assert.deepEqual(Buffer.from(await allowedDownload.arrayBuffer()), Buffer.from('MZ deskpet 2.2.0', 'utf8'));
+
+  const publicDownloads = await jsonResponse(await fetch(`${baseUrl}/api/public/downloads`));
+  assert.equal(publicDownloads.response.status, 200);
+  assert.equal(publicDownloads.payload.downloads.length, 1);
+  assert.equal(publicDownloads.payload.downloads[0].version, '2.2.0');
 
   const rebindCode = await jsonResponse(await fetch(
     `${baseUrl}/api/admin/accounts/${accountId}/rebind-code`,
@@ -559,8 +572,10 @@ test('macOS releases are isolated by platform and architecture', async (context)
   const unauthenticated = await jsonResponse(await fetch(
     `${baseUrl}/api/update/latest?platform=macos&architecture=arm64`
   ));
-  assert.equal(unauthenticated.response.status, 401);
-  assert.equal(unauthenticated.payload.code, 'ACTIVATION_REQUIRED');
+  assert.equal(unauthenticated.response.status, 200);
+  assert.equal(unauthenticated.payload.version, '2.0.0');
+  assert.equal(unauthenticated.payload.platform, 'macos');
+  assert.equal(unauthenticated.payload.architecture, 'arm64');
 
   const code = application.activationStore.createCodes({ count: 1, expiresInDays: 30, note: 'macOS' }).codes[0];
   const credential = crypto.randomBytes(32).toString('base64url');
@@ -594,6 +609,99 @@ test('macOS releases are isolated by platform and architecture', async (context)
   ));
   assert.equal(invalidTarget.response.status, 400);
   assert.equal(invalidTarget.payload.code, 'INVALID_RELEASE_TARGET');
+});
+
+test('public analytics events are deduplicated and summarized by device', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-analytics-test-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const occurredAt = new Date().toISOString();
+  const common = {
+    visitorId: 'visitor-analytics-001',
+    sessionId: 'session-analytics-001',
+    occurredAt,
+    pagePath: '/download/',
+    utmSource: 'test',
+    utmMedium: 'qa'
+  };
+  const eventBody = {
+    events: [
+      { ...common, eventId: 'page-view-001', type: 'page_view' },
+      { ...common, eventId: 'download-click-001', type: 'download_click' },
+      {
+        eventId: 'first-launch-001',
+        type: 'app_first_launch',
+        installationId: 'a'.repeat(32),
+        platform: 'windows',
+        architecture: 'x64',
+        version: '2.5.3',
+        occurredAt
+      },
+      {
+        eventId: 'session-start-001',
+        type: 'app_session_start',
+        installationId: 'a'.repeat(32),
+        platform: 'windows',
+        architecture: 'x64',
+        version: '2.5.3',
+        occurredAt
+      },
+      {
+        eventId: 'daily-active-001',
+        type: 'app_daily_active',
+        installationId: 'a'.repeat(32),
+        platform: 'windows',
+        architecture: 'x64',
+        version: '2.5.3',
+        occurredAt
+      }
+    ]
+  };
+  const recorded = await jsonResponse(await fetch(`${baseUrl}/api/analytics/events`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Origin: 'https://desktoppet.online'
+    },
+    body: JSON.stringify(eventBody)
+  }));
+  assert.equal(recorded.response.status, 202);
+  assert.equal(recorded.response.headers.get('access-control-allow-origin'), 'https://desktoppet.online');
+  assert.equal(recorded.payload.accepted, 5);
+
+  const duplicate = await jsonResponse(await fetch(`${baseUrl}/api/analytics/events`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...common, eventId: 'page-view-001', type: 'page_view' })
+  }));
+  assert.equal(duplicate.response.status, 202);
+  assert.equal(duplicate.payload.accepted, 0);
+  assert.equal(duplicate.payload.duplicates, 1);
+
+  const summary = application.services.analyticsService.summary({});
+  assert.equal(summary.funnel.pageViews, 1);
+  assert.equal(summary.funnel.uniqueVisitors, 1);
+  assert.equal(summary.funnel.downloadClicks, 1);
+  assert.equal(summary.funnel.downloadVisitors, 1);
+  assert.equal(summary.funnel.firstLaunches, 1);
+  assert.equal(summary.funnel.clickRate, 1);
+  assert.equal(summary.activity.dailyActiveDevices, 1);
+  assert.equal(summary.activity.weeklyActiveDevices, 1);
+  assert.equal(summary.platforms[0].platform, 'windows');
 });
 
 test('Express request parsing returns stable API errors', async (context) => {

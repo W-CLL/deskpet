@@ -8,7 +8,8 @@ class PublicController {
     interactionService,
     contentService,
     releaseService,
-    releaseStore
+    releaseStore,
+    analyticsService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -17,6 +18,7 @@ class PublicController {
     this.contentService = contentService;
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
+    this.analyticsService = analyticsService;
     this.startedAt = new Date().toISOString();
   }
 
@@ -78,6 +80,22 @@ class PublicController {
 
   latest(req, res) {
     res.status(200).json(this.releaseService.latestManifest(req));
+  }
+
+  publicDownloads(_req, res) {
+    res.status(200).json({
+      generatedAt: new Date().toISOString(),
+      downloads: this.releaseService.publicDownloads()
+    });
+  }
+
+  latestDownload(req, res) {
+    const release = this.releaseService.publicDownload(req.params.platform, req.params.architecture);
+    res.redirect(302, `/downloads/${encodeURIComponent(release.fileName)}`);
+  }
+
+  async analytics(req, res) {
+    res.status(202).json(await this.analyticsService.recordPublic(req, req.body));
   }
 
   async download(req, res, next) {

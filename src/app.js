@@ -6,6 +6,7 @@ const { ReleaseStore } = require('../lib/storage');
 const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
+const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
@@ -21,6 +22,7 @@ const { FeedbackService } = require('./services/feedback-service');
 const { InteractionService } = require('./services/interaction-service');
 const { ContentService } = require('./services/content-service');
 const { ReleaseService } = require('./services/release-service');
+const { AnalyticsService } = require('./services/analytics-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -43,6 +45,8 @@ async function createApplication(options = {}) {
   const interactionStore = new InteractionStore(config.dataDirectory);
   await interactionStore.initialize();
   interactionStore.pruneRawEvents();
+  const analyticsStore = new AnalyticsStore(config.dataDirectory);
+  await analyticsStore.initialize();
   const contentStore = new ContentStore(config.dataDirectory);
   await contentStore.initialize();
 
@@ -69,6 +73,12 @@ async function createApplication(options = {}) {
     activationIpRateOptions: options.activationIpRateOptions,
     activationDeviceRateOptions: options.activationDeviceRateOptions
   });
+  const analyticsService = new AnalyticsService({
+    analyticsStore,
+    activationService,
+    config
+  });
+  activationService.analyticsService = analyticsService;
   const releaseService = new ReleaseService({
     config,
     releaseStore,
@@ -100,7 +110,8 @@ async function createApplication(options = {}) {
     releaseService,
     feedbackService,
     interactionService,
-    contentService
+    contentService,
+    analyticsService
   });
   const publicController = new PublicController({
     authService,
@@ -109,7 +120,8 @@ async function createApplication(options = {}) {
     interactionService,
     contentService,
     releaseService,
-    releaseStore
+    releaseStore,
+    analyticsService
   });
 
   const app = express();
@@ -152,6 +164,7 @@ async function createApplication(options = {}) {
   maintenanceTimer.unref();
   const interactionCleanupTimer = setInterval(() => {
     interactionService.cleanup();
+    analyticsStore.pruneRawEvents();
   }, 6 * 60 * 60 * 1000);
   interactionCleanupTimer.unref();
 
@@ -164,6 +177,7 @@ async function createApplication(options = {}) {
     activationStore,
     feedbackStore,
     interactionStore,
+    analyticsStore,
     contentStore,
     services: {
       activationService,
@@ -171,7 +185,8 @@ async function createApplication(options = {}) {
       feedbackService,
       interactionService,
       contentService,
-      releaseService
+      releaseService,
+      analyticsService
     },
     close() {
       if (closed) return;
@@ -179,6 +194,7 @@ async function createApplication(options = {}) {
       clearInterval(maintenanceTimer);
       clearInterval(interactionCleanupTimer);
       contentStore.close();
+      analyticsStore.close();
       interactionStore.close();
       feedbackStore.close();
       activationStore.close();

@@ -64,6 +64,10 @@
             <span>互动统计</span>
             <small>账号行为与心情</small>
           </button>
+          <button class="nav-item" type="button" data-page="analytics">
+            <span>增长数据</span>
+            <small>访问、下载与留存</small>
+          </button>
           <button class="nav-item" type="button" data-page="content">
             <span>内容库</span>
             <small>六类互动内容</small>
@@ -379,6 +383,48 @@
                 <p id="emptyActivations" class="empty-state" hidden>暂无激活码</p>
               </div>
               <div class="list-pagination" data-list-pagination="activations"></div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="analytics" hidden>
+            <section class="tool-panel analytics-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">官网与客户端漏斗</p>
+                  <h2>增长数据</h2>
+                </div>
+                <form id="analyticsForm" class="inline-form">
+                  <label><span>开始日期</span><input id="analyticsFrom" type="date"></label>
+                  <label><span>结束日期</span><input id="analyticsTo" type="date"></label>
+                  <button id="refreshAnalyticsButton" class="button button-secondary" type="submit">刷新</button>
+                </form>
+              </div>
+
+              <div class="metric-grid analytics-metrics" aria-label="增长数据汇总">
+                <article class="metric-item metric-primary"><span>独立访客</span><strong id="analyticsVisitors">0</strong><small>官网页面访问者</small></article>
+                <article class="metric-item"><span>下载点击</span><strong id="analyticsDownloads">0</strong><small>安装包按钮点击</small></article>
+                <article class="metric-item"><span>点击率</span><strong id="analyticsClickRate">-</strong><small>下载访客 / 独立访客</small></article>
+                <article class="metric-item"><span>首次启动</span><strong id="analyticsFirstLaunches">0</strong><small>安装设备首次上报</small></article>
+                <article class="metric-item"><span>安装成功率</span><strong id="analyticsInstallRate">-</strong><small>首次启动设备 / 下载访客</small></article>
+                <article class="metric-item"><span>下载到激活</span><strong id="analyticsDownloadActivationRate">-</strong><small>激活设备 / 首次启动设备</small></article>
+                <article class="metric-item"><span>每周活跃设备</span><strong id="analyticsWeeklyActive">0</strong><small>最近 7 天去重设备</small></article>
+              </div>
+
+              <div class="analytics-tables">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>平台</th><th>下载点击</th><th>激活设备</th><th>活跃设备</th></tr></thead>
+                    <tbody id="analyticsPlatformRows"></tbody>
+                  </table>
+                </div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>激活 cohort</th><th>设备数</th><th>D1</th><th>D7</th><th>D30</th></tr></thead>
+                    <tbody id="analyticsCohortRows"></tbody>
+                  </table>
+                </div>
+              </div>
+              <p id="analyticsEmpty" class="empty-state" hidden>当前区间暂无增长数据</p>
             </section>
           </section>
 

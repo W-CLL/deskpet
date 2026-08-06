@@ -120,11 +120,18 @@ IP 和安装 ID 分别限速，失败记录保存在进程内存中，重启后�
 
 ## 更新与下载流程
 
-- 未带授权的客户端只能获得 `DESKPET_BOOTSTRAP_VERSION` 指定的公开过渡版本。
+- 管理员发布版本时，`activeVersions` 与 `publicVersions` 同步指向该版本；`publicVersions` 表示官网和未激活设备可获取的稳定安装包。
+- 网站使用 `/downloads/latest/{platform}/{architecture}` 稳定地址和 `/api/public/downloads` 目录，不把带版本号的文件名写死在页面中。
 - 已授权客户端获得当前发布版本，并记录客户端版本和最近更新时间。
 - 清单包含版本号、下载地址、SHA-256 和更新说明，并由 Ed25519 私钥签名。
-- 非过渡版本的下载同样要求有效授权，避免只保护清单却暴露安装包。
+- 非公开版本、历史包和授权更新清单仍要求有效设备授权；公开稳定包用于安装和激活入口。
 - 下载支持 `GET`、`HEAD` 和单段 `Range`，可由客户端断点续传。
+
+## 增长数据流程
+
+1. 官网记录 `page_view` 和 `download_click`；客户端启动时批量记录首次启动、会话启动和每日活跃。
+2. 服务端按事件 ID 幂等写入 `analytics.db`，安装标识只保存 SHA-256，原始事件保留 180 天。
+3. 激活成功追加 `activation_success`，管理后台按日期查看访问、下载、首次启动、下载到激活、周活设备和 D1/D7/D30 cohort。
 
 签名私钥必须与桌面客户端内置公钥配对。私钥丢失或随意更换后，已发布客户端将拒绝新的更新清单。
 
@@ -139,6 +146,7 @@ activation.db*               激活码和授权 SQLite 数据
 feedback.db*                 问题反馈与处理状态
 interaction.db*              互动档案、事件回执和账号汇总
 content.db*                  在线内容目录、条目修订和启停状态
+analytics.db*                官网、启动、激活和留存事件
 activation-pepper.key        激活码 HMAC 密钥
 activation-encryption.key    激活码加密密钥
 signing-private.pem          更新清单 Ed25519 私钥
@@ -162,8 +170,11 @@ audit.jsonl                  管理操作审计日志
 | `POST` | `/api/content/batch` | 设备授权 | 获取按账号排重的签名内容批次 |
 | `GET` | `/api/content/offline-pack` | 设备授权 | 获取带 ETag 的完整签名离线包 |
 | `GET/POST` | `/api/feedback` | 设备授权 | 查询或提交设备反馈 |
-| `GET` | `/api/update/latest` | 过渡版公开，正式版需授权 | 获取签名更新清单 |
-| `GET/HEAD` | `/downloads/:fileName` | 过渡版公开，正式版需授权 | 下载安装包 |
+| `GET` | `/api/public/downloads` | 公开 | 官网可用稳定下载目录 |
+| `GET` | `/downloads/latest/:platform/:architecture` | 公开 | 重定向到公开稳定安装包 |
+| `GET` | `/api/update/latest` | 公开稳定版；当前授权版 | 获取签名更新清单 |
+| `GET/HEAD` | `/downloads/:fileName` | 公开稳定包；历史包需授权 | 下载安装包 |
+| `POST` | `/api/analytics/events` | 公开、限速范围内 | 官网和客户端事件上报 |
 | `POST` | `/api/admin/login` | 公开、限速 | 管理员登录 |
 | `GET` | `/api/admin/session` | Cookie | 查询会话 |
 | `GET/POST` | `/api/admin/releases` | 管理会话 | 列表或创建上传任务 |
@@ -175,6 +186,7 @@ audit.jsonl                  管理操作审计日志
 | `POST` | `/api/admin/licenses/:id/revoke` | 管理会话 + CSRF | 撤销授权 |
 | `POST` | `/api/admin/accounts/:id/rebind-code` | 管理会话 + CSRF | 为已有账号生成一次性换机码 |
 | `GET` | `/api/admin/interactions` | 管理会话 | 查询全部账号互动汇总 |
+| `GET` | `/api/admin/analytics` | 管理会话 | 查询增长漏斗、周活和 D1/D7/D30 留存 |
 | `GET/POST` | `/api/admin/content` | 管理会话 | 查询或新增互动内容 |
 | `POST` | `/api/admin/content/import` | 管理会话 + CSRF | 批量导入最多 500 条内容 |
 | `PATCH/DELETE` | `/api/admin/content/:id` | 管理会话 + CSRF | 更新或停用互动内容 |

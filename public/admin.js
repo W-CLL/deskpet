@@ -58,6 +58,20 @@ const elements = {
   interactionQuizzes: document.querySelector('#interactionQuizzes'),
   interactionRows: document.querySelector('#interactionRows'),
   emptyInteractions: document.querySelector('#emptyInteractions'),
+  analyticsForm: document.querySelector('#analyticsForm'),
+  analyticsFrom: document.querySelector('#analyticsFrom'),
+  analyticsTo: document.querySelector('#analyticsTo'),
+  refreshAnalyticsButton: document.querySelector('#refreshAnalyticsButton'),
+  analyticsVisitors: document.querySelector('#analyticsVisitors'),
+  analyticsDownloads: document.querySelector('#analyticsDownloads'),
+  analyticsClickRate: document.querySelector('#analyticsClickRate'),
+  analyticsFirstLaunches: document.querySelector('#analyticsFirstLaunches'),
+  analyticsInstallRate: document.querySelector('#analyticsInstallRate'),
+  analyticsDownloadActivationRate: document.querySelector('#analyticsDownloadActivationRate'),
+  analyticsWeeklyActive: document.querySelector('#analyticsWeeklyActive'),
+  analyticsPlatformRows: document.querySelector('#analyticsPlatformRows'),
+  analyticsCohortRows: document.querySelector('#analyticsCohortRows'),
+  analyticsEmpty: document.querySelector('#analyticsEmpty'),
   refreshContentButton: document.querySelector('#refreshContentButton'),
   contentCatalogVersion: document.querySelector('#contentCatalogVersion'),
   contentActive: document.querySelector('#contentActive'),
@@ -127,6 +141,7 @@ const pages = {
   releases: ['版本发布', '上传安装包并维护发布记录'],
   activations: ['激活授权', '管理激活码与设备授权'],
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
+  analytics: ['增长数据', '官网访问、下载转化与设备留存'],
   content: ['内容库', '维护客户端在线与离线互动资源'],
   feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
@@ -484,9 +499,9 @@ function renderReleaseRows(releases) {
 
     const statusCell = cell();
     const status = document.createElement('span');
-    const statusClass = release.active ? 'active' : release.publishedAt ? 'published' : 'draft';
+    const statusClass = release.public ? 'active' : release.active ? 'published' : release.publishedAt ? 'published' : 'draft';
     status.className = `status-badge ${statusClass}`;
-    status.textContent = release.active ? '当前发布' : release.publishedAt ? '已发布' : '草稿';
+    status.textContent = release.public ? '官网公开' : release.active ? '当前发布' : release.publishedAt ? '已发布' : '草稿';
     statusCell.append(status);
 
     const fileCell = cell('file-cell');
@@ -1166,11 +1181,91 @@ async function loadContent() {
   }
 }
 
+function formatAnalyticsRate(value) {
+  const rate = Number(value);
+  return Number.isFinite(rate) ? `${(rate * 100).toFixed(1)}%` : '-';
+}
+
+function analyticsDateValue(date) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date).reduce((result, part) => {
+    if (part.type !== 'literal') result[part.type] = part.value;
+    return result;
+  }, {});
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function initializeAnalyticsRange() {
+  const end = new Date();
+  const start = new Date(end.getTime() - 29 * 24 * 60 * 60 * 1000);
+  elements.analyticsFrom.value = analyticsDateValue(start);
+  elements.analyticsTo.value = analyticsDateValue(end);
+}
+
+function renderAnalytics(payload) {
+  const funnel = payload.funnel || {};
+  const activity = payload.activity || {};
+  elements.analyticsVisitors.textContent = String(funnel.uniqueVisitors || 0);
+  elements.analyticsDownloads.textContent = String(funnel.downloadClicks || 0);
+  elements.analyticsClickRate.textContent = formatAnalyticsRate(funnel.clickRate);
+  elements.analyticsFirstLaunches.textContent = String(funnel.firstLaunches || 0);
+  elements.analyticsInstallRate.textContent = formatAnalyticsRate(funnel.installRate);
+  elements.analyticsDownloadActivationRate.textContent = formatAnalyticsRate(funnel.downloadToActivationRate);
+  elements.analyticsWeeklyActive.textContent = String(activity.weeklyActiveDevices || 0);
+
+  elements.analyticsPlatformRows.replaceChildren();
+  for (const item of payload.platforms || []) {
+    const row = document.createElement('tr');
+    for (const value of [item.platform, item.downloadClicks, item.activations, item.activeDevices]) {
+      const column = document.createElement('td');
+      column.textContent = String(value ?? 0);
+      row.append(column);
+    }
+    elements.analyticsPlatformRows.append(row);
+  }
+
+  elements.analyticsCohortRows.replaceChildren();
+  for (const item of payload.retention?.cohorts || []) {
+    const row = document.createElement('tr');
+    for (const value of [item.date, item.size, formatAnalyticsRate(item.d1Rate), formatAnalyticsRate(item.d7Rate), formatAnalyticsRate(item.d30Rate)]) {
+      const column = document.createElement('td');
+      column.textContent = String(value);
+      row.append(column);
+    }
+    elements.analyticsCohortRows.append(row);
+  }
+  const hasData = Boolean(
+    funnel.uniqueVisitors || funnel.firstLaunches || activity.weeklyActiveDevices
+      || (payload.platforms || []).length || (payload.retention?.cohorts || []).length
+  );
+  elements.analyticsEmpty.hidden = hasData;
+}
+
+async function loadAnalytics() {
+  elements.refreshAnalyticsButton.disabled = true;
+  try {
+    const query = new URLSearchParams({
+      from: elements.analyticsFrom.value,
+      to: elements.analyticsTo.value
+    });
+    renderAnalytics(await api(`/api/admin/analytics?${query}`));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshAnalyticsButton.disabled = false;
+  }
+}
+
 async function loadDashboard() {
   await Promise.all([
     loadReleases(),
     loadActivations(),
     loadInteractions(),
+    loadAnalytics(),
     loadContent(),
     loadFeedback()
   ]);
@@ -1242,6 +1337,7 @@ elements.logoutButton.addEventListener('click', async () => {
 });
 
 syncUploadTarget();
+initializeAnalyticsRange();
 for (const input of elements.releasePlatformInputs) {
   input.addEventListener('change', syncUploadTarget);
 }
@@ -1287,6 +1383,10 @@ elements.uploadForm.addEventListener('submit', async (event) => {
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
+elements.analyticsForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  await loadAnalytics();
+});
 elements.refreshContentButton.addEventListener('click', loadContent);
 elements.refreshFeedbackButton.addEventListener('click', loadFeedback);
 elements.contentSelectVisible.addEventListener('change', () => {

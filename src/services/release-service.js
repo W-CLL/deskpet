@@ -112,6 +112,7 @@ class ReleaseService {
       manifestUrl: new URL('/api/update/latest', this.config.publicUrl).href,
       bootstrapVersions: this.config.bootstrapVersions,
       activeVersions: this.releaseStore.data.activeVersions,
+      publicVersions: this.releaseStore.data.publicVersions,
       releases: this.releaseStore.list()
     };
   }
@@ -298,7 +299,7 @@ class ReleaseService {
     let release;
     try {
       const target = releaseKey(platform, architecture);
-      if (version === this.bootstrapVersionFor(platform, architecture)
+      if (version === this.publicVersionFor(platform, architecture)
         && this.releaseStore.data.activeVersions[target] !== version) {
         throw new HttpError(
           409,
@@ -328,18 +329,10 @@ class ReleaseService {
       this.activationService.requireLicense(req, true);
       manifest = this.releaseStore.manifest(this.config.publicUrl, platform, architecture);
     } else {
-      const bootstrapVersion = this.bootstrapVersionFor(platform, architecture);
-      if (bootstrapVersion) {
-        manifest = this.releaseStore.manifest(
-          this.config.publicUrl,
-          platform,
-          architecture,
-          bootstrapVersion
-        );
-        if (!manifest && !this.releaseStore.find(platform, architecture, bootstrapVersion)) {
-          manifest = this.releaseStore.manifest(this.config.publicUrl, platform, architecture);
-        }
-      }
+      const publicVersion = this.publicVersionFor(platform, architecture);
+      manifest = publicVersion
+        ? this.releaseStore.manifest(this.config.publicUrl, platform, architecture, publicVersion)
+        : null;
     }
 
     if (!manifest) {
@@ -360,8 +353,8 @@ class ReleaseService {
     }
     const release = this.releaseStore.findPublishedFile(fileName);
     if (!release) throw new HttpError(404, '版本文件不存在', 'NOT_FOUND');
-    const isBootstrap = release.version === this.bootstrapVersionFor(release.platform, release.architecture);
-    if (!isBootstrap) this.activationService.requireLicense(req);
+    const isPublic = release.version === this.publicVersionFor(release.platform, release.architecture);
+    if (!isPublic) this.activationService.requireLicense(req);
 
     const filePath = this.releaseStore.filePath(release);
     const stat = await fs.promises.stat(filePath);
@@ -372,7 +365,35 @@ class ReleaseService {
       if (error.status === 416) error.totalSize = stat.size;
       throw error;
     }
-    return { filePath, isBootstrap, range, release, size: stat.size };
+    return { filePath, isBootstrap: isPublic, range, release, size: stat.size };
+  }
+
+  publicDownloads() {
+    return Object.entries(this.releaseStore.data.publicVersions)
+      .map(([key, version]) => {
+        const [platform, architecture] = key.split('/');
+        const release = this.releaseStore.public(platform, architecture);
+        if (!release?.publishedAt) return null;
+        return {
+          platform,
+          architecture,
+          version: release.version,
+          fileName: release.fileName,
+          size: release.size,
+          sha256: release.sha256,
+          notes: release.notes,
+          url: new URL(`/downloads/latest/${platform}/${architecture}`, this.config.publicUrl).href
+        };
+      })
+      .filter(Boolean)
+      .sort((left, right) => left.platform.localeCompare(right.platform)
+        || left.architecture.localeCompare(right.architecture));
+  }
+
+  publicDownload(platform, architecture) {
+    const release = this.releaseStore.public(platform, architecture);
+    if (!release?.publishedAt) throw new HttpError(404, '暂未发布公开安装包', 'NO_PUBLIC_RELEASE');
+    return release;
   }
 
   cleanup() {
@@ -382,8 +403,16 @@ class ReleaseService {
     }
   }
 
+  publicVersionFor(platform, architecture) {
+    const key = releaseKey(platform, architecture);
+    return this.releaseStore.data.publicVersions[key]
+      || this.config.bootstrapVersions[key]
+      || this.releaseStore.data.activeVersions[key]
+      || null;
+  }
+
   bootstrapVersionFor(platform, architecture) {
-    return this.config.bootstrapVersions[releaseKey(platform, architecture)] || null;
+    return this.publicVersionFor(platform, architecture);
   }
 
   releaseTarget(req) {

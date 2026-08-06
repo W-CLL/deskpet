@@ -113,7 +113,8 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 | `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
 | `DESKPET_TRUST_PROXY` | `true` | 使用 Nginx 时，仅信任本机反向代理传入的来源 IP |
 | `DESKPET_SIGNING_PRIVATE_KEY` | `/www/deskpet-data/signing-private.pem` | Ed25519 私钥路径 |
-| `DESKPET_BOOTSTRAP_VERSION` | `2.1.0` | 未激活旧客户端可公开取得的过渡版本 |
+| `DESKPET_BOOTSTRAP_VERSION` | `2.5.3` | Windows x64 对外公开的稳定安装包版本回退值；发布版本后以 `publicVersions` 为准 |
+| `DESKPET_MACOS_BOOTSTRAP_VERSION` | `2.2.1` | macOS 两种架构对外公开的稳定安装包版本回退值 |
 | `DESKPET_BRAND_ICON` | 可选 | 管理后台图标绝对路径 |
 
 完整模板位于 `deploy/baota.env.example`。
@@ -135,7 +136,8 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 - 管理密码只保存 scrypt 哈希，会话 Cookie 使用 `HttpOnly`、`SameSite=Strict` 和生产环境 `Secure`。
 - 所有管理写操作同时验证会话、同源请求和 CSRF 令牌。
 - EXE 以流方式上传并限制为 300 MB，不会整体读入内存。
-- 正式版本的清单和下载都要求有效设备授权。
+- 网站公开稳定版本可直接下载；非公开草稿、历史包和授权更新清单仍要求有效设备授权。
+- 增长数据只保存随机访客标识、安装标识哈希、平台/版本和日期，用于访问、下载、激活与 D1/D7/D30 留存汇总；“下载到激活”按首次启动设备作为安装漏斗分母。
 - `signing-private.pem`、`activation-*.key`、数据库和版本文件不得进入 Git。
 
 生产部署请直接按 [BAOTA_DEPLOYMENT.md](BAOTA_DEPLOYMENT.md) 操作。

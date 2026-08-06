@@ -18,7 +18,8 @@ class AdminController {
     releaseService,
     feedbackService,
     interactionService,
-    contentService
+    contentService,
+    analyticsService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -26,6 +27,7 @@ class AdminController {
     this.feedbackService = feedbackService;
     this.interactionService = interactionService;
     this.contentService = contentService;
+    this.analyticsService = analyticsService;
   }
 
   async login(req, res) {
@@ -82,6 +84,10 @@ class AdminController {
 
   interactions(_req, res) {
     res.status(200).json(this.interactionService.listAll());
+  }
+
+  analytics(req, res) {
+    res.status(200).json(this.analyticsService.summary(req.query));
   }
 
   content(_req, res) {

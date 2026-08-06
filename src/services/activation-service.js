@@ -182,6 +182,7 @@ class ActivationService {
       accountId: license.accountId,
       licenseId: license.licenseId
     });
+    this.analyticsService?.recordActivation(req, license, body);
     return license;
   }
 }

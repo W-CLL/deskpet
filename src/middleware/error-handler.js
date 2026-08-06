@@ -7,13 +7,13 @@ function notFound(_req, _res, next) {
 function normalizeExpressError(error) {
   if (error instanceof HttpError) return error;
   if (error?.type === 'entity.too.large') {
-    return new HttpError(413, '请求内容过大', 'BODY_TOO_LARGE');
+    return new HttpError(413, '请求内容过大，请缩小后重试。', 'BODY_TOO_LARGE');
   }
   if (error?.type === 'entity.parse.failed') {
-    return new HttpError(400, 'JSON 格式无效', 'INVALID_JSON');
+    return new HttpError(400, '请求格式无效，请检查后重试。', 'INVALID_JSON');
   }
   if (error instanceof URIError) {
-    return new HttpError(400, '请求路径无效', 'INVALID_PATH');
+    return new HttpError(400, '请求地址无效，请重新操作。', 'INVALID_PATH');
   }
   return error;
 }
@@ -27,7 +27,9 @@ function errorHandler(sourceError, _req, res, next) {
   if (status === 416 && error.totalSize) {
     res.setHeader('Content-Range', `bytes */${error.totalSize}`);
   }
-  const message = status >= 500 ? '服务器内部错误' : error.message || '请求失败';
+  const message = status >= 500
+    ? '服务器暂时不可用，请稍后重试。'
+    : (error instanceof HttpError ? error.message : '请求失败，请稍后重试。');
   return res.status(status).json({
     error: message,
     code: error.code || 'INTERNAL_ERROR'

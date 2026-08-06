@@ -15,6 +15,8 @@ const { HttpError, mapStoreError } = require('../errors/http-error');
 const { clientIp, parseRange } = require('../http/request-context');
 const { UPLOAD_TTL_MS } = require('../config/app-config');
 
+const MAX_PENDING_UPLOADS = 20;
+
 function signedManifestPayload(manifest) {
   return Buffer.from(JSON.stringify({
     version: manifest.version,
@@ -118,6 +120,9 @@ class ReleaseService {
   }
 
   createUpload(body, session) {
+    if (this.pendingUploads.size >= MAX_PENDING_UPLOADS) {
+      throw new HttpError(429, '当前上传任务较多，请稍后重试。', 'UPLOAD_QUEUE_FULL');
+    }
     let platform;
     let architecture;
     let version;
@@ -399,7 +404,10 @@ class ReleaseService {
   cleanup() {
     const now = Date.now();
     for (const [uploadId, upload] of this.pendingUploads) {
-      if (upload.expiresAt <= now) this.pendingUploads.delete(uploadId);
+      if (upload.expiresAt <= now) {
+        this.pendingUploads.delete(uploadId);
+        fs.promises.rm(this.releaseStore.uploadPath(uploadId), { force: true }).catch(() => {});
+      }
     }
   }
 

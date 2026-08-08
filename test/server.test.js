@@ -71,7 +71,7 @@ test('public and admin requests use the canonical HTTPS domain', async (context)
     publicUrl: 'https://in.desktoppet.online',
     adminUrl: 'https://in.desktoppet.online/admin',
     manifestUrl: 'https://in.desktoppet.online/api/update/latest',
-    bootstrapVersions: { 'windows/x64': '2.1.0' },
+    bootstrapVersions: { 'windows/x64': '2.5.6' },
     activeVersions: {},
     publicVersions: {},
     releases: []

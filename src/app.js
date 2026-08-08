@@ -8,6 +8,7 @@ const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
 const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
+const { ResourcePackStore } = require('../lib/resource-pack-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -23,6 +24,7 @@ const { InteractionService } = require('./services/interaction-service');
 const { ContentService } = require('./services/content-service');
 const { ReleaseService } = require('./services/release-service');
 const { AnalyticsService } = require('./services/analytics-service');
+const { ResourcePackService } = require('./services/resource-pack-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -49,6 +51,8 @@ async function createApplication(options = {}) {
   await analyticsStore.initialize();
   const contentStore = new ContentStore(config.dataDirectory);
   await contentStore.initialize();
+  const resourcePackStore = new ResourcePackStore(config.dataDirectory);
+  await resourcePackStore.initialize();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -104,6 +108,11 @@ async function createApplication(options = {}) {
     auditService,
     signingPrivateKey
   });
+  const resourcePackService = new ResourcePackService({
+    config,
+    resourcePackStore,
+    auditService
+  });
   const adminController = new AdminController({
     authService,
     activationService,
@@ -111,7 +120,8 @@ async function createApplication(options = {}) {
     feedbackService,
     interactionService,
     contentService,
-    analyticsService
+    analyticsService,
+    resourcePackService
   });
   const publicController = new PublicController({
     authService,
@@ -121,7 +131,8 @@ async function createApplication(options = {}) {
     contentService,
     releaseService,
     releaseStore,
-    analyticsService
+    analyticsService,
+    resourcePackService
   });
 
   const app = express();
@@ -160,6 +171,7 @@ async function createApplication(options = {}) {
   const maintenanceTimer = setInterval(() => {
     authService.cleanup();
     releaseService.cleanup();
+    resourcePackService.cleanup();
   }, 60_000);
   maintenanceTimer.unref();
   const interactionCleanupTimer = setInterval(() => {
@@ -179,6 +191,7 @@ async function createApplication(options = {}) {
     interactionStore,
     analyticsStore,
     contentStore,
+    resourcePackStore,
     services: {
       activationService,
       authService,
@@ -186,7 +199,8 @@ async function createApplication(options = {}) {
       interactionService,
       contentService,
       releaseService,
-      analyticsService
+      analyticsService,
+      resourcePackService
     },
     close() {
       if (closed) return;

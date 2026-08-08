@@ -923,6 +923,21 @@ input[readonly] {
   min-height: 104px;
 }
 
+.resource-pack-form-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.6fr) minmax(220px, 1fr) minmax(260px, 1.1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.resource-pack-description {
+  grid-column: 1 / -1;
+}
+
+.resource-pack-description textarea {
+  min-height: 84px;
+}
+
 .upload-actions {
   display: flex;
   min-height: 66px;
@@ -1351,6 +1366,16 @@ table {
 .content-table {
   min-width: 1040px;
   table-layout: fixed;
+}
+
+@media (max-width: 900px) {
+  .resource-pack-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-pack-description {
+    grid-column: auto;
+  }
 }
 
 .content-table th:nth-child(1) {

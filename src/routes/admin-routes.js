@@ -48,6 +48,23 @@ function createAdminRouter({ controller, authService }) {
     requireWriteSession,
     (req, res) => controller.receiveUpload(req, res)
   );
+  router.get('/resource-packs', requireSession, (req, res) => controller.resourcePacks(req, res));
+  router.post(
+    '/resource-packs',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createResourcePackUpload(req, res)
+  );
+  router.put(
+    '/resource-pack-uploads/:uploadId',
+    requireWriteSession,
+    (req, res) => controller.receiveResourcePackUpload(req, res)
+  );
+  router.delete(
+    '/resource-packs/:id',
+    requireWriteSession,
+    (req, res) => controller.deleteResourcePack(req, res)
+  );
 
   router.get(
     '/activation-codes',

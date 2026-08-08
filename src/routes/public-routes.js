@@ -60,6 +60,10 @@ function createPublicRouter(controller) {
     setWebsiteCors(req, res);
     return controller.publicDownloads(req, res);
   });
+  router.get('/api/public/resource-packs', (req, res) => {
+    setWebsiteCors(req, res);
+    return controller.publicResourcePacks(req, res);
+  });
   router.get(
     '/downloads/latest/:platform/:architecture',
     (req, res) => controller.latestDownload(req, res)
@@ -73,6 +77,10 @@ function createPublicRouter(controller) {
     }
   );
   router.get('/downloads/:fileName', (req, res, next) => controller.download(req, res, next));
+  router.get(
+    '/resource-packs/:id/download',
+    (req, res, next) => controller.downloadResourcePack(req, res, next)
+  );
   return router;
 }
 

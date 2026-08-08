@@ -19,7 +19,8 @@ class AdminController {
     feedbackService,
     interactionService,
     contentService,
-    analyticsService
+    analyticsService,
+    resourcePackService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -28,6 +29,7 @@ class AdminController {
     this.interactionService = interactionService;
     this.contentService = contentService;
     this.analyticsService = analyticsService;
+    this.resourcePackService = resourcePackService;
   }
 
   async login(req, res) {
@@ -119,6 +121,28 @@ class AdminController {
   async updateFeedback(req, res) {
     const feedbackId = requireParam(req.params.id, UUID_PATTERN);
     res.status(200).json(await this.feedbackService.updateStatus(req, feedbackId, req.body));
+  }
+
+  resourcePacks(_req, res) {
+    res.status(200).json(this.resourcePackService.list());
+  }
+
+  createResourcePackUpload(req, res) {
+    res.status(201).json(this.resourcePackService.createUpload(req.body, res.locals.adminSession));
+  }
+
+  async receiveResourcePackUpload(req, res) {
+    const uploadId = requireParam(req.params.uploadId, UPLOAD_ID_PATTERN);
+    res.status(201).json(await this.resourcePackService.receiveUpload(
+      req,
+      uploadId,
+      res.locals.adminSession
+    ));
+  }
+
+  async deleteResourcePack(req, res) {
+    const id = requireParam(req.params.id, UUID_PATTERN);
+    res.status(200).json(await this.resourcePackService.delete(req, id));
   }
 
   createUpload(req, res) {

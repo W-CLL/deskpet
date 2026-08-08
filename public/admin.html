@@ -72,6 +72,10 @@
             <span>内容库</span>
             <small>六类互动内容</small>
           </button>
+          <button class="nav-item" type="button" data-page="resource-packs">
+            <span>资源包</span>
+            <small>词包与小剧场</small>
+          </button>
           <button class="nav-item" type="button" data-page="feedback">
             <span>问题反馈</span>
             <small>问题与功能建议</small>
@@ -664,6 +668,91 @@
             </section>
           </section>
 
+          <section class="admin-page" data-page-panel="resource-packs" hidden>
+            <section class="tool-panel upload-section">
+              <div class="panel-heading release-editor-heading">
+                <div>
+                  <p class="eyebrow">官网资源下载</p>
+                  <h2>上传资源包</h2>
+                </div>
+                <span class="editor-state">ZIP</span>
+              </div>
+              <form id="resourcePackForm" class="upload-form">
+                <section class="release-form-block">
+                  <div class="form-block-heading">
+                    <span class="form-block-index">01</span>
+                    <h3>资源信息</h3>
+                  </div>
+                  <div class="resource-pack-form-grid">
+                    <label>
+                      <span>分类</span>
+                      <select id="resourcePackCategory" required>
+                        <option value="interaction-words">互动词包</option>
+                        <option value="theater-scripts">小剧场剧本</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>标题</span>
+                      <input id="resourcePackTitle" maxlength="80" placeholder="例如：打工人日常词包" required>
+                    </label>
+                    <label>
+                      <span>ZIP 文件</span>
+                      <input id="resourcePackFile" type="file" accept=".zip,application/zip" required>
+                    </label>
+                    <label class="resource-pack-description">
+                      <span>简介</span>
+                      <textarea id="resourcePackDescription" rows="3" maxlength="600" placeholder="简要说明包含内容和适用场景" required></textarea>
+                    </label>
+                  </div>
+                </section>
+                <div class="upload-actions">
+                  <div id="resourcePackProgress" class="progress-wrap" hidden>
+                    <progress id="resourcePackProgressBar" max="100" value="0"></progress>
+                    <span id="resourcePackProgressText">0%</span>
+                  </div>
+                  <button id="resourcePackUploadButton" class="button button-primary" type="submit">上传并公开</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="tool-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">公开资源</p>
+                  <h2>资源包管理</h2>
+                </div>
+                <button id="refreshResourcePacksButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+              <div class="list-toolbar" data-list-controls="resource-packs">
+                <label>
+                  <span>分类</span>
+                  <select data-list-filter="category">
+                    <option value="">全部分类</option>
+                    <option value="interaction-words">互动词包</option>
+                    <option value="theater-scripts">小剧场剧本</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th>分类</th>
+                      <th>文件</th>
+                      <th>SHA-256</th>
+                      <th>上传时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resourcePackRows"></tbody>
+                </table>
+                <p id="emptyResourcePacks" class="empty-state" hidden>暂无资源包</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="resource-packs"></div>
+            </section>
+          </section>
+
           <section class="admin-page" data-page-panel="feedback" hidden>
             <section class="tool-panel feedback-section">
               <div class="panel-heading inline-heading">
@@ -748,6 +837,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=canonical-domain-1" defer></script>
+  <script src="/assets/admin.js?v=resource-packs-1" defer></script>
 </body>
 </html>

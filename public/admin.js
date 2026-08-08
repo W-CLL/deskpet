@@ -30,6 +30,18 @@ const elements = {
   uploadProgress: document.querySelector('#uploadProgress'),
   uploadProgressBar: document.querySelector('#uploadProgressBar'),
   uploadProgressText: document.querySelector('#uploadProgressText'),
+  resourcePackForm: document.querySelector('#resourcePackForm'),
+  resourcePackCategory: document.querySelector('#resourcePackCategory'),
+  resourcePackTitle: document.querySelector('#resourcePackTitle'),
+  resourcePackDescription: document.querySelector('#resourcePackDescription'),
+  resourcePackFile: document.querySelector('#resourcePackFile'),
+  resourcePackUploadButton: document.querySelector('#resourcePackUploadButton'),
+  resourcePackProgress: document.querySelector('#resourcePackProgress'),
+  resourcePackProgressBar: document.querySelector('#resourcePackProgressBar'),
+  resourcePackProgressText: document.querySelector('#resourcePackProgressText'),
+  refreshResourcePacksButton: document.querySelector('#refreshResourcePacksButton'),
+  resourcePackRows: document.querySelector('#resourcePackRows'),
+  emptyResourcePacks: document.querySelector('#emptyResourcePacks'),
   refreshButton: document.querySelector('#refreshButton'),
   releasePageTotal: document.querySelector('#releasePageTotal'),
   releasePagePublished: document.querySelector('#releasePagePublished'),
@@ -143,6 +155,7 @@ const pages = {
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
   analytics: ['增长数据', '官网访问、下载转化与设备留存'],
   content: ['内容库', '维护客户端在线与离线互动资源'],
+  'resource-packs': ['资源包', '上传互动词包和小剧场剧本供官网下载'],
   feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
 
@@ -379,6 +392,11 @@ const listViews = {
     matches: (item, filters) => (!filters.type || item.type === filters.type)
       && (!filters.active || (item.active ? 'active' : 'disabled') === filters.active)
   }),
+  resourcePacks: createListView('resource-packs', {
+    emptyElement: elements.emptyResourcePacks,
+    renderPage: renderResourcePackRows,
+    matches: (item, filters) => !filters.category || item.category === filters.category
+  }),
   feedback: createListView('feedback', {
     emptyElement: elements.emptyFeedback,
     renderPage: renderFeedbackRows,
@@ -529,6 +547,74 @@ function renderReleaseRows(releases) {
 
     row.append(versionCell, platformCell, statusCell, fileCell, hashCell, dateCell, actionsCell);
     elements.releaseRows.append(row);
+  }
+}
+
+function resourcePackCategoryLabel(category) {
+  return category === 'theater-scripts' ? '小剧场剧本' : '互动词包';
+}
+
+async function deleteResourcePack(pack) {
+  const confirmed = await confirmAction({
+    title: `删除“${pack.title}”`,
+    message: '官网上的下载入口和 ZIP 文件将同时删除。',
+    confirmLabel: '删除资源包',
+    danger: true
+  });
+  if (!confirmed) return;
+  try {
+    await api(`/api/admin/resource-packs/${encodeURIComponent(pack.id)}`, { method: 'DELETE' });
+    showToast('资源包已删除');
+    await loadResourcePacks();
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
+function renderResourcePacks(payload) {
+  listViews.resourcePacks.setItems(payload.packs);
+}
+
+function renderResourcePackRows(packs) {
+  elements.resourcePackRows.replaceChildren();
+  for (const pack of packs) {
+    const row = document.createElement('tr');
+    const titleCell = cell('version-cell');
+    const title = document.createElement('strong');
+    title.textContent = pack.title;
+    const description = document.createElement('span');
+    description.textContent = pack.description;
+    titleCell.append(title, description);
+
+    const categoryCell = cell();
+    categoryCell.textContent = resourcePackCategoryLabel(pack.category);
+
+    const fileCell = cell('file-cell');
+    const fileName = document.createElement('strong');
+    fileName.textContent = pack.originalName;
+    const fileSize = document.createElement('span');
+    fileSize.textContent = formatBytes(pack.size);
+    fileCell.append(fileName, fileSize);
+
+    const hashCell = cell('hash');
+    hashCell.title = pack.sha256;
+    hashCell.textContent = `${pack.sha256.slice(0, 12)}…${pack.sha256.slice(-8)}`;
+
+    const dateCell = cell();
+    dateCell.textContent = formatDate(pack.createdAt);
+
+    const actionsCell = cell();
+    const actions = document.createElement('div');
+    actions.className = 'row-actions';
+    const download = document.createElement('a');
+    download.className = 'button button-secondary';
+    download.href = pack.url;
+    download.textContent = '下载';
+    actions.append(download, actionButton('删除', 'button-danger', () => deleteResourcePack(pack)));
+    actionsCell.append(actions);
+
+    row.append(titleCell, categoryCell, fileCell, hashCell, dateCell, actionsCell);
+    elements.resourcePackRows.append(row);
   }
 }
 
@@ -1263,6 +1349,7 @@ async function loadAnalytics() {
 async function loadDashboard() {
   await Promise.all([
     loadReleases(),
+    loadResourcePacks(),
     loadActivations(),
     loadInteractions(),
     loadAnalytics(),
@@ -1282,7 +1369,18 @@ async function loadReleases() {
   }
 }
 
-function uploadBinary(uploadUrl, file) {
+async function loadResourcePacks() {
+  elements.refreshResourcePacksButton.disabled = true;
+  try {
+    renderResourcePacks(await api('/api/admin/resource-packs'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshResourcePacksButton.disabled = false;
+  }
+}
+
+function uploadBinary(uploadUrl, file, progressBar, progressText) {
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open('PUT', uploadUrl);
@@ -1292,8 +1390,8 @@ function uploadBinary(uploadUrl, file) {
     request.upload.addEventListener('progress', (event) => {
       if (!event.lengthComputable) return;
       const progress = Math.min(100, Math.round(event.loaded / event.total * 100));
-      elements.uploadProgressBar.value = progress;
-      elements.uploadProgressText.textContent = `${progress}%`;
+      progressBar.value = progress;
+      progressText.textContent = `${progress}%`;
     });
     request.addEventListener('load', () => {
       if (request.status >= 200 && request.status < 300) return resolve(request.response);
@@ -1362,7 +1460,7 @@ elements.uploadForm.addEventListener('submit', async (event) => {
         notes: elements.releaseNotes.value.trim()
       }
     });
-    await uploadBinary(task.uploadUrl, file);
+    await uploadBinary(task.uploadUrl, file, elements.uploadProgressBar, elements.uploadProgressText);
     elements.uploadProgressBar.value = 100;
     elements.uploadProgressText.textContent = '100%';
     elements.uploadForm.reset();
@@ -1380,7 +1478,48 @@ elements.uploadForm.addEventListener('submit', async (event) => {
   }
 });
 
+elements.resourcePackForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const file = elements.resourcePackFile.files[0];
+  if (!file) return;
+  elements.resourcePackUploadButton.disabled = true;
+  elements.resourcePackProgress.hidden = false;
+  elements.resourcePackProgressBar.value = 0;
+  elements.resourcePackProgressText.textContent = '0%';
+  try {
+    const task = await api('/api/admin/resource-packs', {
+      method: 'POST',
+      body: {
+        category: elements.resourcePackCategory.value,
+        title: elements.resourcePackTitle.value.trim(),
+        description: elements.resourcePackDescription.value.trim(),
+        fileName: file.name,
+        fileSize: file.size
+      }
+    });
+    await uploadBinary(
+      task.uploadUrl,
+      file,
+      elements.resourcePackProgressBar,
+      elements.resourcePackProgressText
+    );
+    elements.resourcePackProgressBar.value = 100;
+    elements.resourcePackProgressText.textContent = '100%';
+    elements.resourcePackForm.reset();
+    showToast('资源包已上传并公开');
+    await loadResourcePacks();
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.resourcePackUploadButton.disabled = false;
+    window.setTimeout(() => {
+      elements.resourcePackProgress.hidden = true;
+    }, 800);
+  }
+});
+
 elements.refreshButton.addEventListener('click', loadReleases);
+elements.refreshResourcePacksButton.addEventListener('click', loadResourcePacks);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
 elements.analyticsForm.addEventListener('submit', async (event) => {

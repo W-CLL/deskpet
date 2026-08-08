@@ -9,7 +9,8 @@ class PublicController {
     contentService,
     releaseService,
     releaseStore,
-    analyticsService
+    analyticsService,
+    resourcePackService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -19,6 +20,7 @@ class PublicController {
     this.releaseService = releaseService;
     this.releaseStore = releaseStore;
     this.analyticsService = analyticsService;
+    this.resourcePackService = resourcePackService;
     this.startedAt = new Date().toISOString();
   }
 
@@ -91,6 +93,31 @@ class PublicController {
       generatedAt: new Date().toISOString(),
       downloads: this.releaseService.publicDownloads()
     });
+  }
+
+  publicResourcePacks(_req, res) {
+    res.status(200).json({
+      generatedAt: new Date().toISOString(),
+      packs: this.resourcePackService.publicList()
+    });
+  }
+
+  async downloadResourcePack(req, res, next) {
+    const item = await this.resourcePackService.download(req.params.id);
+    const safeName = item.pack.originalName.replace(/[^A-Za-z0-9._-]/g, '_') || 'resource-pack.zip';
+    res.status(200);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(item.pack.originalName)}`
+    );
+    res.setHeader('Content-Length', item.size);
+    res.setHeader('ETag', `"${item.pack.sha256}"`);
+    res.setHeader('X-Accel-Buffering', 'no');
+    const stream = fs.createReadStream(item.filePath, { highWaterMark: 1024 * 1024 });
+    stream.on('error', next);
+    stream.pipe(res);
   }
 
   latestDownload(req, res) {

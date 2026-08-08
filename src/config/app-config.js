@@ -25,7 +25,7 @@ function loadConfig(overrides = {}) {
   );
 
   const bootstrapVersion = normalizeVersion(
-    overrides.bootstrapVersion || process.env.DESKPET_BOOTSTRAP_VERSION || '2.5.6'
+    overrides.bootstrapVersion || process.env.DESKPET_BOOTSTRAP_VERSION || '2.5.7'
   );
   const macosBootstrapVersion = overrides.macosBootstrapVersion || process.env.DESKPET_MACOS_BOOTSTRAP_VERSION;
   const bootstrapVersions = {

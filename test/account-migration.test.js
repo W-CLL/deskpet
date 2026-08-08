@@ -77,19 +77,19 @@ test('legacy device licenses migrate to stable accounts without changing credent
   assert.equal(authenticated.id, licenseId);
   assert.equal(authenticated.accountId, licenseId);
   assert.equal(authenticated.installationId, installationId);
-  assert.equal(store.migrationState.currentVersion, 2);
-  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2]);
+  assert.equal(store.migrationState.currentVersion, 3);
+  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2, 3]);
   assert.equal(store.list().summary.accounts, 1);
 
   store.close();
   await store.initialize();
-  assert.equal(store.migrationState.currentVersion, 2);
+  assert.equal(store.migrationState.currentVersion, 3);
   assert.deepEqual(store.migrationState.applied, []);
   assert.equal(store.list().summary.accounts, 1);
   const versions = store.database.prepare(`
     SELECT version FROM schema_migrations WHERE scope = 'activation' ORDER BY version
   `).all().map((row) => Number(row.version));
-  assert.deepEqual(versions, [1, 2]);
+  assert.deepEqual(versions, [1, 2, 3]);
 });
 
 test('rebind codes preserve the account and replace the active device license', async (context) => {

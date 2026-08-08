@@ -12,6 +12,11 @@ const DEFAULT_DEVICE_RATE_OPTIONS = {
   windowMs: 15 * 60 * 1000,
   blockMs: 30 * 60 * 1000
 };
+const DEFAULT_TRIAL_RATE_OPTIONS = {
+  maxFailures: 120,
+  windowMs: 15 * 60 * 1000,
+  blockMs: 15 * 60 * 1000
+};
 
 class ActivationService {
   constructor({
@@ -28,6 +33,7 @@ class ActivationService {
     this.deviceLimiter = new LoginRateLimiter(
       activationDeviceRateOptions || DEFAULT_DEVICE_RATE_OPTIONS
     );
+    this.trialLimiter = new LoginRateLimiter(DEFAULT_TRIAL_RATE_OPTIONS);
   }
 
   list() {
@@ -115,7 +121,7 @@ class ActivationService {
     return this.activationStore.authenticate(req.headers.authorization, {
       appVersion: req.headers['x-deskpet-version'],
       markUpdate
-    });
+    }) || this.activationStore.authenticateTrial(req.headers.authorization);
   }
 
   requireLicense(req, markUpdate = false) {
@@ -184,6 +190,28 @@ class ActivationService {
     });
     this.analyticsService?.recordActivation(req, license, body);
     return license;
+  }
+
+  trial(req, body) {
+    const ip = clientIp(req, this.config);
+    const rate = this.trialLimiter.status(ip);
+    if (!rate.allowed) {
+      throw new HttpError(
+        429,
+        `试用请求过于频繁，请在 ${rate.retryAfterSeconds} 秒后重试`,
+        'TRIAL_RATE_LIMITED'
+      );
+    }
+    this.trialLimiter.fail(ip);
+    const trial = this.activationStore.trialStatus({
+      installationId: body?.installationId,
+      credential: body?.credential,
+      appVersion: body?.appVersion
+    });
+    if (!trial) {
+      throw new HttpError(400, '试用设备信息无效，请重新启动应用', 'TRIAL_DEVICE_INVALID');
+    }
+    return trial;
   }
 }
 

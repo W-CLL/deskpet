@@ -113,8 +113,8 @@ DESKPET_DATA_DIR=/www/deskpet-data npm run migrate
 | `DESKPET_HTTP_PORT` | `3100` | Node 内部端口 |
 | `DESKPET_TRUST_PROXY` | `true` | 使用 Nginx 时，仅信任本机反向代理传入的来源 IP |
 | `DESKPET_SIGNING_PRIVATE_KEY` | `/www/deskpet-data/signing-private.pem` | Ed25519 私钥路径 |
-| `DESKPET_BOOTSTRAP_VERSION` | `2.5.5` | Windows x64 对外公开的稳定安装包版本回退值；发布版本后以 `publicVersions` 为准 |
-| `DESKPET_MACOS_BOOTSTRAP_VERSION` | `2.2.3` | macOS 两种架构对外公开的稳定安装包版本回退值 |
+| `DESKPET_BOOTSTRAP_VERSION` | `2.5.6` | Windows x64 对外公开的稳定安装包版本回退值；发布版本后以 `publicVersions` 为准 |
+| `DESKPET_MACOS_BOOTSTRAP_VERSION` | `2.2.4` | macOS 两种架构对外公开的稳定安装包版本回退值 |
 | `DESKPET_BRAND_ICON` | 可选 | 管理后台图标绝对路径 |
 
 完整模板位于 `deploy/baota.env.example`。

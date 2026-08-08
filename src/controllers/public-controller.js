@@ -38,6 +38,10 @@ class PublicController {
     res.status(200).json(await this.activationService.activate(req, req.body));
   }
 
+  async trial(req, res) {
+    res.status(200).json(await this.activationService.trial(req, req.body));
+  }
+
   feedback(req, res) {
     res.status(200).json(this.feedbackService.listForDevice(req));
   }

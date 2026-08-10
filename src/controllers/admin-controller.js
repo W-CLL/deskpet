@@ -52,6 +52,14 @@ class AdminController {
     res.status(200).json(this.releaseService.list());
   }
 
+  siteSettings(_req, res) {
+    res.status(200).json(this.releaseService.siteSettings());
+  }
+
+  async updateSiteSettings(req, res) {
+    res.status(200).json(await this.releaseService.updateSiteSettings(req, req.body));
+  }
+
   activationCodes(_req, res) {
     res.status(200).json(this.activationService.list());
   }

@@ -119,6 +119,29 @@ class ReleaseService {
     };
   }
 
+  siteSettings() {
+    return this.releaseStore.siteSettings();
+  }
+
+  async updateSiteSettings(req, body) {
+    let settings;
+    try {
+      settings = await this.releaseStore.updateSiteSettings(body?.xianyuUrl);
+    } catch (error) {
+      if (/闲鱼链接|闲鱼 HTTPS 链接/.test(error?.message || '')) {
+        throw new HttpError(400, error.message, 'INVALID_XIANYU_URL');
+      }
+      throw error;
+    }
+    await this.auditService.write({
+      action: 'update_site_settings',
+      outcome: 'success',
+      ip: clientIp(req, this.config),
+      xianyuEnabled: Boolean(settings.xianyuUrl)
+    });
+    return settings;
+  }
+
   createUpload(body, session) {
     if (this.pendingUploads.size >= MAX_PENDING_UPLOADS) {
       throw new HttpError(429, '当前上传任务较多，请稍后重试。', 'UPLOAD_QUEUE_FULL');

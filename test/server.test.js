@@ -227,6 +227,47 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   csrfToken = login.payload.csrfToken;
   assert.match(cookie, /^deskpet_session=/);
 
+  const initialSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/admin/site-settings`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(initialSiteSettings.payload.xianyuUrl, '');
+
+  const invalidSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/admin/site-settings`, {
+    method: 'PUT',
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({ xianyuUrl: 'https://example.com/not-xianyu' })
+  }));
+  assert.equal(invalidSiteSettings.response.status, 400);
+  assert.equal(invalidSiteSettings.payload.code, 'INVALID_XIANYU_URL');
+
+  const xianyuUrl = 'https://www.goofish.com/item?id=deskpet-3';
+  const updatedSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/admin/site-settings`, {
+    method: 'PUT',
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({ xianyuUrl })
+  }));
+  assert.equal(updatedSiteSettings.response.status, 200);
+  assert.equal(updatedSiteSettings.payload.xianyuUrl, xianyuUrl);
+
+  const publicSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/public/site-settings`, {
+    headers: { Origin: 'https://desktoppet.online' }
+  }));
+  assert.equal(publicSiteSettings.response.status, 200);
+  assert.equal(publicSiteSettings.response.headers.get('access-control-allow-origin'), 'https://desktoppet.online');
+  assert.equal(publicSiteSettings.payload.xianyuUrl, xianyuUrl);
+  const releaseMetadata = JSON.parse(
+    await fs.promises.readFile(path.join(dataDirectory, 'releases.json'), 'utf8')
+  );
+  assert.equal(releaseMetadata.siteSettings.xianyuUrl, xianyuUrl);
+
   const executable = Buffer.from('MZ deskpet release test payload', 'utf8');
   const releaseInfo = {
     version: '1.6.0',

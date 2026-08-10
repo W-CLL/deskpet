@@ -60,6 +60,10 @@ function createPublicRouter(controller) {
     setWebsiteCors(req, res);
     return controller.publicDownloads(req, res);
   });
+  router.get('/api/public/site-settings', (req, res) => {
+    setWebsiteCors(req, res);
+    return controller.publicSiteSettings(req, res);
+  });
   router.get('/api/public/resource-packs', (req, res) => {
     setWebsiteCors(req, res);
     return controller.publicResourcePacks(req, res);

@@ -95,6 +95,10 @@ class PublicController {
     });
   }
 
+  publicSiteSettings(_req, res) {
+    res.status(200).json(this.releaseService.siteSettings());
+  }
+
   publicResourcePacks(_req, res) {
     res.status(200).json({
       generatedAt: new Date().toISOString(),

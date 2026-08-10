@@ -18,6 +18,9 @@ const elements = {
   adminUrl: document.querySelector('#adminUrl'),
   copyAdminUrlButton: document.querySelector('#copyAdminUrlButton'),
   manifestUrl: document.querySelector('#manifestUrl'),
+  siteSettingsForm: document.querySelector('#siteSettingsForm'),
+  xianyuUrl: document.querySelector('#xianyuUrl'),
+  saveSiteSettingsButton: document.querySelector('#saveSiteSettingsButton'),
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
   releaseVersion: document.querySelector('#releaseVersion'),
@@ -1353,6 +1356,7 @@ async function loadAnalytics() {
 async function loadDashboard() {
   await Promise.all([
     loadReleases(),
+    loadSiteSettings(),
     loadResourcePacks(),
     loadActivations(),
     loadInteractions(),
@@ -1360,6 +1364,15 @@ async function loadDashboard() {
     loadContent(),
     loadFeedback()
   ]);
+}
+
+async function loadSiteSettings() {
+  try {
+    const settings = await api('/api/admin/site-settings');
+    elements.xianyuUrl.value = settings.xianyuUrl || '';
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
 }
 
 async function loadReleases() {
@@ -1436,6 +1449,23 @@ elements.logoutButton.addEventListener('click', async () => {
     await api('/api/admin/logout', { method: 'POST' });
   } catch {}
   showLogin();
+});
+
+elements.siteSettingsForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  elements.saveSiteSettingsButton.disabled = true;
+  try {
+    const settings = await api('/api/admin/site-settings', {
+      method: 'PUT',
+      body: { xianyuUrl: elements.xianyuUrl.value.trim() }
+    });
+    elements.xianyuUrl.value = settings.xianyuUrl || '';
+    showToast(settings.xianyuUrl ? '官网闲鱼入口已更新' : '官网闲鱼入口已隐藏');
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.saveSiteSettingsButton.disabled = false;
+  }
 });
 
 syncUploadTarget();

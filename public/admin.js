@@ -76,6 +76,7 @@ const elements = {
   refreshAnalyticsButton: document.querySelector('#refreshAnalyticsButton'),
   analyticsVisitors: document.querySelector('#analyticsVisitors'),
   analyticsDownloads: document.querySelector('#analyticsDownloads'),
+  analyticsResourceDownloads: document.querySelector('#analyticsResourceDownloads'),
   analyticsClickRate: document.querySelector('#analyticsClickRate'),
   analyticsFirstLaunches: document.querySelector('#analyticsFirstLaunches'),
   analyticsInstallRate: document.querySelector('#analyticsInstallRate'),
@@ -1294,9 +1295,11 @@ function initializeAnalyticsRange() {
 
 function renderAnalytics(payload) {
   const funnel = payload.funnel || {};
+  const resourceDownloads = payload.resourceDownloads || {};
   const activity = payload.activity || {};
   elements.analyticsVisitors.textContent = String(funnel.uniqueVisitors || 0);
   elements.analyticsDownloads.textContent = String(funnel.downloadClicks || 0);
+  elements.analyticsResourceDownloads.textContent = String(resourceDownloads.downloadClicks || 0);
   elements.analyticsClickRate.textContent = formatAnalyticsRate(funnel.clickRate);
   elements.analyticsFirstLaunches.textContent = String(funnel.firstLaunches || 0);
   elements.analyticsInstallRate.textContent = formatAnalyticsRate(funnel.installRate);
@@ -1325,7 +1328,8 @@ function renderAnalytics(payload) {
     elements.analyticsCohortRows.append(row);
   }
   const hasData = Boolean(
-    funnel.uniqueVisitors || funnel.firstLaunches || activity.weeklyActiveDevices
+    funnel.uniqueVisitors || funnel.firstLaunches || resourceDownloads.downloadClicks
+      || activity.weeklyActiveDevices
       || (payload.platforms || []).length || (payload.retention?.cohorts || []).length
   );
   elements.analyticsEmpty.hidden = hasData;

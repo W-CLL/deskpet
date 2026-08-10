@@ -643,6 +643,12 @@ test('public analytics events are deduplicated and summarized by device', async 
       { ...common, eventId: 'page-view-001', type: 'page_view' },
       { ...common, eventId: 'download-click-001', type: 'download_click' },
       {
+        ...common,
+        eventId: 'resource-download-001',
+        type: 'resource_download_click',
+        pagePath: '/resources/'
+      },
+      {
         eventId: 'first-launch-001',
         type: 'app_first_launch',
         installationId: 'a'.repeat(32),
@@ -681,7 +687,7 @@ test('public analytics events are deduplicated and summarized by device', async 
   }));
   assert.equal(recorded.response.status, 202);
   assert.equal(recorded.response.headers.get('access-control-allow-origin'), 'https://desktoppet.online');
-  assert.equal(recorded.payload.accepted, 5);
+  assert.equal(recorded.payload.accepted, 6);
 
   const duplicate = await jsonResponse(await fetch(`${baseUrl}/api/analytics/events`, {
     method: 'POST',
@@ -697,6 +703,8 @@ test('public analytics events are deduplicated and summarized by device', async 
   assert.equal(summary.funnel.uniqueVisitors, 1);
   assert.equal(summary.funnel.downloadClicks, 1);
   assert.equal(summary.funnel.downloadVisitors, 1);
+  assert.equal(summary.resourceDownloads.downloadClicks, 1);
+  assert.equal(summary.resourceDownloads.downloadVisitors, 1);
   assert.equal(summary.funnel.firstLaunches, 1);
   assert.equal(summary.funnel.clickRate, 1);
   assert.equal(summary.activity.dailyActiveDevices, 1);

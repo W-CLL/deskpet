@@ -19,6 +19,7 @@ const MAX_REQUESTS_PER_IP = 120;
 const PUBLIC_EVENT_TYPES = new Set([
   'page_view',
   'download_click',
+  'resource_download_click',
   'app_first_launch',
   'app_session_start',
   'app_daily_active'
@@ -158,7 +159,8 @@ class AnalyticsService {
       if (license) event.accountId = license.accountId;
     }
     if (type === 'page_view' && !event.visitorId) invalidEvent(index, '缺少访客标识');
-    if (type === 'download_click' && (!event.visitorId || !event.pagePath)) {
+    if (['download_click', 'resource_download_click'].includes(type)
+      && (!event.visitorId || !event.pagePath)) {
       invalidEvent(index, '缺少访客标识或页面路径');
     }
     return event;

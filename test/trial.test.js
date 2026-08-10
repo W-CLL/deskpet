@@ -24,9 +24,9 @@ test('online trial starts once and cannot be extended by the local clock', async
     auditService: { write: async () => {} }
   });
   const request = { headers: {}, socket: { remoteAddress: '127.0.0.1' } };
-  const first = service.trial(request, { installationId, credential, appVersion: '2.5.7' });
+  const first = service.trial(request, { installationId, credential, appVersion: '2.5.8' });
   assert.equal(first.allowed, true);
-  assert.equal(first.remainingSeconds, 600);
+  assert.equal(first.remainingSeconds, 300);
   const authenticated = service.authenticate({
     headers: { authorization: `Trial ${installationId}.${credential}` }
   });

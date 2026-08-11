@@ -64,6 +64,10 @@
             <span>互动统计</span>
             <small>账号行为与心情</small>
           </button>
+          <button class="nav-item" type="button" data-page="companions">
+            <span>搭子联机</span>
+            <small>配对与 GIF 投递</small>
+          </button>
           <button class="nav-item" type="button" data-page="analytics">
             <span>增长数据</span>
             <small>访问、下载与留存</small>
@@ -495,6 +499,46 @@
                 <p id="emptyInteractions" class="empty-state" hidden>暂无互动账号</p>
               </div>
               <div class="list-pagination" data-list-pagination="interactions"></div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="companions" hidden>
+            <section class="tool-panel companion-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">近 90 天聚合数据</p>
+                  <h2>搭子联机</h2>
+                </div>
+                <button id="refreshCompanionButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="metric-grid companion-metrics" aria-label="搭子联机统计汇总">
+                <article class="metric-item"><span>联机档案</span><strong id="companionProfiles">0</strong><small>已打开过联机设置的账号</small></article>
+                <article class="metric-item metric-primary"><span>当前配对</span><strong id="companionPairs">0</strong><small>仍保持绑定的搭子关系</small></article>
+                <article class="metric-item"><span>发送</span><strong id="companionSent">0</strong><small>近 90 天 GIF 投递数</small></article>
+                <article class="metric-item"><span>已领取</span><strong id="companionReceived">0</strong><small>客户端下载并确认的投递</small></article>
+                <article class="metric-item"><span>待领取</span><strong id="companionPending">0</strong><small>当前仍在有效期内</small></article>
+                <article class="metric-item"><span>已过期</span><strong id="companionExpired">0</strong><small>近 90 天未领取投递</small></article>
+                <article class="metric-item"><span>领取率</span><strong id="companionReceiptRate">-</strong><small>已领取 / 发送</small></article>
+                <article class="metric-item"><span>GIF 存储</span><strong id="companionStorage">0 B</strong><small>服务器当前实际文件占用</small></article>
+              </div>
+
+              <div class="panel-heading companion-history-heading">
+                <div>
+                  <p class="eyebrow">近 14 天</p>
+                  <h2>每日投递</h2>
+                </div>
+                <span id="companionUpdatedAt" class="panel-note">-</span>
+              </div>
+              <div class="table-wrap">
+                <table class="companion-table">
+                  <thead>
+                    <tr><th>日期</th><th>发送</th><th>已领取</th><th>已过期</th><th>领取率</th></tr>
+                  </thead>
+                  <tbody id="companionRows"></tbody>
+                </table>
+                <p id="emptyCompanions" class="empty-state" hidden>近 14 天暂无联机投递</p>
+              </div>
             </section>
           </section>
 

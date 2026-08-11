@@ -10,7 +10,8 @@ class PublicController {
     releaseService,
     releaseStore,
     analyticsService,
-    resourcePackService
+    resourcePackService,
+    companionService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -21,6 +22,7 @@ class PublicController {
     this.releaseStore = releaseStore;
     this.analyticsService = analyticsService;
     this.resourcePackService = resourcePackService;
+    this.companionService = companionService;
     this.startedAt = new Date().toISOString();
   }
 
@@ -82,6 +84,44 @@ class PublicController {
       return;
     }
     res.status(200).json(payload);
+  }
+
+  companionProfile(req, res) {
+    res.status(200).json(this.companionService.profile(req));
+  }
+
+  updateCompanionProfile(req, res) {
+    res.status(200).json(this.companionService.updateProfile(req, req.body));
+  }
+
+  pairCompanion(req, res) {
+    res.status(200).json(this.companionService.pair(req, req.body));
+  }
+
+  unpairCompanion(req, res) {
+    res.status(200).json(this.companionService.unpair(req));
+  }
+
+  async sendCompanionGif(req, res) {
+    res.status(201).json(await this.companionService.send(req, req.body));
+  }
+
+  companionDeliveries(req, res) {
+    res.status(200).json(this.companionService.pending(req));
+  }
+
+  companionDeliveryFile(req, res) {
+    const item = this.companionService.file(req);
+    res.status(200);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('Content-Type', 'image/gif');
+    res.setHeader('Content-Length', item.size);
+    res.setHeader('ETag', `"${item.sha256}"`);
+    res.sendFile(item.filePath);
+  }
+
+  acknowledgeCompanionDelivery(req, res) {
+    res.status(200).json(this.companionService.acknowledge(req));
   }
 
   latest(req, res) {

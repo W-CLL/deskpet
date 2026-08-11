@@ -9,6 +9,7 @@ const { InteractionStore } = require('../lib/interaction-store');
 const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
 const { ResourcePackStore } = require('../lib/resource-pack-store');
+const { CompanionStore } = require('../lib/companion-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -25,6 +26,7 @@ const { ContentService } = require('./services/content-service');
 const { ReleaseService } = require('./services/release-service');
 const { AnalyticsService } = require('./services/analytics-service');
 const { ResourcePackService } = require('./services/resource-pack-service');
+const { CompanionService } = require('./services/companion-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -53,6 +55,8 @@ async function createApplication(options = {}) {
   await contentStore.initialize();
   const resourcePackStore = new ResourcePackStore(config.dataDirectory);
   await resourcePackStore.initialize();
+  const companionStore = new CompanionStore(config.dataDirectory, options.companionOptions);
+  await companionStore.initialize();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -113,6 +117,7 @@ async function createApplication(options = {}) {
     resourcePackStore,
     auditService
   });
+  const companionService = new CompanionService({ companionStore, activationService });
   const adminController = new AdminController({
     authService,
     activationService,
@@ -121,7 +126,8 @@ async function createApplication(options = {}) {
     interactionService,
     contentService,
     analyticsService,
-    resourcePackService
+    resourcePackService,
+    companionService
   });
   const publicController = new PublicController({
     authService,
@@ -132,7 +138,8 @@ async function createApplication(options = {}) {
     releaseService,
     releaseStore,
     analyticsService,
-    resourcePackService
+    resourcePackService,
+    companionService
   });
 
   const app = express();
@@ -179,6 +186,10 @@ async function createApplication(options = {}) {
     analyticsStore.pruneRawEvents();
   }, 6 * 60 * 60 * 1000);
   interactionCleanupTimer.unref();
+  const companionCleanupTimer = setInterval(() => {
+    companionService.cleanup().catch((error) => console.error('companion-cleanup-failed', error));
+  }, 60 * 60 * 1000);
+  companionCleanupTimer.unref();
 
   let closed = false;
   return {
@@ -192,6 +203,7 @@ async function createApplication(options = {}) {
     analyticsStore,
     contentStore,
     resourcePackStore,
+    companionStore,
     services: {
       activationService,
       authService,
@@ -200,13 +212,16 @@ async function createApplication(options = {}) {
       contentService,
       releaseService,
       analyticsService,
-      resourcePackService
+      resourcePackService,
+      companionService
     },
     close() {
       if (closed) return;
       closed = true;
       clearInterval(maintenanceTimer);
       clearInterval(interactionCleanupTimer);
+      clearInterval(companionCleanupTimer);
+      companionStore.close();
       contentStore.close();
       analyticsStore.close();
       interactionStore.close();

@@ -73,6 +73,18 @@ const elements = {
   interactionQuizzes: document.querySelector('#interactionQuizzes'),
   interactionRows: document.querySelector('#interactionRows'),
   emptyInteractions: document.querySelector('#emptyInteractions'),
+  refreshCompanionButton: document.querySelector('#refreshCompanionButton'),
+  companionProfiles: document.querySelector('#companionProfiles'),
+  companionPairs: document.querySelector('#companionPairs'),
+  companionSent: document.querySelector('#companionSent'),
+  companionReceived: document.querySelector('#companionReceived'),
+  companionPending: document.querySelector('#companionPending'),
+  companionExpired: document.querySelector('#companionExpired'),
+  companionReceiptRate: document.querySelector('#companionReceiptRate'),
+  companionStorage: document.querySelector('#companionStorage'),
+  companionUpdatedAt: document.querySelector('#companionUpdatedAt'),
+  companionRows: document.querySelector('#companionRows'),
+  emptyCompanions: document.querySelector('#emptyCompanions'),
   analyticsForm: document.querySelector('#analyticsForm'),
   analyticsFrom: document.querySelector('#analyticsFrom'),
   analyticsTo: document.querySelector('#analyticsTo'),
@@ -157,6 +169,7 @@ const pages = {
   releases: ['版本发布', '上传安装包并维护发布记录'],
   activations: ['激活授权', '管理激活码与设备授权'],
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
+  companions: ['搭子联机', '查看配对与 GIF 投递聚合数据'],
   analytics: ['增长数据', '官网访问、下载转化与设备留存'],
   content: ['内容库', '维护客户端在线与离线互动资源'],
   'resource-packs': ['资源包', '上传互动词包和小剧场剧本供官网下载'],
@@ -250,9 +263,10 @@ function formatDate(value) {
   }).format(date);
 }
 
-function cell(className = '') {
+function cell(className = '', text) {
   const node = document.createElement('td');
   if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
   return node;
 }
 
@@ -982,6 +996,47 @@ async function loadInteractions() {
   }
 }
 
+function renderCompanions(payload) {
+  const summary = payload.summary || {};
+  elements.companionProfiles.textContent = summary.profiles || 0;
+  elements.companionPairs.textContent = summary.activePairs || 0;
+  elements.companionSent.textContent = summary.sent || 0;
+  elements.companionReceived.textContent = summary.received || 0;
+  elements.companionPending.textContent = summary.pending || 0;
+  elements.companionExpired.textContent = summary.expired || 0;
+  elements.companionReceiptRate.textContent = summary.receiptRate === null
+    ? '-'
+    : formatAnalyticsRate(summary.receiptRate);
+  elements.companionStorage.textContent = formatBytes(summary.storageBytes || 0);
+  elements.companionUpdatedAt.textContent = `更新于 ${formatDate(payload.generatedAt)}`;
+  elements.companionRows.replaceChildren();
+
+  const daily = payload.daily || [];
+  for (const item of daily) {
+    const row = document.createElement('tr');
+    row.append(
+      cell('', item.date),
+      cell('', item.sent),
+      cell('', item.received),
+      cell('', item.expired),
+      cell('', item.sent > 0 ? formatAnalyticsRate(item.received / item.sent) : '-')
+    );
+    elements.companionRows.append(row);
+  }
+  elements.emptyCompanions.hidden = daily.length > 0;
+}
+
+async function loadCompanions() {
+  elements.refreshCompanionButton.disabled = true;
+  try {
+    renderCompanions(await api('/api/admin/companions'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshCompanionButton.disabled = false;
+  }
+}
+
 const contentTypeLabels = {
   joke: '冷笑话',
   math: '数学题',
@@ -1360,6 +1415,7 @@ async function loadDashboard() {
     loadResourcePacks(),
     loadActivations(),
     loadInteractions(),
+    loadCompanions(),
     loadAnalytics(),
     loadContent(),
     loadFeedback()
@@ -1556,6 +1612,7 @@ elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshResourcePacksButton.addEventListener('click', loadResourcePacks);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
+elements.refreshCompanionButton.addEventListener('click', loadCompanions);
 elements.analyticsForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   await loadAnalytics();

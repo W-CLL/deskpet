@@ -20,7 +20,8 @@ class AdminController {
     interactionService,
     contentService,
     analyticsService,
-    resourcePackService
+    resourcePackService,
+    companionService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -30,6 +31,7 @@ class AdminController {
     this.contentService = contentService;
     this.analyticsService = analyticsService;
     this.resourcePackService = resourcePackService;
+    this.companionService = companionService;
   }
 
   async login(req, res) {
@@ -94,6 +96,10 @@ class AdminController {
 
   interactions(_req, res) {
     res.status(200).json(this.interactionService.listAll());
+  }
+
+  async companions(_req, res) {
+    res.status(200).json(await this.companionService.adminStats());
   }
 
   analytics(req, res) {

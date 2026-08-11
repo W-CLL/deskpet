@@ -4,6 +4,7 @@ const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
 const { ContentStore } = require('../lib/content-store');
+const { CompanionStore } = require('../lib/companion-store');
 
 function validateDataDirectory(dataDirectory, requireExisting) {
   if (!requireExisting) {
@@ -45,21 +46,25 @@ async function main(args = process.argv.slice(2)) {
   const feedbackStore = new FeedbackStore(dataDirectory);
   const interactionStore = new InteractionStore(dataDirectory);
   const contentStore = new ContentStore(dataDirectory);
+  const companionStore = new CompanionStore(dataDirectory);
 
   try {
     await activationStore.initialize();
     await feedbackStore.initialize();
     await interactionStore.initialize();
     await contentStore.initialize();
+    await companionStore.initialize();
     const result = {
       dataDirectory,
       activation: activationStore.migrationState,
       feedback: feedbackStore.migrationState,
       interaction: interactionStore.migrationState,
-      content: contentStore.migrationState
+      content: contentStore.migrationState,
+      companion: companionStore.migrationState
     };
     console.log(JSON.stringify(result, null, 2));
   } finally {
+    companionStore.close();
     contentStore.close();
     interactionStore.close();
     feedbackStore.close();

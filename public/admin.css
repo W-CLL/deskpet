@@ -1002,11 +1002,25 @@ progress {
 .releases-section,
 .activation-section,
 .interaction-section,
+.companion-section,
 .content-section,
 .feedback-section {
   display: grid;
   min-width: 0;
   gap: 16px;
+}
+
+.companion-metrics .metric-item {
+  min-height: 110px;
+  grid-column: span 3;
+}
+
+.companion-history-heading {
+  margin-top: 4px;
+}
+
+.companion-table {
+  min-width: 640px;
 }
 
 .summary-strip {

@@ -1,6 +1,7 @@
 const express = require('express');
 const { MAX_JSON_BODY } = require('../config/app-config');
 const { jsonBody } = require('../middleware/json-body');
+const { MAX_GIF_BYTES } = require('../services/companion-service');
 
 function setWebsiteCors(req, res) {
   const origin = String(req.headers.origin || '');
@@ -54,6 +55,35 @@ function createPublicRouter(controller) {
   router.get(
     '/api/content/offline-pack',
     (req, res) => controller.contentOfflinePack(req, res)
+  );
+  router.get('/api/companion', (req, res) => controller.companionProfile(req, res));
+  router.patch(
+    '/api/companion',
+    ...jsonBody(4096),
+    (req, res) => controller.updateCompanionProfile(req, res)
+  );
+  router.post(
+    '/api/companion/pair',
+    ...jsonBody(4096),
+    (req, res) => controller.pairCompanion(req, res)
+  );
+  router.delete('/api/companion/pair', (req, res) => controller.unpairCompanion(req, res));
+  router.get(
+    '/api/companion/deliveries',
+    (req, res) => controller.companionDeliveries(req, res)
+  );
+  router.post(
+    '/api/companion/deliveries',
+    express.raw({ type: 'image/gif', limit: MAX_GIF_BYTES }),
+    (req, res) => controller.sendCompanionGif(req, res)
+  );
+  router.get(
+    '/api/companion/deliveries/:id/file',
+    (req, res) => controller.companionDeliveryFile(req, res)
+  );
+  router.post(
+    '/api/companion/deliveries/:id/acknowledge',
+    (req, res) => controller.acknowledgeCompanionDelivery(req, res)
   );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
   router.get('/api/public/downloads', (req, res) => {

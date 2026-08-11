@@ -103,6 +103,7 @@ function createAdminRouter({ controller, authService }) {
 
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
   router.get('/interactions', requireSession, (req, res) => controller.interactions(req, res));
+  router.get('/companions', requireSession, (req, res) => controller.companions(req, res));
   router.get('/analytics', requireSession, (req, res) => controller.analytics(req, res));
   router.get('/content', requireSession, (req, res) => controller.content(req, res));
   router.post(

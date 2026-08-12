@@ -82,10 +82,6 @@ const elements = {
   companionExpired: document.querySelector('#companionExpired'),
   companionReceiptRate: document.querySelector('#companionReceiptRate'),
   companionStorage: document.querySelector('#companionStorage'),
-  companionSecretMatches: document.querySelector('#companionSecretMatches'),
-  companionStickerSent: document.querySelector('#companionStickerSent'),
-  companionStickerReceived: document.querySelector('#companionStickerReceived'),
-  companionPendingStickers: document.querySelector('#companionPendingStickers'),
   companionUpdatedAt: document.querySelector('#companionUpdatedAt'),
   companionRows: document.querySelector('#companionRows'),
   emptyCompanions: document.querySelector('#emptyCompanions'),
@@ -1012,10 +1008,6 @@ function renderCompanions(payload) {
     ? '-'
     : formatAnalyticsRate(summary.receiptRate);
   elements.companionStorage.textContent = formatBytes(summary.storageBytes || 0);
-  elements.companionSecretMatches.textContent = summary.secretMatches || 0;
-  elements.companionStickerSent.textContent = summary.stickerSent || 0;
-  elements.companionStickerReceived.textContent = summary.stickerReceived || 0;
-  elements.companionPendingStickers.textContent = summary.pendingStickers || 0;
   elements.companionUpdatedAt.textContent = `更新于 ${formatDate(payload.generatedAt)}`;
   elements.companionRows.replaceChildren();
 
@@ -1027,9 +1019,6 @@ function renderCompanions(payload) {
       cell('', item.sent),
       cell('', item.received),
       cell('', item.expired),
-      cell('', item.secretMatches || 0),
-      cell('', item.stickerSent || 0),
-      cell('', item.stickerReceived || 0),
       cell('', item.sent > 0 ? formatAnalyticsRate(item.received / item.sent) : '-')
     );
     elements.companionRows.append(row);

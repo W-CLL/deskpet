@@ -2,7 +2,6 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { HttpError } = require('../errors/http-error');
-const { STICKER_CATALOG } = require('../../lib/companion-store');
 
 const MAX_GIF_BYTES = 8 * 1024 * 1024;
 const MAX_GIF_DIMENSION = 2048;
@@ -28,8 +27,7 @@ function mapStoreError(error) {
     ['其中一方已经绑定搭子', [409, 'COMPANION_ALREADY_PAIRED']],
     ['请先绑定搭子', [409, 'COMPANION_NOT_PAIRED']],
     ['发送太快，请稍后再试', [429, 'COMPANION_RATE_LIMITED']],
-    ['对方还有未查看的来访', [409, 'COMPANION_QUEUE_FULL']],
-    ['对方还有未查看的贴纸', [409, 'COMPANION_STICKER_QUEUE_FULL']]
+    ['对方还有未查看的来访', [409, 'COMPANION_QUEUE_FULL']]
   ]);
   const mapping = mappings.get(error?.message);
   return mapping ? new HttpError(mapping[0], error.message, mapping[1]) : error;
@@ -80,30 +78,6 @@ class CompanionService {
     return this.companionStore.unpair(license.accountId);
   }
 
-  async setSecret(req, buffer) {
-    const license = this.requireAccount(req);
-    inspectGif(buffer);
-    const sha256 = crypto.createHash('sha256').update(buffer).digest('hex');
-    try {
-      return this.companionStore.setSecret(license.accountId, sha256);
-    } catch (error) {
-      throw mapStoreError(error);
-    }
-  }
-
-  sendSticker(req, body) {
-    const license = this.requireAccount(req);
-    const stickerId = String(body?.stickerId || '').trim();
-    if (!Object.hasOwn(STICKER_CATALOG, stickerId)) {
-      throw new HttpError(400, '贴纸无效', 'INVALID_COMPANION_STICKER');
-    }
-    try {
-      return this.companionStore.createSticker(license.accountId, stickerId);
-    } catch (error) {
-      throw mapStoreError(error);
-    }
-  }
-
   async send(req, buffer) {
     const license = this.requireAccount(req);
     const { width, height } = inspectGif(buffer);
@@ -128,10 +102,7 @@ class CompanionService {
 
   pending(req) {
     const license = this.requireAccount(req);
-    return {
-      deliveries: this.companionStore.pending(license.accountId),
-      stickers: this.companionStore.pendingStickers(license.accountId)
-    };
+    return { deliveries: this.companionStore.pending(license.accountId) };
   }
 
   file(req) {
@@ -149,13 +120,6 @@ class CompanionService {
     const license = this.requireAccount(req);
     const result = this.companionStore.acknowledge(license.accountId, req.params.id);
     if (!result) throw new HttpError(404, '来访 GIF 不存在或已处理', 'COMPANION_DELIVERY_NOT_FOUND');
-    return result;
-  }
-
-  acknowledgeSticker(req) {
-    const license = this.requireAccount(req);
-    const result = this.companionStore.acknowledgeSticker(license.accountId, req.params.id);
-    if (!result) throw new HttpError(404, '贴纸不存在或已处理', 'COMPANION_STICKER_NOT_FOUND');
     return result;
   }
 

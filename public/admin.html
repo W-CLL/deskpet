@@ -66,7 +66,7 @@
           </button>
           <button class="nav-item" type="button" data-page="companions">
             <span>搭子联机</span>
-            <small>配对与 GIF 投递</small>
+            <small>配对、暗号与贴纸</small>
           </button>
           <button class="nav-item" type="button" data-page="analytics">
             <span>增长数据</span>
@@ -521,6 +521,10 @@
                 <article class="metric-item"><span>已过期</span><strong id="companionExpired">0</strong><small>近 90 天未领取投递</small></article>
                 <article class="metric-item"><span>领取率</span><strong id="companionReceiptRate">-</strong><small>已领取 / 发送</small></article>
                 <article class="metric-item"><span>GIF 存储</span><strong id="companionStorage">0 B</strong><small>服务器当前实际文件占用</small></article>
+                <article class="metric-item"><span>暗号命中</span><strong id="companionSecretMatches">0</strong><small>双方发送同一今日暗号 GIF</small></article>
+                <article class="metric-item"><span>贴纸发送</span><strong id="companionStickerSent">0</strong><small>内置贴纸投递数</small></article>
+                <article class="metric-item"><span>贴纸领取</span><strong id="companionStickerReceived">0</strong><small>客户端确认收到的贴纸</small></article>
+                <article class="metric-item"><span>待处理贴纸</span><strong id="companionPendingStickers">0</strong><small>当前仍在有效期内</small></article>
               </div>
 
               <div class="panel-heading companion-history-heading">
@@ -533,7 +537,7 @@
               <div class="table-wrap">
                 <table class="companion-table">
                   <thead>
-                    <tr><th>日期</th><th>发送</th><th>已领取</th><th>已过期</th><th>领取率</th></tr>
+                    <tr><th>日期</th><th>发送</th><th>已领取</th><th>已过期</th><th>暗号命中</th><th>贴纸发送</th><th>贴纸领取</th><th>领取率</th></tr>
                   </thead>
                   <tbody id="companionRows"></tbody>
                 </table>

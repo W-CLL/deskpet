@@ -111,6 +111,20 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   assert.equal(paired.payload.partner.displayName, '小夏');
 
   const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+  const secret = await jsonResponse(await fetch(`${baseUrl}/api/companion/secret`, {
+    method: 'POST',
+    headers: { ...first.headers, 'Content-Type': 'image/gif' },
+    body: gif
+  }));
+  assert.equal(secret.response.status, 200);
+  assert.equal(secret.payload.set, true);
+  const partnerSecret = await jsonResponse(await fetch(`${baseUrl}/api/companion/secret`, {
+    method: 'POST',
+    headers: { ...second.headers, 'Content-Type': 'image/gif' },
+    body: gif
+  }));
+  assert.equal(partnerSecret.response.status, 200);
+  assert.equal(partnerSecret.payload.set, true);
   const sent = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
     method: 'POST',
     headers: { ...first.headers, 'Content-Type': 'image/gif' },
@@ -118,6 +132,7 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   }));
   assert.equal(sent.response.status, 201);
   assert.equal(sent.payload.recipientName, '小夏');
+  assert.equal(sent.payload.secretMatch, true);
 
   const pending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
     headers: second.headers
@@ -125,6 +140,7 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   assert.equal(pending.payload.deliveries.length, 1);
   assert.equal(pending.payload.deliveries[0].senderName, '小明');
   assert.equal(pending.payload.deliveries[0].width, 1);
+  assert.deepEqual(pending.payload.stickers, []);
 
   const downloaded = await fetch(`${baseUrl}${pending.payload.deliveries[0].downloadPath}`, {
     headers: second.headers
@@ -137,10 +153,28 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
     { method: 'POST', headers: second.headers }
   ));
   assert.equal(acknowledged.response.status, 200);
+
+  const stickerSent = await jsonResponse(await fetch(`${baseUrl}/api/companion/stickers`, {
+    method: 'POST',
+    headers: secondJsonHeaders,
+    body: JSON.stringify({ stickerId: 'heart' })
+  }));
+  assert.equal(stickerSent.response.status, 201);
+  const stickerPending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: first.headers
+  }));
+  assert.equal(stickerPending.payload.stickers.length, 1);
+  assert.equal(stickerPending.payload.stickers[0].stickerId, 'heart');
+  const stickerAcknowledged = await jsonResponse(await fetch(
+    `${baseUrl}/api/companion/stickers/${stickerSent.payload.id}/acknowledge`,
+    { method: 'POST', headers: first.headers }
+  ));
+  assert.equal(stickerAcknowledged.response.status, 200);
   const empty = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
     headers: second.headers
   }));
   assert.deepEqual(empty.payload.deliveries, []);
+  assert.deepEqual(empty.payload.stickers, []);
 
   const expiring = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
     method: 'POST',
@@ -171,14 +205,19 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
     sent: 2,
     received: 1,
     pending: 0,
+    pendingStickers: 0,
     expired: 1,
     receiptRate: 0.5,
+    secretMatches: 2,
+    stickerSent: 1,
+    stickerReceived: 1,
     storageBytes: gif.length
   });
   assert.equal(adminStats.payload.daily.length, 1);
   assert.deepEqual(
-    Object.fromEntries(['sent', 'received', 'expired'].map((key) => [key, adminStats.payload.daily[0][key]])),
-    { sent: 2, received: 1, expired: 1 }
+    Object.fromEntries(['sent', 'received', 'expired', 'secretMatches', 'stickerSent', 'stickerReceived']
+      .map((key) => [key, adminStats.payload.daily[0][key]])),
+    { sent: 2, received: 1, expired: 1, secretMatches: 2, stickerSent: 1, stickerReceived: 1 }
   );
   assert.equal('deliveries' in adminStats.payload, false);
 

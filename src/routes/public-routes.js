@@ -68,6 +68,16 @@ function createPublicRouter(controller) {
     (req, res) => controller.pairCompanion(req, res)
   );
   router.delete('/api/companion/pair', (req, res) => controller.unpairCompanion(req, res));
+  router.post(
+    '/api/companion/secret',
+    express.raw({ type: 'image/gif', limit: MAX_GIF_BYTES }),
+    (req, res) => controller.setCompanionSecret(req, res)
+  );
+  router.post(
+    '/api/companion/stickers',
+    ...jsonBody(4096),
+    (req, res) => controller.sendCompanionSticker(req, res)
+  );
   router.get(
     '/api/companion/deliveries',
     (req, res) => controller.companionDeliveries(req, res)
@@ -84,6 +94,10 @@ function createPublicRouter(controller) {
   router.post(
     '/api/companion/deliveries/:id/acknowledge',
     (req, res) => controller.acknowledgeCompanionDelivery(req, res)
+  );
+  router.post(
+    '/api/companion/stickers/:id/acknowledge',
+    (req, res) => controller.acknowledgeCompanionSticker(req, res)
   );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
   router.get('/api/public/downloads', (req, res) => {

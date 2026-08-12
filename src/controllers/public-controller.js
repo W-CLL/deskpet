@@ -102,6 +102,14 @@ class PublicController {
     res.status(200).json(this.companionService.unpair(req));
   }
 
+  async setCompanionSecret(req, res) {
+    res.status(200).json(await this.companionService.setSecret(req, req.body));
+  }
+
+  sendCompanionSticker(req, res) {
+    res.status(201).json(this.companionService.sendSticker(req, req.body));
+  }
+
   async sendCompanionGif(req, res) {
     res.status(201).json(await this.companionService.send(req, req.body));
   }
@@ -122,6 +130,10 @@ class PublicController {
 
   acknowledgeCompanionDelivery(req, res) {
     res.status(200).json(this.companionService.acknowledge(req));
+  }
+
+  acknowledgeCompanionSticker(req, res) {
+    res.status(200).json(this.companionService.acknowledgeSticker(req));
   }
 
   latest(req, res) {

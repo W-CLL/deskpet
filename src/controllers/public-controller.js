@@ -182,7 +182,12 @@ class PublicController {
       item.isBootstrap ? 'public, max-age=31536000, immutable' : 'private, no-store'
     );
     res.setHeader('Content-Disposition', `attachment; filename="${item.release.fileName}"`);
-    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader(
+      'Content-Type',
+      item.release.platform === 'android'
+        ? 'application/vnd.android.package-archive'
+        : 'application/octet-stream'
+    );
     res.setHeader('ETag', `"${item.release.sha256}"`);
     res.setHeader('X-Accel-Buffering', 'no');
     if (item.range) {

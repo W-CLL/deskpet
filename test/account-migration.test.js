@@ -77,19 +77,22 @@ test('legacy device licenses migrate to stable accounts without changing credent
   assert.equal(authenticated.id, licenseId);
   assert.equal(authenticated.accountId, licenseId);
   assert.equal(authenticated.installationId, installationId);
-  assert.equal(store.migrationState.currentVersion, 3);
-  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2, 3]);
+  assert.equal(authenticated.platform, 'unknown');
+  assert.equal(authenticated.architecture, 'unknown');
+  assert.equal(store.migrationState.currentVersion, 4);
+  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2, 3, 4]);
   assert.equal(store.list().summary.accounts, 1);
+  assert.equal(store.list().summary.platforms.unknown.active, 1);
 
   store.close();
   await store.initialize();
-  assert.equal(store.migrationState.currentVersion, 3);
+  assert.equal(store.migrationState.currentVersion, 4);
   assert.deepEqual(store.migrationState.applied, []);
   assert.equal(store.list().summary.accounts, 1);
   const versions = store.database.prepare(`
     SELECT version FROM schema_migrations WHERE scope = 'activation' ORDER BY version
   `).all().map((row) => Number(row.version));
-  assert.deepEqual(versions, [1, 2, 3]);
+  assert.deepEqual(versions, [1, 2, 3, 4]);
 });
 
 test('rebind codes preserve the account and replace the active device license', async (context) => {
@@ -107,7 +110,9 @@ test('rebind codes preserve the account and replace the active device license', 
     code: firstCode,
     installationId: crypto.randomBytes(16).toString('hex'),
     credential: firstCredential,
-    appVersion: '2.4.9'
+    appVersion: '2.4.9',
+    platform: 'android',
+    architecture: 'arm64-v8a'
   });
   assert.notEqual(first.accountId, first.licenseId);
 
@@ -124,7 +129,9 @@ test('rebind codes preserve the account and replace the active device license', 
     code: activeRebindCode,
     installationId: crypto.randomBytes(16).toString('hex'),
     credential: secondCredential,
-    appVersion: '2.4.9'
+    appVersion: '2.4.9',
+    platform: 'android',
+    architecture: 'armeabi-v7a'
   });
   assert.equal(second.accountId, first.accountId);
   assert.notEqual(second.licenseId, first.licenseId);
@@ -138,7 +145,9 @@ test('rebind codes preserve the account and replace the active device license', 
     code: activeRebindCode,
     installationId: store.authenticate(`Bearer ${second.licenseId}.${secondCredential}`).installationId,
     credential: secondCredential,
-    appVersion: '2.4.9'
+    appVersion: '2.4.9',
+    platform: 'android',
+    architecture: 'armeabi-v7a'
   });
   assert.equal(retry.accountId, first.accountId);
   assert.equal(retry.licenseId, second.licenseId);
@@ -148,4 +157,5 @@ test('rebind codes preserve the account and replace the active device license', 
   assert.equal(summary.accounts, 1);
   assert.equal(summary.active, 1);
   assert.equal(summary.revoked, 1);
+  assert.deepEqual(summary.platforms.android, { total: 2, active: 1, revoked: 1 });
 });

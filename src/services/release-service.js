@@ -5,6 +5,7 @@ const { Transform } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
 const { randomToken } = require('../../lib/security');
 const {
+  RELEASE_PLATFORMS,
   expectedReleaseFileName,
   normalizeArchitecture,
   normalizePlatform,
@@ -113,6 +114,7 @@ class ReleaseService {
       adminUrl: new URL('/admin', this.config.publicUrl).href,
       manifestUrl: new URL('/api/update/latest', this.config.publicUrl).href,
       bootstrapVersions: this.config.bootstrapVersions,
+      releaseTargets: RELEASE_PLATFORMS,
       activeVersions: this.releaseStore.data.activeVersions,
       publicVersions: this.releaseStore.data.publicVersions,
       releases: this.releaseStore.list()
@@ -160,7 +162,11 @@ class ReleaseService {
     const fileSize = Number(body?.fileSize);
     const notes = String(body?.notes || '').replace(/\r/g, '').trim();
     const expectedFileName = expectedReleaseFileName(platform, architecture, version);
-    const expectedExtension = platform === 'windows' ? '.exe' : '.zip';
+    const expectedExtension = {
+      windows: '.exe',
+      macos: '.zip',
+      android: '.apk'
+    }[platform];
     if (!originalName.toLowerCase().endsWith(expectedExtension)) {
       throw new HttpError(400, `只允许上传 ${expectedExtension.toUpperCase()} 文件`, 'INVALID_FILE_TYPE');
     }
@@ -450,9 +456,12 @@ class ReleaseService {
     const requestUrl = new URL(req.originalUrl || req.url, 'http://localhost');
     try {
       const platform = normalizePlatform(requestUrl.searchParams.get('platform') || 'windows');
+      const defaultArchitecture = platform === 'windows'
+        ? 'x64'
+        : platform === 'android' ? 'arm64-v8a' : '';
       const architecture = normalizeArchitecture(
         platform,
-        requestUrl.searchParams.get('architecture') || (platform === 'windows' ? 'x64' : '')
+        requestUrl.searchParams.get('architecture') || defaultArchitecture
       );
       return { platform, architecture };
     } catch (error) {

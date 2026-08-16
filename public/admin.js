@@ -15,6 +15,7 @@ const elements = {
   overviewActiveLicenses: document.querySelector('#overviewActiveLicenses'),
   overviewUnusedCodes: document.querySelector('#overviewUnusedCodes'),
   overviewPendingFeedback: document.querySelector('#overviewPendingFeedback'),
+  overviewAndroidDevices: document.querySelector('#overviewAndroidDevices'),
   adminUrl: document.querySelector('#adminUrl'),
   copyAdminUrlButton: document.querySelector('#copyAdminUrlButton'),
   manifestUrl: document.querySelector('#manifestUrl'),
@@ -51,6 +52,16 @@ const elements = {
   releasePageDrafts: document.querySelector('#releasePageDrafts'),
   releaseRows: document.querySelector('#releaseRows'),
   emptyReleases: document.querySelector('#emptyReleases'),
+  androidActiveDevices: document.querySelector('#androidActiveDevices'),
+  androidReleaseTotal: document.querySelector('#androidReleaseTotal'),
+  androidArm64Version: document.querySelector('#androidArm64Version'),
+  androidArmv7Version: document.querySelector('#androidArmv7Version'),
+  androidArm64Status: document.querySelector('#androidArm64Status'),
+  androidArmv7Status: document.querySelector('#androidArmv7Status'),
+  manageAndroidReleasesButton: document.querySelector('#manageAndroidReleasesButton'),
+  manageAndroidDevicesButton: document.querySelector('#manageAndroidDevicesButton'),
+  androidDeviceRows: document.querySelector('#androidDeviceRows'),
+  emptyAndroidDevices: document.querySelector('#emptyAndroidDevices'),
   refreshActivationButton: document.querySelector('#refreshActivationButton'),
   generateCodeForm: document.querySelector('#generateCodeForm'),
   activationCount: document.querySelector('#activationCount'),
@@ -167,6 +178,7 @@ const selectedContentIds = new Set();
 const pages = {
   overview: ['概览', '发布与授权运行状态'],
   releases: ['版本发布', '上传安装包并维护发布记录'],
+  android: ['Android 管理', '查看 APK 发布与安卓授权设备'],
   activations: ['激活授权', '管理激活码与设备授权'],
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
   companions: ['搭子联机', '查看配对与 GIF 投递聚合数据'],
@@ -394,7 +406,9 @@ const listViews = {
   activations: createListView('activations', {
     emptyElement: elements.emptyActivations,
     renderPage: renderActivationRows,
-    matches: (item, filters) => (!filters.status || activationStatusKey(item) === filters.status)
+    matches: (item, filters) => (!filters.platform
+      || (item.license?.platform || 'unknown') === filters.platform)
+      && (!filters.status || activationStatusKey(item) === filters.status)
       && (!filters.purpose || (item.purpose || 'new_account') === filters.purpose)
   }),
   interactions: createListView('interactions', {
@@ -428,7 +442,8 @@ function releaseApiPath(release) {
 }
 
 function platformLabel(release) {
-  const system = release.platform === 'macos' ? 'macOS' : 'Windows';
+  const system = { windows: 'Windows', macos: 'macOS', android: 'Android' }[release.platform]
+    || release.platform;
   return `${system} / ${release.architecture}`;
 }
 
@@ -438,10 +453,12 @@ function selectedReleasePlatform() {
 }
 
 function syncUploadTarget() {
-  const isMac = selectedReleasePlatform() === 'macos';
-  const choices = isMac
-    ? [['arm64', 'Apple Silicon'], ['x86_64', 'Intel']]
-    : [['x64', 'x64']];
+  const platform = selectedReleasePlatform();
+  const choices = {
+    windows: [['x64', 'x64']],
+    macos: [['arm64', 'Apple Silicon'], ['x86_64', 'Intel']],
+    android: [['arm64-v8a', 'ARM64（推荐）'], ['armeabi-v7a', 'ARMv7（32 位）']]
+  }[platform];
   const previous = elements.releaseArchitecture.value;
   elements.releaseArchitecture.replaceChildren(...choices.map(([value, label]) => {
     const option = document.createElement('option');
@@ -451,8 +468,20 @@ function syncUploadTarget() {
   }));
   if (choices.some(([value]) => value === previous)) elements.releaseArchitecture.value = previous;
   elements.releaseFile.value = '';
-  elements.releaseFile.accept = isMac ? '.zip,application/zip,application/octet-stream' : '.exe,application/octet-stream';
-  elements.releaseFileLabel.textContent = isMac ? 'macOS 更新包 ZIP' : 'Windows 安装包 EXE';
+  const fileConfig = {
+    windows: ['.exe,application/octet-stream', 'Windows 安装包 EXE'],
+    macos: ['.zip,application/zip,application/octet-stream', 'macOS 更新包 ZIP'],
+    android: ['.apk,application/vnd.android.package-archive,application/octet-stream', 'Android 安装包 APK']
+  }[platform];
+  [elements.releaseFile.accept, elements.releaseFileLabel.textContent] = fileConfig;
+}
+
+function renderAndroidReleaseTarget(payload, architecture, versionElement, statusElement) {
+  const target = `android/${architecture}`;
+  const activeVersion = payload.activeVersions?.[target];
+  versionElement.textContent = activeVersion ? `v${activeVersion}` : '未发布';
+  statusElement.textContent = activeVersion ? `当前 v${activeVersion}` : '未发布';
+  statusElement.className = `status-badge${activeVersion ? ' active' : ''}`;
 }
 
 function confirmAction({ title, message, confirmLabel = '确认', danger = false }) {
@@ -504,7 +533,7 @@ async function deleteRelease(release) {
 function renderReleases(payload) {
   const activeEntries = Object.entries(payload.activeVersions || {});
   elements.activeVersion.textContent = activeEntries.length
-    ? activeEntries.map(([target, version]) => `${target} v${version}`).join(' / ')
+    ? String(activeEntries.length)
     : '尚未发布';
   elements.overviewReleaseTotal.textContent = payload.releases.length;
   elements.releasePageTotal.textContent = payload.releases.length;
@@ -514,6 +543,20 @@ function renderReleases(payload) {
     .filter((release) => !release.publishedAt).length;
   elements.adminUrl.value = payload.adminUrl || '';
   elements.manifestUrl.value = payload.manifestUrl || '';
+  const androidReleases = payload.releases.filter((release) => release.platform === 'android');
+  elements.androidReleaseTotal.textContent = androidReleases.length;
+  renderAndroidReleaseTarget(
+    payload,
+    'arm64-v8a',
+    elements.androidArm64Version,
+    elements.androidArm64Status
+  );
+  renderAndroidReleaseTarget(
+    payload,
+    'armeabi-v7a',
+    elements.androidArmv7Version,
+    elements.androidArmv7Status
+  );
   listViews.releases.setItems(payload.releases);
 }
 
@@ -687,14 +730,53 @@ async function createRebindCode(item) {
 
 function renderActivations(payload) {
   const summary = payload.summary || {};
+  const androidSummary = summary.platforms?.android || {};
   elements.overviewActiveLicenses.textContent = summary.active || 0;
   elements.overviewUnusedCodes.textContent = summary.unused || 0;
+  elements.overviewAndroidDevices.textContent = androidSummary.active || 0;
+  elements.androidActiveDevices.textContent = androidSummary.active || 0;
   elements.activationTotal.textContent = summary.total || 0;
   elements.activationAccounts.textContent = summary.accounts || 0;
   elements.activationUnused.textContent = summary.unused || 0;
   elements.activationActive.textContent = summary.active || 0;
   elements.activationRevoked.textContent = summary.revoked || 0;
   listViews.activations.setItems(payload.codes);
+  renderAndroidDevices(payload.codes || []);
+}
+
+function renderAndroidDevices(codes) {
+  const androidDevices = codes
+    .filter((item) => item.license?.platform === 'android')
+    .slice(0, 12);
+  elements.androidDeviceRows.replaceChildren();
+  elements.emptyAndroidDevices.hidden = androidDevices.length > 0;
+
+  for (const item of androidDevices) {
+    const row = document.createElement('tr');
+    const device = cell('license-cell');
+    const deviceId = document.createElement('strong');
+    deviceId.textContent = `设备 …${item.license.installationSuffix}`;
+    const account = document.createElement('span');
+    account.textContent = item.account ? `账号 …${item.account.suffix}` : '账号 -';
+    device.append(deviceId, account);
+
+    const version = cell();
+    version.textContent = `v${item.license.appVersion || '-'}`;
+    const architecture = cell();
+    architecture.textContent = item.license.architecture || 'unknown';
+    const statusCell = cell();
+    const status = document.createElement('span');
+    const active = item.license.status === 'active';
+    status.className = `status-badge ${active ? 'active' : 'revoked'}`;
+    status.textContent = active ? '有效' : '已撤销';
+    statusCell.append(status);
+    const checkedAt = cell();
+    checkedAt.textContent = item.license.lastUpdateAt
+      ? formatDate(item.license.lastUpdateAt)
+      : '尚未检查更新';
+    row.append(device, version, architecture, statusCell, checkedAt);
+    elements.androidDeviceRows.append(row);
+  }
 }
 
 function renderActivationRows(codes) {
@@ -744,7 +826,10 @@ function renderActivationRows(codes) {
     }
     if (item.license) {
       const device = document.createElement('span');
-      device.textContent = `设备 …${item.license.installationSuffix}`;
+      const platform = { windows: 'Windows', macos: 'macOS', android: 'Android' }[
+        item.license.platform
+      ] || '未知平台';
+      device.textContent = `设备 …${item.license.installationSuffix} · ${platform} / ${item.license.architecture || 'unknown'}`;
       const detail = document.createElement('span');
       const checkedAt = item.license.lastUpdateAt ? formatDate(item.license.lastUpdateAt) : '尚未检查更新';
       detail.textContent = `v${item.license.appVersion || '-'} · ${checkedAt}`;
@@ -1529,6 +1614,26 @@ initializeAnalyticsRange();
 for (const input of elements.releasePlatformInputs) {
   input.addEventListener('change', syncUploadTarget);
 }
+
+elements.manageAndroidReleasesButton.addEventListener('click', () => {
+  const androidInput = Array.from(elements.releasePlatformInputs)
+    .find((input) => input.value === 'android');
+  if (androidInput) androidInput.checked = true;
+  syncUploadTarget();
+  navigateTo('releases');
+  elements.releaseVersion.focus();
+});
+
+elements.manageAndroidDevicesButton.addEventListener('click', () => {
+  const platformFilter = document.querySelector(
+    '[data-list-controls="activations"] [data-list-filter="platform"]'
+  );
+  if (platformFilter) {
+    platformFilter.value = 'android';
+    platformFilter.dispatchEvent(new Event('change'));
+  }
+  navigateTo('activations');
+});
 
 elements.uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();

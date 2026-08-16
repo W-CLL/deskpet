@@ -72,6 +72,11 @@ test('public and admin requests use the canonical HTTPS domain', async (context)
     adminUrl: 'https://in.desktoppet.online/admin',
     manifestUrl: 'https://in.desktoppet.online/api/update/latest',
     bootstrapVersions: { 'windows/x64': '2.5.7' },
+    releaseTargets: {
+      windows: ['x64'],
+      macos: ['arm64', 'x86_64'],
+      android: ['arm64-v8a', 'armeabi-v7a']
+    },
     activeVersions: {},
     publicVersions: {},
     releases: []
@@ -751,6 +756,101 @@ test('public analytics events are deduplicated and summarized by device', async 
   assert.equal(summary.activity.dailyActiveDevices, 1);
   assert.equal(summary.activity.weeklyActiveDevices, 1);
   assert.equal(summary.platforms[0].platform, 'windows');
+});
+
+test('Android APK releases are isolated by ABI and served with the APK content type', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-android-release-test-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const targets = [
+    ['arm64-v8a', 'arm64'],
+    ['armeabi-v7a', 'armv7']
+  ];
+  for (const [architecture, fileArchitecture] of targets) {
+    const artifact = Buffer.from(`APK ${architecture} 1.1.0`, 'utf8');
+    const temporaryPath = application.store.uploadPath(`android-${architecture}`);
+    await fs.promises.writeFile(temporaryPath, artifact);
+    const release = await application.store.commitUpload({
+      temporaryPath,
+      platform: 'android',
+      architecture,
+      version: '1.1.0',
+      originalName: `ZhuoDazi-Android-1.1.0-${fileArchitecture}.apk`,
+      size: artifact.length,
+      sha256: crypto.createHash('sha256').update(artifact).digest('hex'),
+      notes: `Android ${architecture}`
+    });
+    assert.equal(release.fileName, `ZhuoDazi-Android-1.1.0-${fileArchitecture}.apk`);
+    await application.store.publish('android', architecture, '1.1.0');
+  }
+
+  const code = application.activationStore.createCodes({ count: 1, expiresInDays: 30 }).codes[0];
+  const credential = crypto.randomBytes(32).toString('base64url');
+  const activation = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-DeskPet-Platform': 'android',
+      'X-DeskPet-Architecture': 'arm64-v8a'
+    },
+    body: JSON.stringify({
+      code,
+      installationId: crypto.randomBytes(16).toString('hex'),
+      credential,
+      appVersion: '1.1.0'
+    })
+  }));
+  assert.equal(activation.response.status, 200);
+  const authorization = `Bearer ${activation.payload.licenseId}.${credential}`;
+
+  for (const [architecture, fileArchitecture] of targets) {
+    const manifest = await jsonResponse(await fetch(
+      `${baseUrl}/api/update/latest?platform=android&architecture=${architecture}`,
+      { headers: { Authorization: authorization } }
+    ));
+    assert.equal(manifest.response.status, 200);
+    assert.equal(manifest.payload.platform, 'android');
+    assert.equal(manifest.payload.architecture, architecture);
+    assert.match(
+      manifest.payload.url,
+      new RegExp(`ZhuoDazi-Android-1\\.1\\.0-${fileArchitecture}\\.apk$`)
+    );
+    const download = await fetch(
+      `${baseUrl}${new URL(manifest.payload.url).pathname}`,
+      { headers: { Authorization: authorization } }
+    );
+    assert.equal(download.status, 200);
+    assert.equal(
+      download.headers.get('content-type'),
+      'application/vnd.android.package-archive'
+    );
+  }
+
+  const defaultManifest = await jsonResponse(await fetch(
+    `${baseUrl}/api/update/latest?platform=android`,
+    { headers: { Authorization: authorization } }
+  ));
+  assert.equal(defaultManifest.payload.architecture, 'arm64-v8a');
+
+  const invalidTarget = await jsonResponse(await fetch(
+    `${baseUrl}/api/update/latest?platform=android&architecture=x86_64`
+  ));
+  assert.equal(invalidTarget.response.status, 400);
+  assert.equal(invalidTarget.payload.code, 'INVALID_RELEASE_TARGET');
 });
 
 test('Express request parsing returns stable API errors', async (context) => {

@@ -120,6 +120,8 @@ class ActivationService {
   authenticate(req, markUpdate = false) {
     return this.activationStore.authenticate(req.headers.authorization, {
       appVersion: req.headers['x-deskpet-version'],
+      platform: req.headers['x-deskpet-platform'],
+      architecture: req.headers['x-deskpet-architecture'],
       markUpdate
     }) || this.activationStore.authenticateTrial(req.headers.authorization);
   }
@@ -158,7 +160,9 @@ class ActivationService {
       code: body?.code,
       installationId,
       credential: body?.credential,
-      appVersion: body?.appVersion
+      appVersion: body?.appVersion,
+      platform: req.headers['x-deskpet-platform'],
+      architecture: req.headers['x-deskpet-architecture']
     });
     if (!license) {
       const nextIpStatus = this.ipLimiter.fail(ip);

@@ -21,6 +21,21 @@ test('password hashes verify without storing the plaintext password', async () =
   assert.equal(JSON.stringify(record).includes('correct horse battery staple'), false);
 });
 
+test('admin shell includes the Android management hooks used by admin.js', async () => {
+  const publicDirectory = path.join(__dirname, '..', 'public');
+  const [adminMarkup, adminScript] = await Promise.all([
+    fs.promises.readFile(path.join(publicDirectory, 'admin.html'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin.js'), 'utf8')
+  ]);
+  assert.match(adminMarkup, /data-page-panel="android"/);
+  assert.match(adminMarkup, /id="manageAndroidReleasesButton"/);
+  assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
+  assert.match(adminMarkup, /id="androidDeviceRows"/);
+  assert.match(adminMarkup, /admin\.js\?v=android-resource-packs-2/);
+  assert.match(adminScript, /if \(elements\.manageAndroidReleasesButton\)/);
+  assert.match(adminScript, /if \(elements\.manageAndroidDevicesButton\)/);
+});
+
 test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {
   const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-release-migration-test-'));
   context.after(() => fs.promises.rm(dataDirectory, { recursive: true, force: true }));

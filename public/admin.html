@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=canonical-domain-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=android-resource-packs-2">
 </head>
 <body>
   <main class="app-root">
@@ -55,6 +55,10 @@
           <button class="nav-item" type="button" data-page="releases">
             <span>版本发布</span>
             <small>安装包与清单</small>
+          </button>
+          <button class="nav-item" type="button" data-page="android">
+            <span>Android 管理</span>
+            <small>APK 与授权设备</small>
           </button>
           <button class="nav-item" type="button" data-page="activations">
             <span>激活授权</span>
@@ -133,6 +137,11 @@
                 <strong id="overviewPendingFeedback">0</strong>
                 <small>待处理与进行中</small>
               </article>
+              <article class="metric-item metric-android">
+                <span>Android 设备</span>
+                <strong id="overviewAndroidDevices">0</strong>
+                <small>当前有效授权设备</small>
+              </article>
             </div>
 
             <div class="overview-workbench">
@@ -199,6 +208,69 @@
             </div>
           </section>
 
+          <section class="admin-page" data-page-panel="android" hidden>
+            <div class="summary-strip android-summary" aria-label="Android 管理概览">
+              <span class="summary-item" data-tone="success">有效设备 <strong id="androidActiveDevices">0</strong></span>
+              <span class="summary-item" data-tone="neutral">APK 记录 <strong id="androidReleaseTotal">0</strong></span>
+              <span class="summary-item" data-tone="info">ARM64 <strong id="androidArm64Version">未发布</strong></span>
+              <span class="summary-item" data-tone="info">ARMv7 <strong id="androidArmv7Version">未发布</strong></span>
+            </div>
+
+            <div class="android-workbench">
+              <section class="tool-panel android-release-panel">
+                <div class="panel-heading inline-heading">
+                  <div>
+                    <p class="eyebrow">APK 发布</p>
+                    <h2>Android 双架构状态</h2>
+                  </div>
+                  <button id="manageAndroidReleasesButton" class="button button-primary" type="button">上传 APK</button>
+                </div>
+                <div class="android-target-list">
+                  <article class="android-target-row">
+                    <div>
+                      <strong>ARM64</strong>
+                      <span>arm64-v8a · 绝大多数现代安卓设备</span>
+                    </div>
+                    <span id="androidArm64Status" class="status-badge">未发布</span>
+                  </article>
+                  <article class="android-target-row">
+                    <div>
+                      <strong>ARMv7</strong>
+                      <span>armeabi-v7a · 较旧的 32 位设备</span>
+                    </div>
+                    <span id="androidArmv7Status" class="status-badge">未发布</span>
+                  </article>
+                </div>
+                <p class="android-package-rule">文件名必须为 <code>ZhuoDazi-Android-版本-arm64.apk</code> 或 <code>ZhuoDazi-Android-版本-armv7.apk</code>。</p>
+              </section>
+
+              <section class="tool-panel android-device-panel">
+                <div class="panel-heading inline-heading">
+                  <div>
+                    <p class="eyebrow">设备授权</p>
+                    <h2>Android 设备</h2>
+                  </div>
+                  <button id="manageAndroidDevicesButton" class="button button-secondary" type="button">全部授权</button>
+                </div>
+                <div class="table-wrap android-device-table-wrap">
+                  <table class="android-device-table">
+                    <thead>
+                      <tr>
+                        <th>设备</th>
+                        <th>版本</th>
+                        <th>ABI</th>
+                        <th>状态</th>
+                        <th>最近检查</th>
+                      </tr>
+                    </thead>
+                    <tbody id="androidDeviceRows"></tbody>
+                  </table>
+                  <p id="emptyAndroidDevices" class="empty-state" hidden>暂无 Android 授权设备</p>
+                </div>
+              </section>
+            </div>
+          </section>
+
           <section class="admin-page" data-page-panel="releases" hidden>
             <section class="tool-panel upload-section">
               <div class="panel-heading release-editor-heading">
@@ -234,6 +306,13 @@
                           <span>
                             <strong>macOS</strong>
                             <small>ZIP</small>
+                          </span>
+                        </label>
+                        <label class="platform-choice">
+                          <input name="platform" type="radio" value="android">
+                          <span>
+                            <strong>Android</strong>
+                            <small>APK</small>
                           </span>
                         </label>
                       </div>
@@ -294,6 +373,7 @@
                     <option value="">全部平台</option>
                     <option value="windows">Windows</option>
                     <option value="macos">macOS</option>
+                    <option value="android">Android</option>
                   </select>
                 </label>
                 <label>
@@ -362,6 +442,16 @@
               </form>
 
               <div class="list-toolbar" data-list-controls="activations">
+                <label>
+                  <span>平台</span>
+                  <select data-list-filter="platform">
+                    <option value="">全部平台</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="android">Android</option>
+                    <option value="unknown">待识别</option>
+                  </select>
+                </label>
                 <label>
                   <span>状态</span>
                   <select data-list-filter="status">
@@ -889,6 +979,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=android-resource-packs-1" defer></script>
+  <script src="/assets/admin.js?v=android-resource-packs-2" defer></script>
 </body>
 </html>

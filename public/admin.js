@@ -477,6 +477,7 @@ function syncUploadTarget() {
 }
 
 function renderAndroidReleaseTarget(payload, architecture, versionElement, statusElement) {
+  if (!versionElement || !statusElement) return;
   const target = `android/${architecture}`;
   const activeVersion = payload.activeVersions?.[target];
   versionElement.textContent = activeVersion ? `v${activeVersion}` : '未发布';
@@ -544,7 +545,7 @@ function renderReleases(payload) {
   elements.adminUrl.value = payload.adminUrl || '';
   elements.manifestUrl.value = payload.manifestUrl || '';
   const androidReleases = payload.releases.filter((release) => release.platform === 'android');
-  elements.androidReleaseTotal.textContent = androidReleases.length;
+  if (elements.androidReleaseTotal) elements.androidReleaseTotal.textContent = androidReleases.length;
   renderAndroidReleaseTarget(
     payload,
     'arm64-v8a',
@@ -733,8 +734,12 @@ function renderActivations(payload) {
   const androidSummary = summary.platforms?.android || {};
   elements.overviewActiveLicenses.textContent = summary.active || 0;
   elements.overviewUnusedCodes.textContent = summary.unused || 0;
-  elements.overviewAndroidDevices.textContent = androidSummary.active || 0;
-  elements.androidActiveDevices.textContent = androidSummary.active || 0;
+  if (elements.overviewAndroidDevices) {
+    elements.overviewAndroidDevices.textContent = androidSummary.active || 0;
+  }
+  if (elements.androidActiveDevices) {
+    elements.androidActiveDevices.textContent = androidSummary.active || 0;
+  }
   elements.activationTotal.textContent = summary.total || 0;
   elements.activationAccounts.textContent = summary.accounts || 0;
   elements.activationUnused.textContent = summary.unused || 0;
@@ -745,6 +750,7 @@ function renderActivations(payload) {
 }
 
 function renderAndroidDevices(codes) {
+  if (!elements.androidDeviceRows || !elements.emptyAndroidDevices) return;
   const androidDevices = codes
     .filter((item) => item.license?.platform === 'android')
     .slice(0, 12);
@@ -1615,25 +1621,29 @@ for (const input of elements.releasePlatformInputs) {
   input.addEventListener('change', syncUploadTarget);
 }
 
-elements.manageAndroidReleasesButton.addEventListener('click', () => {
-  const androidInput = Array.from(elements.releasePlatformInputs)
-    .find((input) => input.value === 'android');
-  if (androidInput) androidInput.checked = true;
-  syncUploadTarget();
-  navigateTo('releases');
-  elements.releaseVersion.focus();
-});
+if (elements.manageAndroidReleasesButton) {
+  elements.manageAndroidReleasesButton.addEventListener('click', () => {
+    const androidInput = Array.from(elements.releasePlatformInputs)
+      .find((input) => input.value === 'android');
+    if (androidInput) androidInput.checked = true;
+    syncUploadTarget();
+    navigateTo('releases');
+    elements.releaseVersion.focus();
+  });
+}
 
-elements.manageAndroidDevicesButton.addEventListener('click', () => {
-  const platformFilter = document.querySelector(
-    '[data-list-controls="activations"] [data-list-filter="platform"]'
-  );
-  if (platformFilter) {
-    platformFilter.value = 'android';
-    platformFilter.dispatchEvent(new Event('change'));
-  }
-  navigateTo('activations');
-});
+if (elements.manageAndroidDevicesButton) {
+  elements.manageAndroidDevicesButton.addEventListener('click', () => {
+    const platformFilter = document.querySelector(
+      '[data-list-controls="activations"] [data-list-filter="platform"]'
+    );
+    if (platformFilter) {
+      platformFilter.value = 'android';
+      platformFilter.dispatchEvent(new Event('change'));
+    }
+    navigateTo('activations');
+  });
+}
 
 elements.uploadForm.addEventListener('submit', async (event) => {
   event.preventDefault();

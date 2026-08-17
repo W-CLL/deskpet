@@ -1,20 +1,7 @@
 const { FEEDBACK_STATUSES, FEEDBACK_TYPES } = require('../../lib/feedback-store');
+const { cleanMultiline, cleanSingleLine } = require('../../lib/text');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
-
-function cleanSingleLine(value, maxLength) {
-  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength);
-}
-
-function cleanMultiline(value, maxLength) {
-  return String(value || '')
-    .replace(/\r/g, '')
-    .split('\n')
-    .map((line) => line.trimEnd())
-    .join('\n')
-    .trim()
-    .slice(0, maxLength);
-}
 
 class FeedbackService {
   constructor({ config, feedbackStore, activationService, auditService }) {

@@ -23,12 +23,14 @@ class ActivationService {
     config,
     activationStore,
     auditService,
+    analyticsService,
     activationIpRateOptions,
     activationDeviceRateOptions
   }) {
     this.config = config;
     this.activationStore = activationStore;
     this.auditService = auditService;
+    this.analyticsService = analyticsService || null;
     this.ipLimiter = new LoginRateLimiter(activationIpRateOptions || DEFAULT_IP_RATE_OPTIONS);
     this.deviceLimiter = new LoginRateLimiter(
       activationDeviceRateOptions || DEFAULT_DEVICE_RATE_OPTIONS

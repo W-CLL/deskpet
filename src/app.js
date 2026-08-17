@@ -41,22 +41,24 @@ async function createApplication(options = {}) {
   process.umask(0o077);
   const config = loadConfig(options);
   const releaseStore = new ReleaseStore(config.dataDirectory);
-  await releaseStore.initialize();
   const activationStore = new ActivationStore(config.dataDirectory);
-  await activationStore.initialize();
   const feedbackStore = new FeedbackStore(config.dataDirectory);
-  await feedbackStore.initialize();
   const interactionStore = new InteractionStore(config.dataDirectory);
-  await interactionStore.initialize();
-  interactionStore.pruneRawEvents();
   const analyticsStore = new AnalyticsStore(config.dataDirectory);
-  await analyticsStore.initialize();
   const contentStore = new ContentStore(config.dataDirectory);
-  await contentStore.initialize();
   const resourcePackStore = new ResourcePackStore(config.dataDirectory);
-  await resourcePackStore.initialize();
   const companionStore = new CompanionStore(config.dataDirectory, options.companionOptions);
-  await companionStore.initialize();
+  await Promise.all([
+    releaseStore.initialize(),
+    activationStore.initialize(),
+    feedbackStore.initialize(),
+    interactionStore.initialize(),
+    analyticsStore.initialize(),
+    contentStore.initialize(),
+    resourcePackStore.initialize(),
+    companionStore.initialize()
+  ]);
+  interactionStore.pruneRawEvents();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -74,19 +76,20 @@ async function createApplication(options = {}) {
     sessionOptions: options.sessionOptions,
     loginRateOptions: options.loginRateOptions
   });
-  const activationService = new ActivationService({
+  let activationService;
+  const analyticsService = new AnalyticsService({
+    analyticsStore,
+    authenticateLicense: (req) => activationService.authenticate(req),
+    config
+  });
+  activationService = new ActivationService({
     config,
     activationStore,
     auditService,
+    analyticsService,
     activationIpRateOptions: options.activationIpRateOptions,
     activationDeviceRateOptions: options.activationDeviceRateOptions
   });
-  const analyticsService = new AnalyticsService({
-    analyticsStore,
-    activationService,
-    config
-  });
-  activationService.analyticsService = analyticsService;
   const releaseService = new ReleaseService({
     config,
     releaseStore,

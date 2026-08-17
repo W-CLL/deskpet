@@ -13,7 +13,7 @@ const {
   releaseKey
 } = require('../../lib/storage');
 const { HttpError, mapStoreError } = require('../errors/http-error');
-const { clientIp, parseRange } = require('../http/request-context');
+const { clientIp, parseRange, querySearchParams } = require('../http/request-context');
 const { UPLOAD_TTL_MS } = require('../config/app-config');
 
 const MAX_PENDING_UPLOADS = 20;
@@ -453,15 +453,15 @@ class ReleaseService {
   }
 
   releaseTarget(req) {
-    const requestUrl = new URL(req.originalUrl || req.url, 'http://localhost');
+    const searchParams = querySearchParams(req);
     try {
-      const platform = normalizePlatform(requestUrl.searchParams.get('platform') || 'windows');
+      const platform = normalizePlatform(searchParams.get('platform') || 'windows');
       const defaultArchitecture = platform === 'windows'
         ? 'x64'
         : platform === 'android' ? 'arm64-v8a' : '';
       const architecture = normalizeArchitecture(
         platform,
-        requestUrl.searchParams.get('architecture') || defaultArchitecture
+        searchParams.get('architecture') || defaultArchitecture
       );
       return { platform, architecture };
     } catch (error) {

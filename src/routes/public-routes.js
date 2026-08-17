@@ -110,6 +110,7 @@ function createPublicRouter(controller) {
       return controller.analytics(req, res);
     }
   );
+  router.head('/downloads/:fileName', (req, res, next) => controller.download(req, res, next));
   router.get('/downloads/:fileName', (req, res, next) => controller.download(req, res, next));
   router.get(
     '/resource-packs/:id/download',

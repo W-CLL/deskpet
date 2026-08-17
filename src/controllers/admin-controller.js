@@ -1,4 +1,5 @@
 const { HttpError } = require('../errors/http-error');
+const { queryValue } = require('../http/request-context');
 
 const UUID_PATTERN = /^[0-9a-f-]{36}$/i;
 const UPLOAD_ID_PATTERN = /^[A-Za-z0-9_-]{20,80}$/;
@@ -103,7 +104,10 @@ class AdminController {
   }
 
   analytics(req, res) {
-    res.status(200).json(this.analyticsService.summary(req.query));
+    res.status(200).json(this.analyticsService.summary({
+      from: queryValue(req, 'from') || undefined,
+      to: queryValue(req, 'to') || undefined
+    }));
   }
 
   content(_req, res) {

@@ -1,6 +1,11 @@
 const crypto = require('node:crypto');
-const { CONTENT_TYPES } = require('../../lib/content-store');
+const {
+  CONTENT_TYPES,
+  LEGACY_CONTENT_TYPES,
+  SIX_TYPE_MINIMUM_VERSION
+} = require('../../lib/content-types');
 const { compareVersions } = require('../../lib/storage');
+const { cleanMultiline, cleanSingleLine } = require('../../lib/text');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
 
@@ -11,22 +16,6 @@ const MAX_CLIENT_EXCLUSIONS = 500;
 const MAX_IMPORT_ITEMS = 500;
 const MAX_BULK_CONTENT_IDS = 500;
 const RECENT_CONTENT_DAYS = 30;
-const LEGACY_CONTENT_TYPES = Object.freeze(['joke', 'math', 'trivia']);
-const SIX_TYPE_MINIMUM_VERSION = Object.freeze({ windows: '2.5.2' });
-
-function cleanSingleLine(value, maxLength) {
-  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength);
-}
-
-function cleanMultiline(value, maxLength) {
-  return String(value || '')
-    .replace(/\r/g, '')
-    .split('\n')
-    .map((line) => line.trimEnd())
-    .join('\n')
-    .trim()
-    .slice(0, maxLength);
-}
 
 function contentError(message, code = 'INVALID_CONTENT_ITEM') {
   return new HttpError(400, message, code);

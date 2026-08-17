@@ -3,6 +3,7 @@ const path = require('node:path');
 const { ActivationStore } = require('../lib/activation-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
+const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
 const { CompanionStore } = require('../lib/companion-store');
 
@@ -45,6 +46,7 @@ async function main(args = process.argv.slice(2)) {
   const activationStore = new ActivationStore(dataDirectory);
   const feedbackStore = new FeedbackStore(dataDirectory);
   const interactionStore = new InteractionStore(dataDirectory);
+  const analyticsStore = new AnalyticsStore(dataDirectory);
   const contentStore = new ContentStore(dataDirectory);
   const companionStore = new CompanionStore(dataDirectory);
 
@@ -52,6 +54,7 @@ async function main(args = process.argv.slice(2)) {
     await activationStore.initialize();
     await feedbackStore.initialize();
     await interactionStore.initialize();
+    await analyticsStore.initialize();
     await contentStore.initialize();
     await companionStore.initialize();
     const result = {
@@ -59,6 +62,7 @@ async function main(args = process.argv.slice(2)) {
       activation: activationStore.migrationState,
       feedback: feedbackStore.migrationState,
       interaction: interactionStore.migrationState,
+      analytics: analyticsStore.migrationState,
       content: contentStore.migrationState,
       companion: companionStore.migrationState
     };
@@ -66,6 +70,7 @@ async function main(args = process.argv.slice(2)) {
   } finally {
     companionStore.close();
     contentStore.close();
+    analyticsStore.close();
     interactionStore.close();
     feedbackStore.close();
     activationStore.close();

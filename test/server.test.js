@@ -496,6 +496,30 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(analytics.response.status, 200);
   assert.equal(analytics.payload.funnel.activatedInstallations, 1);
 
+  const now = Date.now();
+  const rangeFrom = new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const rangeTo = new Date(now + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const rangedAnalytics = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/analytics?from=${rangeFrom}&to=${rangeTo}`,
+    { headers: { Cookie: cookie } }
+  ));
+  assert.equal(rangedAnalytics.response.status, 200);
+  assert.equal(rangedAnalytics.payload.funnel.activatedInstallations, 1);
+
+  const emptyRange = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/analytics?from=2020-01-01&to=2020-01-02`,
+    { headers: { Cookie: cookie } }
+  ));
+  assert.equal(emptyRange.response.status, 200);
+  assert.equal(emptyRange.payload.funnel.activatedInstallations, 0);
+
+  const invalidRange = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/analytics?from=2026-08-10&to=2026-08-01`,
+    { headers: { Cookie: cookie } }
+  ));
+  assert.equal(invalidRange.response.status, 400);
+  assert.equal(invalidRange.payload.code, 'INVALID_ANALYTICS_RANGE');
+
   const activationList = await jsonResponse(await fetch(`${baseUrl}/api/admin/activation-codes`, {
     headers: { Cookie: cookie }
   }));
@@ -539,6 +563,12 @@ test('one-time activation gates current manifests and downloads', async (context
   const allowedDownload = await fetch(`${baseUrl}${currentDownloadPath}`);
   assert.equal(allowedDownload.status, 200);
   assert.deepEqual(Buffer.from(await allowedDownload.arrayBuffer()), Buffer.from('MZ deskpet 2.2.0', 'utf8'));
+
+  const headDownload = await fetch(`${baseUrl}${currentDownloadPath}`, { method: 'HEAD' });
+  assert.equal(headDownload.status, 200);
+  assert.equal(headDownload.headers.get('accept-ranges'), 'bytes');
+  assert.equal(Number(headDownload.headers.get('content-length')), Buffer.byteLength('MZ deskpet 2.2.0'));
+  assert.equal((await headDownload.arrayBuffer()).byteLength, 0);
 
   const publicDownloads = await jsonResponse(await fetch(`${baseUrl}/api/public/downloads`));
   assert.equal(publicDownloads.response.status, 200);

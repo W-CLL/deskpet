@@ -31,8 +31,11 @@ async function start() {
   const shutdown = async () => {
     if (stopping) return;
     stopping = true;
-    application.close();
-    await new Promise((resolve) => server.close(resolve));
+    try {
+      await new Promise((resolve) => server.close(resolve));
+    } finally {
+      application.close();
+    }
   };
   process.once('SIGTERM', () => shutdown().finally(() => process.exit(0)));
   process.once('SIGINT', () => shutdown().finally(() => process.exit(0)));

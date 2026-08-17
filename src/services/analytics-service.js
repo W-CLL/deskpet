@@ -4,6 +4,7 @@ const {
   normalizePlatform,
   normalizeVersion
 } = require('../../lib/storage');
+const { collapseNewlines: clean } = require('../../lib/text');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
 
@@ -24,10 +25,6 @@ const PUBLIC_EVENT_TYPES = new Set([
   'app_session_start',
   'app_daily_active'
 ]);
-
-function clean(value, maxLength) {
-  return String(value || '').replace(/[\r\n]+/g, ' ').trim().slice(0, maxLength);
-}
 
 function dateKey(date) {
   const parts = new Intl.DateTimeFormat('en-US', {
@@ -51,9 +48,9 @@ function invalidEvent(index, message) {
 }
 
 class AnalyticsService {
-  constructor({ analyticsStore, activationService, config }) {
+  constructor({ analyticsStore, authenticateLicense, config }) {
     this.analyticsStore = analyticsStore;
-    this.activationService = activationService;
+    this.authenticateLicense = authenticateLicense || null;
     this.config = config;
     this.rateLimits = new Map();
   }
@@ -65,8 +62,8 @@ class AnalyticsService {
       throw new HttpError(400, `每批必须包含 1 至 ${MAX_EVENTS_PER_BATCH} 条数据`, 'INVALID_ANALYTICS_BATCH');
     }
     let license = null;
-    if (req.headers.authorization && this.activationService) {
-      license = this.activationService.authenticate(req);
+    if (req.headers.authorization && this.authenticateLicense) {
+      license = this.authenticateLicense(req);
     }
     const events = source.map((item, index) => this.normalizeEvent(item, index, license));
     const result = this.analyticsStore.recordEvents(events);

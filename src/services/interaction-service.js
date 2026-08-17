@@ -3,6 +3,7 @@ const {
   INTERACTION_MODES,
   MOOD_VALUES
 } = require('../../lib/interaction-store');
+const { cleanSingleLine } = require('../../lib/text');
 const { HttpError } = require('../errors/http-error');
 
 const EVENT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -10,10 +11,6 @@ const CONTENT_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 const MAX_EVENTS_PER_BATCH = 50;
 const MAX_EVENT_AGE_MS = 365 * 24 * 60 * 60 * 1000;
 const MAX_FUTURE_SKEW_MS = 10 * 60 * 1000;
-
-function cleanSingleLine(value, maxLength) {
-  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength);
-}
 
 function invalidEvent(index, message) {
   return new HttpError(400, `第 ${index + 1} 条互动事件${message}`, 'INVALID_INTERACTION_EVENT');

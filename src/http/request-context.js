@@ -56,6 +56,18 @@ function assertSafeOrigin(req, config) {
   }
 }
 
+function querySearchParams(req) {
+  try {
+    return new URL(String(req.originalUrl || req.url || '/'), 'http://127.0.0.1').searchParams;
+  } catch {
+    return new URLSearchParams();
+  }
+}
+
+function queryValue(req, name) {
+  return querySearchParams(req).get(name) || '';
+}
+
 function parseRange(header, size) {
   if (!header) return null;
   const match = /^bytes=(\d*)-(\d*)$/.exec(String(header).trim());
@@ -95,5 +107,7 @@ module.exports = {
   isLoopbackRequest,
   isTrustedProxy,
   parseRange,
+  querySearchParams,
+  queryValue,
   sessionCookie
 };

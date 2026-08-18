@@ -176,7 +176,7 @@ let contentBulkPending = false;
 const selectedContentIds = new Set();
 
 const pages = {
-  overview: ['概览', '发布与授权运行状态'],
+  overview: ['概览', '今天先处理这些'],
   releases: ['版本发布', '上传安装包并维护发布记录'],
   android: ['Android 管理', '查看 APK 发布与安卓授权设备'],
   activations: ['激活授权', '管理激活码与设备授权'],
@@ -540,8 +540,14 @@ function renderReleases(payload) {
   elements.releasePageTotal.textContent = payload.releases.length;
   elements.releasePagePublished.textContent = payload.releases
     .filter((release) => release.publishedAt).length;
-  elements.releasePageDrafts.textContent = payload.releases
-    .filter((release) => !release.publishedAt).length;
+  const draftCount = payload.releases.filter((release) => !release.publishedAt).length;
+  elements.releasePageDrafts.textContent = draftCount;
+  const todoDrafts = document.querySelector('#overviewTodoDrafts');
+  if (todoDrafts) {
+    todoDrafts.textContent = draftCount > 0
+      ? `还有 ${draftCount} 个草稿待发布`
+      : '当前没有待发布草稿';
+  }
   elements.adminUrl.value = payload.adminUrl || '';
   elements.manifestUrl.value = payload.manifestUrl || '';
   const androidReleases = payload.releases.filter((release) => release.platform === 'android');
@@ -734,6 +740,12 @@ function renderActivations(payload) {
   const androidSummary = summary.platforms?.android || {};
   elements.overviewActiveLicenses.textContent = summary.active || 0;
   elements.overviewUnusedCodes.textContent = summary.unused || 0;
+  const todoCodes = document.querySelector('#overviewTodoCodes');
+  if (todoCodes) {
+    todoCodes.textContent = summary.unused > 0
+      ? `还有 ${summary.unused} 个未使用激活码`
+      : '当前没有未使用激活码';
+  }
   if (elements.overviewAndroidDevices) {
     elements.overviewAndroidDevices.textContent = androidSummary.active || 0;
   }
@@ -938,6 +950,12 @@ function renderFeedback(payload) {
   const summary = payload.summary || {};
   const active = (summary.pending || 0) + (summary.inProgress || 0);
   elements.overviewPendingFeedback.textContent = active;
+  const todoFeedback = document.querySelector('#overviewTodoFeedback');
+  if (todoFeedback) {
+    todoFeedback.textContent = active > 0
+      ? `还有 ${active} 条待处理或进行中`
+      : '暂时没有待处理反馈';
+  }
   elements.feedbackTotal.textContent = summary.total || 0;
   elements.feedbackPending.textContent = summary.pending || 0;
   elements.feedbackInProgress.textContent = summary.inProgress || 0;
@@ -1095,9 +1113,16 @@ function renderCompanions(payload) {
   elements.companionReceived.textContent = summary.received || 0;
   elements.companionPending.textContent = summary.pending || 0;
   elements.companionExpired.textContent = summary.expired || 0;
-  elements.companionReceiptRate.textContent = summary.receiptRate === null
+  const receiptLabel = summary.receiptRate === null
     ? '-'
     : formatAnalyticsRate(summary.receiptRate);
+  elements.companionReceiptRate.textContent = receiptLabel;
+  const todoCompanions = document.querySelector('#overviewTodoCompanions');
+  if (todoCompanions) {
+    todoCompanions.textContent = summary.pending > 0
+      ? `还有 ${summary.pending} 条待领取，领取率 ${receiptLabel}`
+      : `近 90 天领取率 ${receiptLabel}`;
+  }
   elements.companionStorage.textContent = formatBytes(summary.storageBytes || 0);
   elements.companionUpdatedAt.textContent = `更新于 ${formatDate(payload.generatedAt)}`;
   elements.companionRows.replaceChildren();

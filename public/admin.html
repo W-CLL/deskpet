@@ -25,7 +25,7 @@
         </div>
         <label>
           <span>用户名</span>
-          <input name="username" autocomplete="username" value="admin" required>
+          <input name="username" autocomplete="username" required>
         </label>
         <label>
           <span>密码</span>
@@ -104,7 +104,7 @@
           <div class="header-title">
             <span class="header-kicker">管理工作区</span>
             <h1 id="pageTitle">概览</h1>
-            <p id="pageSubtitle">发布与授权运行状态</p>
+            <p id="pageSubtitle">今天先处理这些</p>
           </div>
           <button id="logoutButton" class="button button-secondary" type="button">退出登录</button>
         </header>
@@ -179,25 +179,25 @@
 
               <section class="quick-section">
                 <div class="panel-heading">
-                  <p class="eyebrow">常用操作</p>
-                  <h2>快速前往</h2>
+                  <p class="eyebrow">今天先看</p>
+                  <h2>待办</h2>
                 </div>
                 <div class="quick-grid">
+                  <button class="quick-action" type="button" data-go-to="feedback">
+                    <strong>待处理反馈</strong>
+                    <span id="overviewTodoFeedback">查看问题、建议并更新处理状态</span>
+                  </button>
                   <button class="quick-action" type="button" data-go-to="releases">
-                    <strong>发布新版本</strong>
-                    <span>上传安装包或处理草稿版本</span>
+                    <strong>未发布草稿</strong>
+                    <span id="overviewTodoDrafts">上传安装包或处理草稿版本</span>
                   </button>
                   <button class="quick-action" type="button" data-go-to="activations">
-                    <strong>管理设备授权</strong>
-                    <span>生成激活码或撤销已有授权</span>
+                    <strong>未使用激活码</strong>
+                    <span id="overviewTodoCodes">生成、复制或按备注查找激活码</span>
                   </button>
-                  <button class="quick-action" type="button" data-go-to="feedback">
-                    <strong>处理用户反馈</strong>
-                    <span>查看问题、建议并更新处理状态</span>
-                  </button>
-                  <button class="quick-action" type="button" data-go-to="interactions">
-                    <strong>查看互动统计</strong>
-                    <span>核对心情选择、笑话和答题记录</span>
+                  <button class="quick-action" type="button" data-go-to="companions">
+                    <strong>搭子领取</strong>
+                    <span id="overviewTodoCompanions">核对 GIF 投递是否正常领取</span>
                   </button>
                   <button class="quick-action" type="button" data-go-to="content">
                     <strong>维护互动内容</strong>
@@ -289,7 +289,7 @@
                   <div class="release-target-grid">
                     <label class="version-field">
                       <span>版本号</span>
-                      <input id="releaseVersion" name="version" inputmode="decimal" placeholder="2.4.0" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
+                      <input id="releaseVersion" name="version" inputmode="decimal" placeholder="3.1.5" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
                     </label>
                     <fieldset class="platform-segment">
                       <legend>发布平台</legend>

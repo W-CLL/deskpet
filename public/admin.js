@@ -46,6 +46,21 @@ const elements = {
   refreshResourcePacksButton: document.querySelector('#refreshResourcePacksButton'),
   resourcePackRows: document.querySelector('#resourcePackRows'),
   emptyResourcePacks: document.querySelector('#emptyResourcePacks'),
+  visitStickerForm: document.querySelector('#visitStickerForm'),
+  visitStickerCategory: document.querySelector('#visitStickerCategory'),
+  visitStickerTitle: document.querySelector('#visitStickerTitle'),
+  visitStickerNote: document.querySelector('#visitStickerNote'),
+  visitStickerFile: document.querySelector('#visitStickerFile'),
+  visitStickerUploadButton: document.querySelector('#visitStickerUploadButton'),
+  visitStickerProgress: document.querySelector('#visitStickerProgress'),
+  visitStickerProgressBar: document.querySelector('#visitStickerProgressBar'),
+  visitStickerProgressText: document.querySelector('#visitStickerProgressText'),
+  refreshVisitStickersButton: document.querySelector('#refreshVisitStickersButton'),
+  visitStickerGirlfriendCount: document.querySelector('#visitStickerGirlfriendCount'),
+  visitStickerFriendCount: document.querySelector('#visitStickerFriendCount'),
+  visitStickerCompanionCount: document.querySelector('#visitStickerCompanionCount'),
+  visitStickerRows: document.querySelector('#visitStickerRows'),
+  emptyVisitStickers: document.querySelector('#emptyVisitStickers'),
   refreshButton: document.querySelector('#refreshButton'),
   releasePageTotal: document.querySelector('#releasePageTotal'),
   releasePagePublished: document.querySelector('#releasePagePublished'),
@@ -185,6 +200,7 @@ const pages = {
   analytics: ['增长数据', '官网访问、下载转化与设备留存'],
   content: ['内容库', '维护客户端在线与离线互动资源'],
   'resource-packs': ['资源包', '上传互动词包和小剧场剧本供官网下载'],
+  'visit-stickers': ['体验来访', '上传女友、好友、搭子表情，供体验期点一下来串门'],
   feedback: ['问题反馈', '查看问题与建议并更新处理状态']
 };
 
@@ -429,6 +445,11 @@ const listViews = {
     renderPage: renderResourcePackRows,
     matches: (item, filters) => !filters.category || item.category === filters.category
   }),
+  visitStickers: createListView('visit-stickers', {
+    emptyElement: elements.emptyVisitStickers,
+    renderPage: renderVisitStickerRows,
+    matches: (item, filters) => !filters.category || item.category === filters.category
+  }),
   feedback: createListView('feedback', {
     emptyElement: elements.emptyFeedback,
     renderPage: renderFeedbackRows,
@@ -622,6 +643,14 @@ function resourcePackCategoryLabel(category) {
   return category === 'theater-scripts' ? '小剧场剧本' : '互动词包';
 }
 
+function visitStickerCategoryLabel(category) {
+  return {
+    girlfriend: '女友',
+    friend: '好友',
+    companion: '搭子'
+  }[category] || category;
+}
+
 async function deleteResourcePack(pack) {
   const confirmed = await confirmAction({
     title: `删除“${pack.title}”`,
@@ -683,6 +712,61 @@ function renderResourcePackRows(packs) {
 
     row.append(titleCell, categoryCell, fileCell, hashCell, dateCell, actionsCell);
     elements.resourcePackRows.append(row);
+  }
+}
+
+async function deleteVisitStickerPack(pack) {
+  const confirmed = await confirmAction({
+    title: `删除“${pack.title}”`,
+    message: `会删掉这个压缩包里的 ${pack.stickerCount} 张体验来访表情。`,
+    confirmLabel: '删除表情包',
+    danger: true
+  });
+  if (!confirmed) return;
+  try {
+    await api(`/api/admin/visit-stickers/packs/${encodeURIComponent(pack.id)}`, { method: 'DELETE' });
+    showToast('体验来访表情包已删除');
+    await loadVisitStickers();
+  } catch (error) {
+    showToast(error.message, 'error');
+  }
+}
+
+function renderVisitStickers(payload) {
+  elements.visitStickerGirlfriendCount.textContent = String(payload.counts?.girlfriend || 0);
+  elements.visitStickerFriendCount.textContent = String(payload.counts?.friend || 0);
+  elements.visitStickerCompanionCount.textContent = String(payload.counts?.companion || 0);
+  listViews.visitStickers.setItems(payload.packs || []);
+}
+
+function renderVisitStickerRows(packs) {
+  elements.visitStickerRows.replaceChildren();
+  for (const pack of packs) {
+    const row = document.createElement('tr');
+    const titleCell = cell('version-cell');
+    const title = document.createElement('strong');
+    title.textContent = pack.title;
+    const note = document.createElement('span');
+    note.textContent = pack.note || pack.originalName || '';
+    titleCell.append(title, note);
+
+    const categoryCell = cell();
+    categoryCell.textContent = visitStickerCategoryLabel(pack.category);
+
+    const countCell = cell();
+    countCell.textContent = `${pack.stickerCount} 张`;
+
+    const dateCell = cell();
+    dateCell.textContent = formatDate(pack.createdAt);
+
+    const actionsCell = cell();
+    const actions = document.createElement('div');
+    actions.className = 'row-actions';
+    actions.append(actionButton('删除', 'button-danger', () => deleteVisitStickerPack(pack)));
+    actionsCell.append(actions);
+
+    row.append(titleCell, categoryCell, countCell, dateCell, actionsCell);
+    elements.visitStickerRows.append(row);
   }
 }
 
@@ -1541,6 +1625,7 @@ async function loadDashboard() {
     loadReleases(),
     loadSiteSettings(),
     loadResourcePacks(),
+    loadVisitStickers(),
     loadActivations(),
     loadInteractions(),
     loadCompanions(),
@@ -1578,6 +1663,17 @@ async function loadResourcePacks() {
     showToast(error.message, 'error');
   } finally {
     elements.refreshResourcePacksButton.disabled = false;
+  }
+}
+
+async function loadVisitStickers() {
+  elements.refreshVisitStickersButton.disabled = true;
+  try {
+    renderVisitStickers(await api('/api/admin/visit-stickers'));
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.refreshVisitStickersButton.disabled = false;
   }
 }
 
@@ -1760,8 +1856,49 @@ elements.resourcePackForm.addEventListener('submit', async (event) => {
   }
 });
 
+elements.visitStickerForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const file = elements.visitStickerFile.files[0];
+  if (!file) return;
+  elements.visitStickerUploadButton.disabled = true;
+  elements.visitStickerProgress.hidden = false;
+  elements.visitStickerProgressBar.value = 0;
+  elements.visitStickerProgressText.textContent = '0%';
+  try {
+    const task = await api('/api/admin/visit-stickers', {
+      method: 'POST',
+      body: {
+        category: elements.visitStickerCategory.value,
+        title: elements.visitStickerTitle.value.trim(),
+        note: elements.visitStickerNote.value.trim(),
+        fileName: file.name,
+        fileSize: file.size
+      }
+    });
+    await uploadBinary(
+      task.uploadUrl,
+      file,
+      elements.visitStickerProgressBar,
+      elements.visitStickerProgressText
+    );
+    elements.visitStickerProgressBar.value = 100;
+    elements.visitStickerProgressText.textContent = '100%';
+    elements.visitStickerForm.reset();
+    showToast('体验来访表情已上传');
+    await loadVisitStickers();
+  } catch (error) {
+    showToast(error.message, 'error');
+  } finally {
+    elements.visitStickerUploadButton.disabled = false;
+    window.setTimeout(() => {
+      elements.visitStickerProgress.hidden = true;
+    }, 800);
+  }
+});
+
 elements.refreshButton.addEventListener('click', loadReleases);
 elements.refreshResourcePacksButton.addEventListener('click', loadResourcePacks);
+elements.refreshVisitStickersButton.addEventListener('click', loadVisitStickers);
 elements.refreshActivationButton.addEventListener('click', loadActivations);
 elements.refreshInteractionButton.addEventListener('click', loadInteractions);
 elements.refreshCompanionButton.addEventListener('click', loadCompanions);

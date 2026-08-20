@@ -31,9 +31,11 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminMarkup, /id="manageAndroidReleasesButton"/);
   assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
   assert.match(adminMarkup, /id="androidDeviceRows"/);
-  assert.match(adminMarkup, /admin\.js\?v=android-resource-packs-2/);
+  assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
+  assert.match(adminMarkup, /admin\.js\?v=visit-stickers-1/);
   assert.match(adminScript, /if \(elements\.manageAndroidReleasesButton\)/);
   assert.match(adminScript, /if \(elements\.manageAndroidDevicesButton\)/);
+  assert.match(adminScript, /renderVisitStickers/);
 });
 
 test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {

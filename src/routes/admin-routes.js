@@ -72,6 +72,28 @@ function createAdminRouter({ controller, authService }) {
     requireWriteSession,
     (req, res) => controller.deleteResourcePack(req, res)
   );
+  router.get('/visit-stickers', requireSession, (req, res) => controller.visitStickers(req, res));
+  router.post(
+    '/visit-stickers',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createVisitStickerUpload(req, res)
+  );
+  router.put(
+    '/visit-sticker-uploads/:uploadId',
+    requireWriteSession,
+    (req, res) => controller.receiveVisitStickerUpload(req, res)
+  );
+  router.delete(
+    '/visit-stickers/packs/:id',
+    requireWriteSession,
+    (req, res) => controller.deleteVisitStickerPack(req, res)
+  );
+  router.delete(
+    '/visit-stickers/:id',
+    requireWriteSession,
+    (req, res) => controller.deleteVisitSticker(req, res)
+  );
 
   router.get(
     '/activation-codes',

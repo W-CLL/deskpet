@@ -10,6 +10,7 @@ const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
 const { ResourcePackStore } = require('../lib/resource-pack-store');
 const { CompanionStore } = require('../lib/companion-store');
+const { VisitStickerStore } = require('../lib/visit-sticker-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -27,6 +28,7 @@ const { ReleaseService } = require('./services/release-service');
 const { AnalyticsService } = require('./services/analytics-service');
 const { ResourcePackService } = require('./services/resource-pack-service');
 const { CompanionService } = require('./services/companion-service');
+const { VisitStickerService } = require('./services/visit-sticker-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -48,6 +50,7 @@ async function createApplication(options = {}) {
   const contentStore = new ContentStore(config.dataDirectory);
   const resourcePackStore = new ResourcePackStore(config.dataDirectory);
   const companionStore = new CompanionStore(config.dataDirectory, options.companionOptions);
+  const visitStickerStore = new VisitStickerStore(config.dataDirectory);
   await Promise.all([
     releaseStore.initialize(),
     activationStore.initialize(),
@@ -56,7 +59,8 @@ async function createApplication(options = {}) {
     analyticsStore.initialize(),
     contentStore.initialize(),
     resourcePackStore.initialize(),
-    companionStore.initialize()
+    companionStore.initialize(),
+    visitStickerStore.initialize()
   ]);
   interactionStore.pruneRawEvents();
 
@@ -121,6 +125,12 @@ async function createApplication(options = {}) {
     auditService
   });
   const companionService = new CompanionService({ companionStore, activationService });
+  const visitStickerService = new VisitStickerService({
+    config,
+    visitStickerStore,
+    activationService,
+    auditService
+  });
   const adminController = new AdminController({
     authService,
     activationService,
@@ -130,7 +140,8 @@ async function createApplication(options = {}) {
     contentService,
     analyticsService,
     resourcePackService,
-    companionService
+    companionService,
+    visitStickerService
   });
   const publicController = new PublicController({
     authService,
@@ -142,7 +153,8 @@ async function createApplication(options = {}) {
     releaseStore,
     analyticsService,
     resourcePackService,
-    companionService
+    companionService,
+    visitStickerService
   });
 
   const app = express();
@@ -182,6 +194,7 @@ async function createApplication(options = {}) {
     authService.cleanup();
     releaseService.cleanup();
     resourcePackService.cleanup();
+    visitStickerService.cleanup();
   }, 60_000);
   maintenanceTimer.unref();
   const interactionCleanupTimer = setInterval(() => {
@@ -207,6 +220,7 @@ async function createApplication(options = {}) {
     contentStore,
     resourcePackStore,
     companionStore,
+    visitStickerStore,
     services: {
       activationService,
       authService,
@@ -216,7 +230,8 @@ async function createApplication(options = {}) {
       releaseService,
       analyticsService,
       resourcePackService,
-      companionService
+      companionService,
+      visitStickerService
     },
     close() {
       if (closed) return;
@@ -225,6 +240,7 @@ async function createApplication(options = {}) {
       clearInterval(interactionCleanupTimer);
       clearInterval(companionCleanupTimer);
       companionStore.close();
+      visitStickerStore.close();
       contentStore.close();
       analyticsStore.close();
       interactionStore.close();

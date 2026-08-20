@@ -22,7 +22,8 @@ class AdminController {
     contentService,
     analyticsService,
     resourcePackService,
-    companionService
+    companionService,
+    visitStickerService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -33,6 +34,7 @@ class AdminController {
     this.analyticsService = analyticsService;
     this.resourcePackService = resourcePackService;
     this.companionService = companionService;
+    this.visitStickerService = visitStickerService;
   }
 
   async login(req, res) {
@@ -161,6 +163,33 @@ class AdminController {
   async deleteResourcePack(req, res) {
     const id = requireParam(req.params.id, UUID_PATTERN);
     res.status(200).json(await this.resourcePackService.delete(req, id));
+  }
+
+  visitStickers(_req, res) {
+    res.status(200).json(this.visitStickerService.adminList());
+  }
+
+  createVisitStickerUpload(req, res) {
+    res.status(201).json(this.visitStickerService.createUpload(req.body, res.locals.adminSession));
+  }
+
+  async receiveVisitStickerUpload(req, res) {
+    const uploadId = requireParam(req.params.uploadId, UPLOAD_ID_PATTERN);
+    res.status(201).json(await this.visitStickerService.receiveUpload(
+      req,
+      uploadId,
+      res.locals.adminSession
+    ));
+  }
+
+  async deleteVisitStickerPack(req, res) {
+    const id = requireParam(req.params.id, UUID_PATTERN);
+    res.status(200).json(await this.visitStickerService.deletePack(req, id));
+  }
+
+  async deleteVisitSticker(req, res) {
+    const id = requireParam(req.params.id, UUID_PATTERN);
+    res.status(200).json(await this.visitStickerService.deleteSticker(req, id));
   }
 
   createUpload(req, res) {

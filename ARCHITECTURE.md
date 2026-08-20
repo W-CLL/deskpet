@@ -185,6 +185,12 @@ audit.jsonl                  管理操作审计日志
 | `POST` | `/api/admin/activation-codes/:id/reveal` | 管理会话 + CSRF | 查看完整激活码 |
 | `POST` | `/api/admin/licenses/:id/revoke` | 管理会话 + CSRF | 撤销授权 |
 | `POST` | `/api/admin/accounts/:id/rebind-code` | 管理会话 + CSRF | 为已有账号生成一次性换机码 |
+| `GET/POST` | `/api/admin/visit-stickers` | 管理会话 | 列出或创建体验来访表情包上传 |
+| `PUT` | `/api/admin/visit-sticker-uploads/:uploadId` | 管理会话 + CSRF | 上传包含 GIF 的 ZIP |
+| `DELETE` | `/api/admin/visit-stickers/packs/:id` | 管理会话 + CSRF | 删除一组体验来访表情 |
+| `GET` | `/api/trial/visit-stickers` | 试用授权 | 体验期来访分类和数量 |
+| `POST` | `/api/trial/visit-stickers/play` | 试用授权 | 按分类随机一张来访表情 |
+| `GET` | `/api/trial/visit-stickers/:id/file` | 试用授权 | 下载该张来访 GIF |
 | `GET` | `/api/admin/interactions` | 管理会话 | 查询全部账号互动汇总 |
 | `GET` | `/api/admin/analytics` | 管理会话 | 查询增长漏斗、周活和 D1/D7/D30 留存 |
 | `GET/POST` | `/api/admin/content` | 管理会话 | 查询或新增互动内容 |

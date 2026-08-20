@@ -85,6 +85,16 @@ function createPublicRouter(controller) {
     '/api/companion/deliveries/:id/acknowledge',
     (req, res) => controller.acknowledgeCompanionDelivery(req, res)
   );
+  router.get('/api/trial/visit-stickers', (req, res) => controller.trialVisitCatalog(req, res));
+  router.post(
+    '/api/trial/visit-stickers/play',
+    ...jsonBody(4096),
+    (req, res) => controller.playTrialVisit(req, res)
+  );
+  router.get(
+    '/api/trial/visit-stickers/:id/file',
+    (req, res) => controller.trialVisitFile(req, res)
+  );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
   router.get('/api/public/downloads', (req, res) => {
     setWebsiteCors(req, res);

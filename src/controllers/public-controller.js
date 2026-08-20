@@ -11,7 +11,8 @@ class PublicController {
     releaseStore,
     analyticsService,
     resourcePackService,
-    companionService
+    companionService,
+    visitStickerService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -23,6 +24,7 @@ class PublicController {
     this.analyticsService = analyticsService;
     this.resourcePackService = resourcePackService;
     this.companionService = companionService;
+    this.visitStickerService = visitStickerService;
     this.startedAt = new Date().toISOString();
   }
 
@@ -122,6 +124,25 @@ class PublicController {
 
   acknowledgeCompanionDelivery(req, res) {
     res.status(200).json(this.companionService.acknowledge(req));
+  }
+
+  trialVisitCatalog(req, res) {
+    this.visitStickerService.requireTrial(req);
+    res.status(200).json(this.visitStickerService.catalog(req));
+  }
+
+  playTrialVisit(req, res) {
+    res.status(200).json(this.visitStickerService.play(req, req.body));
+  }
+
+  trialVisitFile(req, res) {
+    const item = this.visitStickerService.file(req, req.params.id);
+    res.status(200);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('Content-Type', 'image/gif');
+    res.setHeader('Content-Length', item.size);
+    res.setHeader('ETag', `"${item.sha256}"`);
+    res.sendFile(item.filePath);
   }
 
   latest(req, res) {

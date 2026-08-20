@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=android-resource-packs-2">
+  <link rel="stylesheet" href="/assets/admin.css?v=visit-stickers-1">
 </head>
 <body>
   <main class="app-root">
@@ -83,6 +83,10 @@
           <button class="nav-item" type="button" data-page="resource-packs">
             <span>资源包</span>
             <small>词包与小剧场</small>
+          </button>
+          <button class="nav-item" type="button" data-page="visit-stickers">
+            <span>体验来访</span>
+            <small>女友 / 好友 / 搭子表情</small>
           </button>
           <button class="nav-item" type="button" data-page="feedback">
             <span>问题反馈</span>
@@ -895,6 +899,106 @@
             </section>
           </section>
 
+          <section class="admin-page" data-page-panel="visit-stickers" hidden>
+            <section class="tool-panel upload-section">
+              <div class="panel-heading release-editor-heading">
+                <div>
+                  <p class="eyebrow">体验期来访</p>
+                  <h2>上传表情压缩包</h2>
+                </div>
+                <span class="editor-state">ZIP / GIF</span>
+              </div>
+              <form id="visitStickerForm" class="upload-form">
+                <section class="release-form-block">
+                  <div class="form-block-heading">
+                    <span class="form-block-index">01</span>
+                    <h3>分类和文件</h3>
+                  </div>
+                  <div class="resource-pack-form-grid">
+                    <label>
+                      <span>分类</span>
+                      <select id="visitStickerCategory" required>
+                        <option value="girlfriend">女友</option>
+                        <option value="friend">好友</option>
+                        <option value="companion">搭子</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>标题</span>
+                      <input id="visitStickerTitle" maxlength="80" placeholder="例如：下班来串门" required>
+                    </label>
+                    <label>
+                      <span>ZIP 文件</span>
+                      <input id="visitStickerFile" type="file" accept=".zip,application/zip" required>
+                    </label>
+                    <label class="resource-pack-description">
+                      <span>备注</span>
+                      <textarea id="visitStickerNote" rows="3" maxlength="600" placeholder="可选。压缩包里放 GIF，一层文件夹也可以。"></textarea>
+                    </label>
+                  </div>
+                </section>
+                <div class="upload-actions">
+                  <div id="visitStickerProgress" class="progress-wrap" hidden>
+                    <progress id="visitStickerProgressBar" max="100" value="0"></progress>
+                    <span id="visitStickerProgressText">0%</span>
+                  </div>
+                  <button id="visitStickerUploadButton" class="button button-primary" type="submit">上传并用于体验来访</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="tool-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">线上表情库</p>
+                  <h2>已上传的来访表情</h2>
+                </div>
+                <button id="refreshVisitStickersButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+              <div class="metric-grid" aria-label="来访表情数量">
+                <article class="metric-item">
+                  <span>女友</span>
+                  <strong id="visitStickerGirlfriendCount">0</strong>
+                </article>
+                <article class="metric-item">
+                  <span>好友</span>
+                  <strong id="visitStickerFriendCount">0</strong>
+                </article>
+                <article class="metric-item">
+                  <span>搭子</span>
+                  <strong id="visitStickerCompanionCount">0</strong>
+                </article>
+              </div>
+              <div class="list-toolbar" data-list-controls="visit-stickers">
+                <label>
+                  <span>分类</span>
+                  <select data-list-filter="category">
+                    <option value="">全部分类</option>
+                    <option value="girlfriend">女友</option>
+                    <option value="friend">好友</option>
+                    <option value="companion">搭子</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>表情包</th>
+                      <th>分类</th>
+                      <th>数量</th>
+                      <th>上传时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visitStickerRows"></tbody>
+                </table>
+                <p id="emptyVisitStickers" class="empty-state" hidden>还没有体验来访表情。上传一个 ZIP，里面放 GIF。</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="visit-stickers"></div>
+            </section>
+          </section>
+
           <section class="admin-page" data-page-panel="feedback" hidden>
             <section class="tool-panel feedback-section">
               <div class="panel-heading inline-heading">
@@ -979,6 +1083,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=android-resource-packs-2" defer></script>
+  <script src="/assets/admin.js?v=visit-stickers-1" defer></script>
 </body>
 </html>

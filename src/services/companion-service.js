@@ -102,12 +102,12 @@ class CompanionService {
 
   pending(req) {
     const license = this.requireAccount(req);
-    return { deliveries: this.companionStore.pending(license.accountId) };
+    return { deliveries: this.companionStore.pending(license.accountId, license.id) };
   }
 
   file(req) {
     const license = this.requireAccount(req);
-    const delivery = this.companionStore.delivery(license.accountId, req.params.id);
+    const delivery = this.companionStore.delivery(license.accountId, license.id, req.params.id);
     if (!delivery) throw new HttpError(404, '来访 GIF 不存在或已失效', 'COMPANION_DELIVERY_NOT_FOUND');
     return {
       filePath: path.join(this.companionStore.filesDirectory, delivery.file_name),
@@ -118,7 +118,7 @@ class CompanionService {
 
   acknowledge(req) {
     const license = this.requireAccount(req);
-    const result = this.companionStore.acknowledge(license.accountId, req.params.id);
+    const result = this.companionStore.acknowledge(license.accountId, license.id, req.params.id);
     if (!result) throw new HttpError(404, '来访 GIF 不存在或已处理', 'COMPANION_DELIVERY_NOT_FOUND');
     return result;
   }

@@ -79,20 +79,20 @@ test('legacy device licenses migrate to stable accounts without changing credent
   assert.equal(authenticated.installationId, installationId);
   assert.equal(authenticated.platform, 'unknown');
   assert.equal(authenticated.architecture, 'unknown');
-  assert.equal(store.migrationState.currentVersion, 4);
-  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2, 3, 4]);
+  assert.equal(store.migrationState.currentVersion, 5);
+  assert.deepEqual(store.migrationState.applied.map((item) => item.version), [1, 2, 3, 4, 5]);
   assert.equal(store.list().summary.accounts, 1);
   assert.equal(store.list().summary.platforms.unknown.active, 1);
 
   store.close();
   await store.initialize();
-  assert.equal(store.migrationState.currentVersion, 4);
+  assert.equal(store.migrationState.currentVersion, 5);
   assert.deepEqual(store.migrationState.applied, []);
   assert.equal(store.list().summary.accounts, 1);
   const versions = store.database.prepare(`
     SELECT version FROM schema_migrations WHERE scope = 'activation' ORDER BY version
   `).all().map((row) => Number(row.version));
-  assert.deepEqual(versions, [1, 2, 3, 4]);
+  assert.deepEqual(versions, [1, 2, 3, 4, 5]);
 });
 
 test('rebind codes preserve the account and replace the active device license', async (context) => {
@@ -158,4 +158,70 @@ test('rebind codes preserve the account and replace the active device license', 
   assert.equal(summary.active, 1);
   assert.equal(summary.revoked, 1);
   assert.deepEqual(summary.platforms.android, { total: 2, active: 1, revoked: 1 });
+});
+
+test('one purchase code can activate two devices on the same account', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-account-two-devices-'));
+  const store = new ActivationStore(dataDirectory);
+  context.after(async () => {
+    store.close();
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+  await store.initialize();
+
+  const code = store.createCodes({ count: 1, expiresInDays: 30 }).codes[0];
+  const firstCredential = crypto.randomBytes(32).toString('base64url');
+  const first = store.activate({
+    code,
+    installationId: crypto.randomBytes(16).toString('hex'),
+    credential: firstCredential,
+    appVersion: '3.1.9',
+    platform: 'windows',
+    architecture: 'x64'
+  });
+  const second = store.activate({
+    code,
+    installationId: crypto.randomBytes(16).toString('hex'),
+    credential: crypto.randomBytes(32).toString('base64url'),
+    appVersion: '1.3.4',
+    platform: 'android',
+    architecture: 'arm64-v8a'
+  });
+  assert.equal(second.accountId, first.accountId);
+  assert.notEqual(second.licenseId, first.licenseId);
+  assert.equal(second.deviceCount, 2);
+  assert.equal(store.authenticate(`Bearer ${first.licenseId}.${firstCredential}`).accountId, first.accountId);
+
+  let limited;
+  try {
+    store.activate({
+      code,
+      installationId: crypto.randomBytes(16).toString('hex'),
+      credential: crypto.randomBytes(32).toString('base64url'),
+      appVersion: '3.1.9',
+      platform: 'macos',
+      architecture: 'arm64'
+    });
+  } catch (error) {
+    limited = error;
+  }
+  assert.equal(limited?.code, 'ACCOUNT_DEVICE_LIMIT');
+
+  const listed = store.list().codes.find((item) => item.account?.id === first.accountId);
+  assert.equal(listed.licenses.length, 2);
+  assert.equal(listed.licenses.filter((item) => item.status === 'active').length, 2);
+
+  const rebind = store.createRebindCode(first.accountId).codes[0];
+  const replacement = store.activate({
+    code: rebind,
+    installationId: crypto.randomBytes(16).toString('hex'),
+    credential: crypto.randomBytes(32).toString('base64url'),
+    appVersion: '3.1.9',
+    platform: 'macos',
+    architecture: 'arm64'
+  });
+  assert.equal(replacement.accountId, first.accountId);
+  assert.equal(store.authenticate(`Bearer ${first.licenseId}.${firstCredential}`), null);
+  assert.equal(store.list().summary.active, 1);
+  assert.equal(store.list().summary.revoked, 2);
 });

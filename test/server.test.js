@@ -463,23 +463,51 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(revealed.response.status, 200);
   assert.equal(revealed.payload.code, generated.payload.codes[0]);
 
-  const attempts = [0, 1].map((index) => ({
+  const firstDevice = {
     code: generated.payload.codes[0],
-    installationId: `installation-${index}-${crypto.randomBytes(12).toString('base64url')}`,
+    installationId: `installation-0-${crypto.randomBytes(12).toString('base64url')}`,
     credential: crypto.randomBytes(32).toString('base64url'),
     appVersion: '2.1.0'
-  }));
-  const results = await Promise.all(attempts.map(async (body) => jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+  };
+  const firstActivation = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  }))));
-  assert.deepEqual(results.map((item) => item.response.status).sort(), [200, 401]);
-  const winningIndex = results.findIndex((item) => item.response.status === 200);
-  const winner = attempts[winningIndex];
-  const licenseId = results[winningIndex].payload.licenseId;
-  const accountId = results[winningIndex].payload.accountId;
+    headers: { 'Content-Type': 'application/json', 'X-DeskPet-Platform': 'windows' },
+    body: JSON.stringify(firstDevice)
+  }));
+  assert.equal(firstActivation.response.status, 200);
+  const winner = firstDevice;
+  const licenseId = firstActivation.payload.licenseId;
+  const accountId = firstActivation.payload.accountId;
   assert.match(accountId, /^[0-9a-f-]{36}$/i);
+
+  const secondDevice = {
+    code: generated.payload.codes[0],
+    installationId: `installation-1-${crypto.randomBytes(12).toString('base64url')}`,
+    credential: crypto.randomBytes(32).toString('base64url'),
+    appVersion: '2.1.0'
+  };
+  const secondActivation = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-DeskPet-Platform': 'android' },
+    body: JSON.stringify(secondDevice)
+  }));
+  assert.equal(secondActivation.response.status, 200);
+  assert.equal(secondActivation.payload.accountId, accountId);
+  assert.notEqual(secondActivation.payload.licenseId, licenseId);
+  assert.equal(secondActivation.payload.deviceCount, 2);
+
+  const thirdDevice = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-DeskPet-Platform': 'macos' },
+    body: JSON.stringify({
+      code: generated.payload.codes[0],
+      installationId: `installation-2-${crypto.randomBytes(12).toString('base64url')}`,
+      credential: crypto.randomBytes(32).toString('base64url'),
+      appVersion: '2.1.0'
+    })
+  }));
+  assert.equal(thirdDevice.response.status, 409);
+  assert.equal(thirdDevice.payload.code, 'ACCOUNT_DEVICE_LIMIT');
 
   const retry = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
     method: 'POST',
@@ -494,7 +522,7 @@ test('one-time activation gates current manifests and downloads', async (context
     headers: { Cookie: cookie }
   }));
   assert.equal(analytics.response.status, 200);
-  assert.equal(analytics.payload.funnel.activatedInstallations, 1);
+  assert.equal(analytics.payload.funnel.activatedInstallations, 2);
 
   const now = Date.now();
   const rangeFrom = new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
@@ -504,7 +532,7 @@ test('one-time activation gates current manifests and downloads', async (context
     { headers: { Cookie: cookie } }
   ));
   assert.equal(rangedAnalytics.response.status, 200);
-  assert.equal(rangedAnalytics.payload.funnel.activatedInstallations, 1);
+  assert.equal(rangedAnalytics.payload.funnel.activatedInstallations, 2);
 
   const emptyRange = await jsonResponse(await fetch(
     `${baseUrl}/api/admin/analytics?from=2020-01-01&to=2020-01-02`,
@@ -524,7 +552,7 @@ test('one-time activation gates current manifests and downloads', async (context
     headers: { Cookie: cookie }
   }));
   assert.equal(activationList.payload.summary.used, 1);
-  assert.equal(activationList.payload.summary.active, 1);
+  assert.equal(activationList.payload.summary.active, 2);
   assert.equal(activationList.payload.codes[0].maskedCode.startsWith('****'), true);
   assert.equal(JSON.stringify(activationList.payload).includes(generated.payload.codes[0]), false);
 
@@ -601,6 +629,14 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(replacementActivation.response.status, 200);
   assert.equal(replacementActivation.payload.accountId, accountId);
   assert.notEqual(replacementActivation.payload.licenseId, licenseId);
+  assert.equal(replacementActivation.payload.deviceCount, 1);
+
+  const secondDeviceRevoked = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
+    headers: {
+      Authorization: `Bearer ${secondActivation.payload.licenseId}.${secondDevice.credential}`
+    }
+  }));
+  assert.equal(secondDeviceRevoked.response.status, 401);
 
   const replacedLicenseUpdate = await jsonResponse(await fetch(`${baseUrl}/api/update/latest`, {
     headers: { Authorization: authorization }

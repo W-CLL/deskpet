@@ -158,14 +158,23 @@ class ActivationService {
       );
     }
 
-    const license = this.activationStore.activate({
-      code: body?.code,
-      installationId,
-      credential: body?.credential,
-      appVersion: body?.appVersion,
-      platform: req.headers['x-deskpet-platform'],
-      architecture: req.headers['x-deskpet-architecture']
-    });
+    let license;
+    try {
+      license = this.activationStore.activate({
+        code: body?.code,
+        installationId,
+        credential: body?.credential,
+        appVersion: body?.appVersion,
+        platform: req.headers['x-deskpet-platform'],
+        architecture: req.headers['x-deskpet-architecture']
+      });
+    } catch (error) {
+      if (error?.code === 'ACCOUNT_DEVICE_LIMIT') {
+        await this.auditService.write({ action: 'activate', outcome: 'device-limit', ip });
+        throw new HttpError(409, error.message, 'ACCOUNT_DEVICE_LIMIT');
+      }
+      throw error;
+    }
     if (!license) {
       const nextIpStatus = this.ipLimiter.fail(ip);
       const nextDeviceStatus = this.deviceLimiter.fail(deviceKey);

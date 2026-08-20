@@ -196,3 +196,116 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   }));
   assert.equal(unpaired.payload.partner, null);
 });
+
+async function activateWithCode(baseUrl, code, platform = 'windows') {
+  const credential = crypto.randomBytes(32).toString('base64url');
+  const activated = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-DeskPet-Platform': platform },
+    body: JSON.stringify({
+      code,
+      installationId: crypto.randomBytes(16).toString('hex'),
+      credential,
+      appVersion: '3.1.9'
+    })
+  }));
+  assert.equal(activated.response.status, 200);
+  return {
+    accountId: activated.payload.accountId,
+    licenseId: activated.payload.licenseId,
+    deviceCount: activated.payload.deviceCount,
+    headers: {
+      Authorization: `Bearer ${activated.payload.licenseId}.${credential}`,
+      'X-DeskPet-Version': '3.1.9',
+      'X-DeskPet-Platform': platform
+    }
+  };
+}
+
+test('two devices on one account each receive the same companion visit', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-companion-two-devices-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey,
+    companionOptions: { cooldownMs: 0, maxPending: 1 }
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const senderCode = application.activationStore.createCodes({ count: 1 }).codes[0];
+  const recipientCode = application.activationStore.createCodes({ count: 1 }).codes[0];
+  const sender = await activateWithCode(baseUrl, senderCode, 'windows');
+  const recipientDesktop = await activateWithCode(baseUrl, recipientCode, 'windows');
+  const recipientPhone = await activateWithCode(baseUrl, recipientCode, 'android');
+  assert.equal(recipientPhone.accountId, recipientDesktop.accountId);
+  assert.equal(recipientPhone.deviceCount, 2);
+
+  const recipientProfile = await jsonResponse(await fetch(`${baseUrl}/api/companion`, {
+    headers: recipientDesktop.headers
+  }));
+  const phoneProfile = await jsonResponse(await fetch(`${baseUrl}/api/companion`, {
+    headers: recipientPhone.headers
+  }));
+  assert.equal(phoneProfile.payload.pairingCode, recipientProfile.payload.pairingCode);
+
+  await fetch(`${baseUrl}/api/companion/pair`, {
+    method: 'POST',
+    headers: { ...sender.headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: recipientProfile.payload.pairingCode })
+  });
+
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+  const sent = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    method: 'POST',
+    headers: { ...sender.headers, 'Content-Type': 'image/gif' },
+    body: gif
+  }));
+  assert.equal(sent.response.status, 201);
+
+  const desktopPending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: recipientDesktop.headers
+  }));
+  const phonePending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: recipientPhone.headers
+  }));
+  assert.equal(desktopPending.payload.deliveries.length, 1);
+  assert.equal(phonePending.payload.deliveries.length, 1);
+  assert.equal(phonePending.payload.deliveries[0].id, desktopPending.payload.deliveries[0].id);
+
+  const acknowledged = await jsonResponse(await fetch(
+    `${baseUrl}/api/companion/deliveries/${sent.payload.id}/acknowledge`,
+    { method: 'POST', headers: recipientDesktop.headers }
+  ));
+  assert.equal(acknowledged.response.status, 200);
+
+  const desktopEmpty = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: recipientDesktop.headers
+  }));
+  const phoneStillPending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: recipientPhone.headers
+  }));
+  assert.deepEqual(desktopEmpty.payload.deliveries, []);
+  assert.equal(phoneStillPending.payload.deliveries.length, 1);
+
+  const downloaded = await fetch(`${baseUrl}${phoneStillPending.payload.deliveries[0].downloadPath}`, {
+    headers: recipientPhone.headers
+  });
+  assert.equal(downloaded.status, 200);
+  assert.deepEqual(Buffer.from(await downloaded.arrayBuffer()), gif);
+
+  const secondSend = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    method: 'POST',
+    headers: { ...sender.headers, 'Content-Type': 'image/gif' },
+    body: gif
+  }));
+  assert.equal(secondSend.response.status, 201);
+});

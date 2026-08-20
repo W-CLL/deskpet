@@ -407,7 +407,7 @@ const listViews = {
     emptyElement: elements.emptyActivations,
     renderPage: renderActivationRows,
     matches: (item, filters) => (!filters.platform
-      || (item.license?.platform || 'unknown') === filters.platform)
+      || (item.licenses || [item.license]).some((license) => (license?.platform || 'unknown') === filters.platform))
       && (!filters.status || activationStatusKey(item) === filters.status)
       && (!filters.purpose || (item.purpose || 'new_account') === filters.purpose)
   }),
@@ -764,7 +764,9 @@ function renderActivations(payload) {
 function renderAndroidDevices(codes) {
   if (!elements.androidDeviceRows || !elements.emptyAndroidDevices) return;
   const androidDevices = codes
-    .filter((item) => item.license?.platform === 'android')
+    .flatMap((item) => (item.licenses || (item.license ? [item.license] : []))
+      .filter((license) => license.platform === 'android')
+      .map((license) => ({ ...item, license })))
     .slice(0, 12);
   elements.androidDeviceRows.replaceChildren();
   elements.emptyAndroidDevices.hidden = androidDevices.length > 0;
@@ -842,16 +844,20 @@ function renderActivationRows(codes) {
       account.textContent = `账号 …${item.account.suffix}`;
       licenseCell.append(account);
     }
-    if (item.license) {
-      const device = document.createElement('span');
-      const platform = { windows: 'Windows', macos: 'macOS', android: 'Android' }[
-        item.license.platform
-      ] || '未知平台';
-      device.textContent = `设备 …${item.license.installationSuffix} · ${platform} / ${item.license.architecture || 'unknown'}`;
-      const detail = document.createElement('span');
-      const checkedAt = item.license.lastUpdateAt ? formatDate(item.license.lastUpdateAt) : '尚未检查更新';
-      detail.textContent = `v${item.license.appVersion || '-'} · ${checkedAt}`;
-      licenseCell.append(device, detail);
+    const licenses = item.licenses?.length ? item.licenses : (item.license ? [item.license] : []);
+    if (licenses.length) {
+      for (const license of licenses) {
+        const device = document.createElement('span');
+        const platform = { windows: 'Windows', macos: 'macOS', android: 'Android' }[
+          license.platform
+        ] || '未知平台';
+        const statusHint = license.status === 'active' ? '' : ' · 已撤销';
+        device.textContent = `设备 …${license.installationSuffix} · ${platform} / ${license.architecture || 'unknown'}${statusHint}`;
+        const detail = document.createElement('span');
+        const checkedAt = license.lastUpdateAt ? formatDate(license.lastUpdateAt) : '尚未检查更新';
+        detail.textContent = `v${license.appVersion || '-'} · ${checkedAt}`;
+        licenseCell.append(device, detail);
+      }
     } else if (!item.account) {
       licenseCell.textContent = '-';
     }
@@ -892,8 +898,14 @@ function renderActivationRows(codes) {
       });
       actions.append(viewButton, copyButton);
     }
-    if (item.license?.status === 'active') {
-      actions.append(actionButton('撤销', 'button-danger', () => revokeLicense(item)));
+    const activeLicenses = (item.licenses || (item.license ? [item.license] : []))
+      .filter((license) => license.status === 'active');
+    for (const license of activeLicenses) {
+      actions.append(actionButton(
+        activeLicenses.length > 1 ? `撤销 …${license.installationSuffix}` : '撤销',
+        'button-danger',
+        () => revokeLicense({ ...item, license })
+      ));
     }
     if (item.account?.status === 'active' && !accountsWithRebindAction.has(item.account.id)) {
       actions.append(actionButton('换机码', 'button-secondary', () => createRebindCode(item)));

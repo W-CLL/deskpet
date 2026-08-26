@@ -8,6 +8,7 @@ const test = require('node:test');
 const { createApplication, signedManifestPayload } = require('../server');
 const { hashPassword, verifyPassword } = require('../lib/security');
 const { ReleaseStore } = require('../lib/storage');
+const { AnalyticsService } = require('../src/services/analytics-service');
 
 async function jsonResponse(response) {
   const payload = await response.json();
@@ -21,6 +22,31 @@ test('password hashes verify without storing the plaintext password', async () =
   assert.equal(JSON.stringify(record).includes('correct horse battery staple'), false);
 });
 
+test('usage summary separates online, 7-day and 15-day inactive devices', () => {
+  const now = Date.parse('2026-08-26T12:00:00.000Z');
+  const daysAgo = (days) => new Date(now - days * 24 * 60 * 60 * 1000).toISOString();
+  const service = new AnalyticsService({
+    analyticsStore: {
+      usageDetails: () => ({
+        devices: [], downloads: [], apiRoutes: [], featureTotals: [], featureEvents: []
+      })
+    },
+    config: {}
+  });
+  const inventory = [
+    { deviceKey: 'online', authorizationState: 'active', authorizationType: 'license', lastSeenAt: new Date(now).toISOString() },
+    { deviceKey: 'inactive-7', authorizationState: 'active', authorizationType: 'license', lastSeenAt: daysAgo(7) },
+    { deviceKey: 'inactive-15', authorizationState: 'active', authorizationType: 'license', lastSeenAt: daysAgo(15) },
+    { deviceKey: 'revoked', authorizationState: 'revoked', authorizationType: 'license', lastSeenAt: daysAgo(30) }
+  ];
+
+  const usage = service.usageSummary(inventory, now);
+  assert.equal(usage.summary.onlineDevices, 1);
+  assert.equal(usage.summary.inactive7Days, 2);
+  assert.equal(usage.summary.inactive15Days, 1);
+  assert.equal(usage.devices.find((item) => item.deviceKey === 'revoked').activityStatus, 'revoked');
+});
+
 test('admin shell includes the Android management hooks used by admin.js', async () => {
   const publicDirectory = path.join(__dirname, '..', 'public');
   const [adminMarkup, adminScript] = await Promise.all([
@@ -32,7 +58,7 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
   assert.match(adminMarkup, /id="androidDeviceRows"/);
   assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
-  assert.match(adminMarkup, /admin\.js\?v=visit-stickers-1/);
+  assert.match(adminMarkup, /admin\.js\?v=usage-details-1/);
   assert.match(adminScript, /if \(elements\.manageAndroidReleasesButton\)/);
   assert.match(adminScript, /if \(elements\.manageAndroidDevicesButton\)/);
   assert.match(adminScript, /renderVisitStickers/);
@@ -594,11 +620,43 @@ test('one-time activation gates current manifests and downloads', async (context
   assert.equal(allowedDownload.status, 200);
   assert.deepEqual(Buffer.from(await allowedDownload.arrayBuffer()), Buffer.from('MZ deskpet 2.2.0', 'utf8'));
 
+  const usageAnalytics = await jsonResponse(await fetch(`${baseUrl}/api/admin/analytics`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(usageAnalytics.response.status, 200);
+  assert.equal(usageAnalytics.payload.usage.summary.releaseDownloads, 1);
+  assert.equal(usageAnalytics.payload.usage.summary.onlineDevices, 2);
+  assert.equal(usageAnalytics.payload.usage.summary.inactive7Days, 0);
+  assert.equal(usageAnalytics.payload.usage.summary.inactive15Days, 0);
+  assert.deepEqual(
+    usageAnalytics.payload.usage.downloads.find((item) => item.version === '2.2.0'),
+    {
+      platform: 'windows',
+      architecture: 'x64',
+      version: '2.2.0',
+      downloadCount: 1,
+      lastDownloadAt: usageAnalytics.payload.usage.downloads[0].lastDownloadAt
+    }
+  );
+  assert.equal(usageAnalytics.payload.usage.apiRoutes
+    .filter((item) => item.path === '/api/update/latest')
+    .reduce((total, item) => total + item.requestCount, 0), 2);
+
   const headDownload = await fetch(`${baseUrl}${currentDownloadPath}`, { method: 'HEAD' });
   assert.equal(headDownload.status, 200);
   assert.equal(headDownload.headers.get('accept-ranges'), 'bytes');
   assert.equal(Number(headDownload.headers.get('content-length')), Buffer.byteLength('MZ deskpet 2.2.0'));
   assert.equal((await headDownload.arrayBuffer()).byteLength, 0);
+
+  const resumedDownload = await fetch(`${baseUrl}${currentDownloadPath}`, {
+    headers: { Range: 'bytes=3-7' }
+  });
+  assert.equal(resumedDownload.status, 206);
+  await resumedDownload.arrayBuffer();
+  const afterResumeAnalytics = await jsonResponse(await fetch(`${baseUrl}/api/admin/analytics`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(afterResumeAnalytics.payload.usage.summary.releaseDownloads, 1);
 
   const publicDownloads = await jsonResponse(await fetch(`${baseUrl}/api/public/downloads`));
   assert.equal(publicDownloads.response.status, 200);

@@ -42,6 +42,10 @@ class ActivationService {
     return this.activationStore.list();
   }
 
+  devices() {
+    return this.activationStore.deviceInventory();
+  }
+
   async createCodes(req, body) {
     let generated;
     try {
@@ -221,7 +225,9 @@ class ActivationService {
     const trial = this.activationStore.trialStatus({
       installationId: body?.installationId,
       credential: body?.credential,
-      appVersion: body?.appVersion
+      appVersion: body?.appVersion,
+      platform: req.headers['x-deskpet-platform'],
+      architecture: req.headers['x-deskpet-architecture']
     });
     if (!trial) {
       throw new HttpError(400, '试用设备信息无效，请重新启动应用', 'TRIAL_DEVICE_INVALID');

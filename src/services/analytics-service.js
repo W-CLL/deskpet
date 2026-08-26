@@ -118,6 +118,77 @@ class AnalyticsService {
     return this.analyticsStore.summary({ from, to });
   }
 
+  recordRequest(event) {
+    this.analyticsStore.recordRequest(event);
+  }
+
+  recordReleaseDownload(release) {
+    this.analyticsStore.recordReleaseDownload({ release });
+  }
+
+  recordFeature(event) {
+    this.analyticsStore.recordFeature(event);
+  }
+
+  usageSummary(inventory = [], now = Date.now()) {
+    const details = this.analyticsStore.usageDetails();
+    const devices = new Map(inventory.map((item) => [item.deviceKey, {
+      ...item,
+      lastPath: '',
+      requestCount: 0,
+      successfulRequests: 0,
+      lastStatus: null
+    }]));
+    for (const tracked of details.devices) {
+      const existing = devices.get(tracked.deviceKey);
+      devices.set(tracked.deviceKey, {
+        ...existing,
+        ...tracked,
+        authorizationState: existing?.authorizationState || 'active',
+        firstSeenAt: earlierDate(existing?.firstSeenAt, tracked.firstSeenAt),
+        lastSeenAt: laterDate(existing?.lastSeenAt, tracked.lastSeenAt)
+      });
+    }
+    const onlineCutoff = now - 5 * 60 * 1000;
+    const inactive7Cutoff = now - 7 * 24 * 60 * 60 * 1000;
+    const inactive15Cutoff = now - 15 * 24 * 60 * 60 * 1000;
+    const deviceRows = [...devices.values()].map((item) => {
+      const lastSeen = Date.parse(item.lastSeenAt || item.firstSeenAt);
+      const activeAuthorization = item.authorizationState === 'active';
+      let activityStatus = 'recent';
+      if (!activeAuthorization) activityStatus = item.authorizationState;
+      else if (lastSeen >= onlineCutoff) activityStatus = 'online';
+      else if (lastSeen <= inactive15Cutoff) activityStatus = 'inactive15';
+      else if (lastSeen <= inactive7Cutoff) activityStatus = 'inactive7';
+      return { ...item, activityStatus };
+    }).sort((left, right) => Date.parse(right.lastSeenAt) - Date.parse(left.lastSeenAt));
+    const activeDevices = deviceRows.filter((item) => item.authorizationState === 'active');
+    const trials = deviceRows.filter((item) => item.authorizationType === 'trial');
+    return {
+      generatedAt: new Date(now).toISOString(),
+      onlineWindowMinutes: 5,
+      summary: {
+        trackedDevices: deviceRows.length,
+        activeAuthorizedDevices: activeDevices.length,
+        onlineDevices: activeDevices.filter((item) => item.activityStatus === 'online').length,
+        inactive7Days: activeDevices.filter((item) => ['inactive7', 'inactive15'].includes(item.activityStatus)).length,
+        inactive15Days: activeDevices.filter((item) => item.activityStatus === 'inactive15').length,
+        trialDevices: trials.length,
+        activeTrials: trials.filter((item) => item.authorizationState === 'active').length,
+        releaseDownloads: details.downloads.reduce((total, item) => total + item.downloadCount, 0),
+        apiRequests: details.apiRoutes.reduce((total, item) => total + item.requestCount, 0),
+        companionTrialVisits: details.featureTotals
+          .filter((item) => item.feature === 'trial_visit' && item.category === 'companion')
+          .reduce((total, item) => total + item.count, 0)
+      },
+      devices: deviceRows,
+      downloads: details.downloads,
+      apiRoutes: details.apiRoutes,
+      featureTotals: details.featureTotals,
+      featureEvents: details.featureEvents
+    };
+  }
+
   normalizeEvent(source, index, license = null, now = Date.now()) {
     if (!source || typeof source !== 'object' || Array.isArray(source)) invalidEvent(index, '格式无效');
     const eventId = clean(source.eventId, 160);
@@ -215,6 +286,18 @@ function parseDateOnly(value) {
     throw new HttpError(400, '日期格式无效', 'INVALID_ANALYTICS_RANGE');
   }
   return date;
+}
+
+function earlierDate(left, right) {
+  if (!left) return right;
+  if (!right) return left;
+  return Date.parse(left) <= Date.parse(right) ? left : right;
+}
+
+function laterDate(left, right) {
+  if (!left) return right;
+  if (!right) return left;
+  return Date.parse(left) >= Date.parse(right) ? left : right;
 }
 
 module.exports = {

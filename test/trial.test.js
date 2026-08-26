@@ -28,6 +28,12 @@ test('online trial starts once and cannot be extended by the local clock', async
   assert.equal(first.allowed, true);
   assert.ok(first.remainingSeconds > 23 * 60 * 60);
   assert.ok(first.remainingSeconds <= 24 * 60 * 60);
+  const trialRecord = store.database.prepare(`
+    SELECT started_at, expires_at FROM trials WHERE installation_id = ?
+  `).get(installationId);
+  const storedDuration = Date.parse(trialRecord.expires_at) - Date.parse(trialRecord.started_at);
+  assert.ok(storedDuration >= 7 * 24 * 60 * 60 * 1000 - 1000);
+  assert.ok(storedDuration <= 7 * 24 * 60 * 60 * 1000 + 1000);
   const authenticated = service.authenticate({
     headers: { authorization: `Trial ${installationId}.${credential}` }
   });

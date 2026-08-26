@@ -176,6 +176,18 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
     storageBytes: gif.length
   });
   assert.equal(adminStats.payload.daily.length, 1);
+  assert.equal(adminStats.payload.pairs.length, 1);
+  assert.deepEqual(
+    new Set([
+      adminStats.payload.pairs[0].firstAccountId,
+      adminStats.payload.pairs[0].secondAccountId
+    ]),
+    new Set([first.accountId, second.accountId])
+  );
+  assert.equal(adminStats.payload.profiles.length, 2);
+  assert.equal(adminStats.payload.recentDeliveries.length, 1);
+  assert.equal(adminStats.payload.recentDeliveries[0].source, 'pair');
+  assert.equal(adminStats.payload.recentDeliveries[0].status, 'received');
   assert.deepEqual(
     Object.fromEntries(['sent', 'received', 'expired'].map((key) => [key, adminStats.payload.daily[0][key]])),
     { sent: 2, received: 1, expired: 1 }
@@ -390,6 +402,7 @@ test('hall users can see online strangers and send a GIF with a message', async 
   assert.equal(pending.payload.deliveries.length, 1);
   assert.equal(pending.payload.deliveries[0].senderName, '大厅访客甲');
   assert.equal(pending.payload.deliveries[0].message, message);
+  assert.equal(application.companionStore.adminStats().recentDeliveries[0].source, 'hall');
 
   await fetch(`${baseUrl}/api/companion/hall`, {
     method: 'PATCH',

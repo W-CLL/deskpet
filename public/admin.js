@@ -111,6 +111,12 @@ const elements = {
   companionUpdatedAt: document.querySelector('#companionUpdatedAt'),
   companionRows: document.querySelector('#companionRows'),
   emptyCompanions: document.querySelector('#emptyCompanions'),
+  companionPairRows: document.querySelector('#companionPairRows'),
+  emptyCompanionPairs: document.querySelector('#emptyCompanionPairs'),
+  companionProfileRows: document.querySelector('#companionProfileRows'),
+  emptyCompanionProfiles: document.querySelector('#emptyCompanionProfiles'),
+  companionDeliveryRows: document.querySelector('#companionDeliveryRows'),
+  emptyCompanionDeliveries: document.querySelector('#emptyCompanionDeliveries'),
   analyticsForm: document.querySelector('#analyticsForm'),
   analyticsFrom: document.querySelector('#analyticsFrom'),
   analyticsTo: document.querySelector('#analyticsTo'),
@@ -126,6 +132,22 @@ const elements = {
   analyticsPlatformRows: document.querySelector('#analyticsPlatformRows'),
   analyticsCohortRows: document.querySelector('#analyticsCohortRows'),
   analyticsEmpty: document.querySelector('#analyticsEmpty'),
+  usageReleaseDownloads: document.querySelector('#usageReleaseDownloads'),
+  usageTrackedDevices: document.querySelector('#usageTrackedDevices'),
+  usageOnlineDevices: document.querySelector('#usageOnlineDevices'),
+  usageInactive7: document.querySelector('#usageInactive7'),
+  usageInactive15: document.querySelector('#usageInactive15'),
+  usageTrialDevices: document.querySelector('#usageTrialDevices'),
+  usageActiveTrials: document.querySelector('#usageActiveTrials'),
+  usageCompanionVisits: document.querySelector('#usageCompanionVisits'),
+  usageApiRequests: document.querySelector('#usageApiRequests'),
+  usageUpdatedAt: document.querySelector('#usageUpdatedAt'),
+  usageDownloadRows: document.querySelector('#usageDownloadRows'),
+  emptyUsageDownloads: document.querySelector('#emptyUsageDownloads'),
+  usageDeviceRows: document.querySelector('#usageDeviceRows'),
+  emptyUsageDevices: document.querySelector('#emptyUsageDevices'),
+  usageFeatureRows: document.querySelector('#usageFeatureRows'),
+  usageApiRows: document.querySelector('#usageApiRows'),
   refreshContentButton: document.querySelector('#refreshContentButton'),
   contentCatalogVersion: document.querySelector('#contentCatalogVersion'),
   contentActive: document.querySelector('#contentActive'),
@@ -1236,6 +1258,56 @@ function renderCompanions(payload) {
     elements.companionRows.append(row);
   }
   elements.emptyCompanions.hidden = daily.length > 0;
+
+  const pairs = payload.pairs || [];
+  elements.companionPairRows.replaceChildren();
+  for (const item of pairs) {
+    const row = document.createElement('tr');
+    row.append(
+      cell('', item.firstName),
+      cell('hash', `…${item.firstAccountSuffix}`),
+      cell('', item.secondName),
+      cell('hash', `…${item.secondAccountSuffix}`),
+      cell('', formatDate(item.pairedAt))
+    );
+    elements.companionPairRows.append(row);
+  }
+  elements.emptyCompanionPairs.hidden = pairs.length > 0;
+
+  const profiles = payload.profiles || [];
+  elements.companionProfileRows.replaceChildren();
+  for (const item of profiles) {
+    const hall = item.hallEnabled ? (item.online ? '大厅在线' : '大厅离线') : '未开启';
+    const row = document.createElement('tr');
+    row.append(
+      cell('', item.displayName),
+      cell('hash', `…${item.accountSuffix}`),
+      cell('', item.partner ? `${item.partner.displayName} · …${item.partner.accountSuffix}` : '未绑定'),
+      cell('', hall),
+      cell('', item.lastSeenAt ? formatDate(item.lastSeenAt) : '-'),
+      cell('', formatDate(item.updatedAt))
+    );
+    elements.companionProfileRows.append(row);
+  }
+  elements.emptyCompanionProfiles.hidden = profiles.length > 0;
+
+  const deliveries = payload.recentDeliveries || [];
+  elements.companionDeliveryRows.replaceChildren();
+  const deliveryStatus = { received: '已领取', pending: '待领取', expired: '已过期' };
+  for (const item of deliveries) {
+    const row = document.createElement('tr');
+    row.append(
+      cell('', item.source === 'hall' ? '陌生人大厅' : '绑定搭子'),
+      cell('', `${item.sender.displayName} · …${item.sender.accountSuffix}`),
+      cell('', `${item.recipient.displayName} · …${item.recipient.accountSuffix}`),
+      cell('', item.message || '-'),
+      cell('', formatBytes(item.size)),
+      cell('', deliveryStatus[item.status] || item.status),
+      cell('', formatDate(item.createdAt))
+    );
+    elements.companionDeliveryRows.append(row);
+  }
+  elements.emptyCompanionDeliveries.hidden = deliveries.length > 0;
 }
 
 async function loadCompanions() {
@@ -1575,6 +1647,7 @@ function renderAnalytics(payload) {
   elements.analyticsInstallRate.textContent = formatAnalyticsRate(funnel.installRate);
   elements.analyticsDownloadActivationRate.textContent = formatAnalyticsRate(funnel.downloadToActivationRate);
   elements.analyticsWeeklyActive.textContent = String(activity.weeklyActiveDevices || 0);
+  renderUsage(payload.usage || {});
 
   elements.analyticsPlatformRows.replaceChildren();
   for (const item of payload.platforms || []) {
@@ -1603,6 +1676,94 @@ function renderAnalytics(payload) {
       || (payload.platforms || []).length || (payload.retention?.cohorts || []).length
   );
   elements.analyticsEmpty.hidden = hasData;
+}
+
+function renderUsage(usage) {
+  const summary = usage.summary || {};
+  elements.usageReleaseDownloads.textContent = String(summary.releaseDownloads || 0);
+  elements.usageTrackedDevices.textContent = String(summary.trackedDevices || 0);
+  elements.usageOnlineDevices.textContent = String(summary.onlineDevices || 0);
+  elements.usageInactive7.textContent = String(summary.inactive7Days || 0);
+  elements.usageInactive15.textContent = String(summary.inactive15Days || 0);
+  elements.usageTrialDevices.textContent = String(summary.trialDevices || 0);
+  elements.usageActiveTrials.textContent = `当前有效 ${summary.activeTrials || 0}`;
+  elements.usageCompanionVisits.textContent = String(summary.companionTrialVisits || 0);
+  elements.usageApiRequests.textContent = String(summary.apiRequests || 0);
+  elements.usageUpdatedAt.textContent = usage.generatedAt ? `更新于 ${formatDate(usage.generatedAt)}` : '-';
+
+  elements.usageDownloadRows.replaceChildren();
+  for (const item of usage.downloads || []) {
+    const row = document.createElement('tr');
+    row.append(
+      cell('', item.platform),
+      cell('', item.architecture),
+      cell('', item.version),
+      cell('', item.downloadCount),
+      cell('', formatDate(item.lastDownloadAt))
+    );
+    elements.usageDownloadRows.append(row);
+  }
+  elements.emptyUsageDownloads.hidden = (usage.downloads || []).length > 0;
+
+  const activityLabels = {
+    online: '在线', recent: '近期活跃', inactive7: '7 天不活跃',
+    inactive15: '15 天不活跃', revoked: '已撤销', expired: '体验已过期'
+  };
+  elements.usageDeviceRows.replaceChildren();
+  for (const item of usage.devices || []) {
+    const row = document.createElement('tr');
+    row.append(
+      cell('hash', `…${item.installationSuffix || '-'}`),
+      cell('hash', item.accountId ? `…${String(item.accountId).slice(-8)}` : '-'),
+      cell('', item.authorizationType === 'trial' ? '体验' : '正式授权'),
+      cell('', `${item.platform || 'unknown'} / ${item.architecture || 'unknown'}`),
+      cell('', item.appVersion || '-'),
+      cell('', formatDate(item.lastSeenAt)),
+      cell('', activityLabels[item.activityStatus] || item.activityStatus),
+      cell('', item.requestCount || 0),
+      cell('hash', item.lastPath || '-')
+    );
+    elements.usageDeviceRows.append(row);
+  }
+  elements.emptyUsageDevices.hidden = (usage.devices || []).length > 0;
+
+  const featureLabels = {
+    trial_visit: '体验来访', companion_pair: '绑定搭子', companion_unpair: '解除搭子',
+    companion_send: '发送给搭子', companion_hall_send: '大厅发送',
+    companion_hall_open: '开启大厅', companion_hall_close: '关闭大厅'
+  };
+  const categoryLabels = { girlfriend: '女友', friend: '好友', companion: '搭子' };
+  elements.usageFeatureRows.replaceChildren();
+  for (const item of usage.featureEvents || []) {
+    const feature = `${featureLabels[item.feature] || item.feature}${item.category ? ` · ${categoryLabels[item.category] || item.category}` : ''}`;
+    const owner = item.accountId
+      ? `账号 …${String(item.accountId).slice(-8)} / 设备 …${item.installationSuffix || '-'}`
+      : `体验设备 …${item.installationSuffix || '-'}`;
+    const row = document.createElement('tr');
+    row.append(
+      cell('', feature),
+      cell('hash', owner),
+      cell('', `${item.platform || 'unknown'} ${item.appVersion || ''}`.trim()),
+      cell('', formatDate(item.occurredAt))
+    );
+    elements.usageFeatureRows.append(row);
+  }
+
+  elements.usageApiRows.replaceChildren();
+  for (const item of usage.apiRoutes || []) {
+    const successRate = item.requestCount > 0
+      ? formatAnalyticsRate(item.successfulRequests / item.requestCount)
+      : '-';
+    const row = document.createElement('tr');
+    row.append(
+      cell('hash', `${item.method} ${item.path}`),
+      cell('', `${item.platform || 'unknown'} ${item.appVersion || ''}`.trim()),
+      cell('', item.requestCount),
+      cell('', `${item.successfulRequests} · ${successRate}`),
+      cell('', formatDate(item.lastSeenAt))
+    );
+    elements.usageApiRows.append(row);
+  }
 }
 
 async function loadAnalytics() {

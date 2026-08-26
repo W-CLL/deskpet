@@ -425,6 +425,20 @@ dialog h2 {
   min-width: 0;
 }
 
+.usage-heading {
+  margin-top: 8px;
+}
+
+.usage-table-wrap table,
+.usage-tables table,
+.companion-detail-table {
+  min-width: 820px;
+}
+
+.usage-device-table {
+  min-width: 1180px !important;
+}
+
 .metric-item {
   position: relative;
   display: grid;

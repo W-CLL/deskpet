@@ -106,10 +106,13 @@ class AdminController {
   }
 
   analytics(req, res) {
-    res.status(200).json(this.analyticsService.summary({
-      from: queryValue(req, 'from') || undefined,
-      to: queryValue(req, 'to') || undefined
-    }));
+    res.status(200).json({
+      ...this.analyticsService.summary({
+        from: queryValue(req, 'from') || undefined,
+        to: queryValue(req, 'to') || undefined
+      }),
+      usage: this.analyticsService.usageSummary(this.activationService.devices())
+    });
   }
 
   content(_req, res) {

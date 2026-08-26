@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=visit-stickers-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=usage-details-1">
 </head>
 <body>
   <main class="app-root">
@@ -518,6 +518,52 @@
                 <article class="metric-item"><span>安装成功率</span><strong id="analyticsInstallRate">-</strong><small>首次启动设备 / 下载访客</small></article>
                 <article class="metric-item"><span>下载到激活</span><strong id="analyticsDownloadActivationRate">-</strong><small>激活设备 / 首次启动设备</small></article>
                 <article class="metric-item"><span>每周活跃设备</span><strong id="analyticsWeeklyActive">0</strong><small>最近 7 天去重设备</small></article>
+                <article class="metric-item metric-primary"><span>真实安装包下载</span><strong id="usageReleaseDownloads">0</strong><small>服务端实际开始传输的版本包</small></article>
+                <article class="metric-item"><span>记录设备</span><strong id="usageTrackedDevices">0</strong><small>正式授权与体验设备合计</small></article>
+                <article class="metric-item"><span>当前在线</span><strong id="usageOnlineDevices">0</strong><small>最近 5 分钟调用过授权接口</small></article>
+                <article class="metric-item"><span>7 天不活跃</span><strong id="usageInactive7">0</strong><small>有效设备中至少 7 天未调用</small></article>
+                <article class="metric-item"><span>15 天不活跃</span><strong id="usageInactive15">0</strong><small>有效设备中至少 15 天未调用</small></article>
+                <article class="metric-item"><span>体验设备</span><strong id="usageTrialDevices">0</strong><small id="usageActiveTrials">当前有效 0</small></article>
+                <article class="metric-item"><span>搭子来访体验</span><strong id="usageCompanionVisits">0</strong><small>体验期选择“搭子来访”次数</small></article>
+                <article class="metric-item"><span>接口请求</span><strong id="usageApiRequests">0</strong><small>部署统计后累计客户端请求</small></article>
+              </div>
+
+              <div class="panel-heading usage-heading">
+                <div><p class="eyebrow">实际文件传输</p><h2>版本下载次数</h2></div>
+                <span id="usageUpdatedAt" class="panel-note">-</span>
+              </div>
+              <div class="table-wrap usage-table-wrap">
+                <table>
+                  <thead><tr><th>平台</th><th>架构</th><th>版本</th><th>下载次数</th><th>最近下载</th></tr></thead>
+                  <tbody id="usageDownloadRows"></tbody>
+                </table>
+                <p id="emptyUsageDownloads" class="empty-state" hidden>部署统计后还没有版本下载</p>
+              </div>
+
+              <div class="panel-heading usage-heading">
+                <div><p class="eyebrow">接口心跳</p><h2>设备在线与活跃明细</h2></div>
+              </div>
+              <div class="table-wrap usage-table-wrap">
+                <table class="usage-device-table">
+                  <thead><tr><th>设备</th><th>账号</th><th>授权</th><th>平台 / 架构</th><th>版本</th><th>最近活动</th><th>状态</th><th>接口次数</th><th>最近接口</th></tr></thead>
+                  <tbody id="usageDeviceRows"></tbody>
+                </table>
+                <p id="emptyUsageDevices" class="empty-state" hidden>暂无设备记录</p>
+              </div>
+
+              <div class="analytics-tables usage-tables">
+                <div>
+                  <div class="panel-heading usage-heading"><div><p class="eyebrow">功能事件</p><h2>最近使用明细</h2></div></div>
+                  <div class="table-wrap">
+                    <table><thead><tr><th>功能</th><th>设备 / 账号</th><th>平台版本</th><th>时间</th></tr></thead><tbody id="usageFeatureRows"></tbody></table>
+                  </div>
+                </div>
+                <div>
+                  <div class="panel-heading usage-heading"><div><p class="eyebrow">统一中间件</p><h2>接口调用明细</h2></div></div>
+                  <div class="table-wrap">
+                    <table><thead><tr><th>接口</th><th>平台版本</th><th>请求</th><th>成功</th><th>最近调用</th></tr></thead><tbody id="usageApiRows"></tbody></table>
+                  </div>
+                </div>
               </div>
 
               <div class="analytics-tables">
@@ -633,6 +679,15 @@
                 </table>
                 <p id="emptyCompanions" class="empty-state" hidden>近 14 天暂无联机投递</p>
               </div>
+
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">当前关系</p><h2>谁和谁绑定</h2></div></div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>第一位</th><th>账号</th><th>第二位</th><th>账号</th><th>绑定时间</th></tr></thead><tbody id="companionPairRows"></tbody></table><p id="emptyCompanionPairs" class="empty-state" hidden>当前没有搭子绑定</p></div>
+
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">账号状态</p><h2>联机档案明细</h2></div></div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>昵称</th><th>账号</th><th>当前搭子</th><th>大厅</th><th>最近在线</th><th>最近更新</th></tr></thead><tbody id="companionProfileRows"></tbody></table><p id="emptyCompanionProfiles" class="empty-state" hidden>暂无联机档案</p></div>
+
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">最近 200 条</p><h2>投递明细</h2></div></div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>来源</th><th>发送方</th><th>接收方</th><th>留言</th><th>大小</th><th>状态</th><th>时间</th></tr></thead><tbody id="companionDeliveryRows"></tbody></table><p id="emptyCompanionDeliveries" class="empty-state" hidden>暂无搭子投递</p></div>
             </section>
           </section>
 
@@ -1083,6 +1138,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=visit-stickers-1" defer></script>
+  <script src="/assets/admin.js?v=usage-details-1" defer></script>
 </body>
 </html>

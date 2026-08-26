@@ -42,11 +42,15 @@ class PublicController {
   }
 
   async activate(req, res) {
-    res.status(200).json(await this.activationService.activate(req, req.body));
+    const result = await this.activationService.activate(req, req.body);
+    res.locals.activatedLicense = result;
+    res.status(200).json(result);
   }
 
   async trial(req, res) {
-    res.status(200).json(await this.activationService.trial(req, req.body));
+    const result = await this.activationService.trial(req, req.body);
+    res.locals.trialStarted = true;
+    res.status(200).json(result);
   }
 
   feedback(req, res) {
@@ -150,7 +154,13 @@ class PublicController {
   }
 
   playTrialVisit(req, res) {
-    res.status(200).json(this.visitStickerService.play(req, req.body));
+    const result = this.visitStickerService.play(req, req.body);
+    res.locals.usageFeature = {
+      feature: 'trial_visit',
+      category: result.category,
+      detail: result.id
+    };
+    res.status(200).json(result);
   }
 
   trialVisitFile(req, res) {
@@ -214,6 +224,7 @@ class PublicController {
 
   async download(req, res, next) {
     const item = await this.releaseService.download(req, req.params.fileName);
+    res.locals.releaseDownload = item.release;
     res.status(item.range ? 206 : 200);
     res.setHeader('Accept-Ranges', 'bytes');
     res.setHeader(

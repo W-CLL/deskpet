@@ -184,6 +184,17 @@ test('admin can upload categorized visit stickers and trial devices play them', 
   assert.equal(tooSoon.response.status, 429);
   assert.equal(tooSoon.payload.code, 'VISIT_STICKER_COOLDOWN');
 
+  const analytics = await jsonResponse(await fetch(`${baseUrl}/api/admin/analytics`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(analytics.response.status, 200);
+  const visitTotal = analytics.payload.usage.featureTotals.find((item) => (
+    item.feature === 'trial_visit' && item.category === 'girlfriend'
+  ));
+  assert.equal(visitTotal.count, 1);
+  assert.equal(analytics.payload.usage.featureEvents[0].feature, 'trial_visit');
+  assert.equal(analytics.payload.usage.featureEvents[0].installationSuffix, installationId.slice(-8));
+
   const code = application.activationStore.createCodes({ count: 1 }).codes[0];
   const paidCredential = crypto.randomBytes(32).toString('base64url');
   const activated = await jsonResponse(await fetch(`${baseUrl}/api/activate`, {

@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const { queryValue } = require('../http/request-context');
 
 class PublicController {
   constructor({
@@ -92,6 +93,14 @@ class PublicController {
     res.status(200).json(this.companionService.profile(req));
   }
 
+  companionHall(req, res) {
+    res.status(200).json(this.companionService.hall(req));
+  }
+
+  updateCompanionHall(req, res) {
+    res.status(200).json(this.companionService.updateHall(req, req.body));
+  }
+
   updateCompanionProfile(req, res) {
     res.status(200).json(this.companionService.updateProfile(req, req.body));
   }
@@ -106,6 +115,15 @@ class PublicController {
 
   async sendCompanionGif(req, res) {
     res.status(201).json(await this.companionService.send(req, req.body));
+  }
+
+  async sendHallCompanionGif(req, res) {
+    res.status(201).json(await this.companionService.sendHall(
+      req,
+      req.body,
+      req.params.recipientId,
+      queryValue(req, 'message')
+    ));
   }
 
   companionDeliveries(req, res) {

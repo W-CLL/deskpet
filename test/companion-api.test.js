@@ -309,3 +309,105 @@ test('two devices on one account each receive the same companion visit', async (
   }));
   assert.equal(secondSend.response.status, 201);
 });
+
+test('hall users can see online strangers and send a GIF with a message', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-companion-hall-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const authRecord = await hashPassword('test admin password 123');
+  await fs.promises.writeFile(
+    path.join(dataDirectory, 'auth.json'),
+    JSON.stringify(authRecord),
+    { mode: 0o600 }
+  );
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey,
+    companionOptions: { cooldownMs: 0 }
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const first = await activate(application, baseUrl);
+  const second = await activate(application, baseUrl);
+  const jsonHeaders = (headers) => ({ ...headers, 'Content-Type': 'application/json' });
+  await fetch(`${baseUrl}/api/companion`, {
+    method: 'PATCH',
+    headers: jsonHeaders(first.headers),
+    body: JSON.stringify({ displayName: '大厅访客甲' })
+  });
+  await fetch(`${baseUrl}/api/companion`, {
+    method: 'PATCH',
+    headers: jsonHeaders(second.headers),
+    body: JSON.stringify({ displayName: '大厅访客乙' })
+  });
+  const firstHall = await jsonResponse(await fetch(`${baseUrl}/api/companion/hall`, {
+    method: 'PATCH',
+    headers: jsonHeaders(first.headers),
+    body: JSON.stringify({ enabled: true })
+  }));
+  assert.equal(firstHall.response.status, 200);
+  const secondHall = await jsonResponse(await fetch(`${baseUrl}/api/companion/hall`, {
+    method: 'PATCH',
+    headers: jsonHeaders(second.headers),
+    body: JSON.stringify({ enabled: true })
+  }));
+  assert.equal(secondHall.response.status, 200);
+
+  const hall = await jsonResponse(await fetch(`${baseUrl}/api/companion/hall`, {
+    headers: first.headers
+  }));
+  assert.equal(hall.response.status, 200);
+  assert.equal(hall.payload.enabled, true);
+  assert.deepEqual(
+    hall.payload.people.map(({ id, displayName, online }) => ({ id, displayName, online })),
+    [{ id: second.accountId, displayName: '大厅访客乙', online: true }]
+  );
+
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+  const message = '来玩呀，给你一只小表情';
+  const sent = await jsonResponse(await fetch(
+    `${baseUrl}/api/companion/hall/deliveries/${encodeURIComponent(second.accountId)}?message=${encodeURIComponent(message)}`,
+    {
+      method: 'POST',
+      headers: { ...first.headers, 'Content-Type': 'image/gif' },
+      body: gif
+    }
+  ));
+  assert.equal(sent.response.status, 201);
+  assert.equal(sent.payload.recipientName, '大厅访客乙');
+
+  const pending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: second.headers
+  }));
+  assert.equal(pending.payload.deliveries.length, 1);
+  assert.equal(pending.payload.deliveries[0].senderName, '大厅访客甲');
+  assert.equal(pending.payload.deliveries[0].message, message);
+
+  await fetch(`${baseUrl}/api/companion/hall`, {
+    method: 'PATCH',
+    headers: jsonHeaders(second.headers),
+    body: JSON.stringify({ enabled: false })
+  });
+  const hiddenHall = await jsonResponse(await fetch(`${baseUrl}/api/companion/hall`, {
+    headers: first.headers
+  }));
+  assert.deepEqual(hiddenHall.payload.people, []);
+  const offline = await jsonResponse(await fetch(
+    `${baseUrl}/api/companion/hall/deliveries/${encodeURIComponent(second.accountId)}`,
+    {
+      method: 'POST',
+      headers: { ...first.headers, 'Content-Type': 'image/gif' },
+      body: gif
+    }
+  ));
+  assert.equal(offline.response.status, 409);
+  assert.equal(offline.payload.code, 'COMPANION_HALL_RECIPIENT_OFFLINE');
+});

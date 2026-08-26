@@ -57,6 +57,12 @@ function createPublicRouter(controller) {
     (req, res) => controller.contentOfflinePack(req, res)
   );
   router.get('/api/companion', (req, res) => controller.companionProfile(req, res));
+  router.get('/api/companion/hall', (req, res) => controller.companionHall(req, res));
+  router.patch(
+    '/api/companion/hall',
+    ...jsonBody(4096),
+    (req, res) => controller.updateCompanionHall(req, res)
+  );
   router.patch(
     '/api/companion',
     ...jsonBody(4096),
@@ -76,6 +82,11 @@ function createPublicRouter(controller) {
     '/api/companion/deliveries',
     express.raw({ type: 'image/gif', limit: MAX_GIF_BYTES }),
     (req, res) => controller.sendCompanionGif(req, res)
+  );
+  router.post(
+    '/api/companion/hall/deliveries/:recipientId',
+    express.raw({ type: 'image/gif', limit: MAX_GIF_BYTES }),
+    (req, res) => controller.sendHallCompanionGif(req, res)
   );
   router.get(
     '/api/companion/deliveries/:id/file',

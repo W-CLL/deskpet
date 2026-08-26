@@ -29,8 +29,10 @@ function mapStoreError(error) {
     ['发送太快，请稍后再试', [429, 'COMPANION_RATE_LIMITED']],
     ['对方还有未查看的来访', [409, 'COMPANION_QUEUE_FULL']]
   ]);
+  mappings.set('HALL_SENDER_DISABLED', [409, 'COMPANION_HALL_DISABLED', '请先打开桌宠大厅']);
+  mappings.set('HALL_RECIPIENT_OFFLINE', [409, 'COMPANION_HALL_RECIPIENT_OFFLINE', '对方已经离线']);
   const mapping = mappings.get(error?.message);
-  return mapping ? new HttpError(mapping[0], error.message, mapping[1]) : error;
+  return mapping ? new HttpError(mapping[0], mapping[2] || error.message, mapping[1]) : error;
 }
 
 class CompanionService {
@@ -50,6 +52,19 @@ class CompanionService {
   profile(req) {
     const license = this.requireAccount(req);
     return this.companionStore.profile(license.accountId);
+  }
+
+  hall(req) {
+    const license = this.requireAccount(req);
+    return this.companionStore.hall(license.accountId);
+  }
+
+  updateHall(req, body) {
+    const license = this.requireAccount(req);
+    if (typeof body?.enabled !== 'boolean') {
+      throw new HttpError(400, 'Invalid companion hall setting', 'INVALID_COMPANION_HALL_SETTING');
+    }
+    return this.companionStore.setHallEnabled(license.accountId, body.enabled);
   }
 
   updateProfile(req, body) {
@@ -93,6 +108,33 @@ class CompanionService {
         sha256: crypto.createHash('sha256').update(buffer).digest('hex'),
         width,
         height
+      });
+    } catch (error) {
+      await fs.promises.rm(filePath, { force: true });
+      throw mapStoreError(error);
+    }
+  }
+
+  async sendHall(req, buffer, recipientId, message) {
+    const license = this.requireAccount(req);
+    const target = String(recipientId || '').trim();
+    if (!target || target.length > 128) {
+      throw new HttpError(400, 'Invalid hall recipient', 'INVALID_COMPANION_HALL_RECIPIENT');
+    }
+    const { width, height } = inspectGif(buffer);
+    const id = crypto.randomUUID();
+    const fileName = `${id}.gif`;
+    const filePath = path.join(this.companionStore.filesDirectory, fileName);
+    await fs.promises.writeFile(filePath, buffer, { flag: 'wx', mode: 0o600 });
+    try {
+      return this.companionStore.createHallDelivery(license.accountId, target, {
+        id,
+        fileName,
+        size: buffer.length,
+        sha256: crypto.createHash('sha256').update(buffer).digest('hex'),
+        width,
+        height,
+        message
       });
     } catch (error) {
       await fs.promises.rm(filePath, { force: true });

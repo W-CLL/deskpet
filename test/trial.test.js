@@ -41,6 +41,21 @@ test('online trial starts once and cannot be extended by the local clock', async
   assert.equal(authenticated.trial, true);
 
   store.database.prepare('UPDATE trials SET expires_at = ? WHERE installation_id = ?')
+    .run(new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), installationId);
+  const midWindow = store.trialStatus({ installationId, credential });
+  assert.equal(midWindow.allowed, true);
+  assert.equal(midWindow.remainingSeconds, 24 * 60 * 60);
+  assert.equal(store.authenticateTrial(`Trial ${installationId}.${credential}`)?.installationId, installationId);
+
+  store.database.prepare('UPDATE trials SET expires_at = ? WHERE installation_id = ?')
+    .run(new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(), installationId);
+  const lastDay = store.trialStatus({ installationId, credential });
+  assert.equal(lastDay.allowed, true);
+  assert.ok(lastDay.remainingSeconds > 11 * 60 * 60);
+  assert.ok(lastDay.remainingSeconds <= 12 * 60 * 60);
+  assert.equal(store.authenticateTrial(`Trial ${installationId}.${credential}`)?.installationId, installationId);
+
+  store.database.prepare('UPDATE trials SET expires_at = ? WHERE installation_id = ?')
     .run(new Date(Date.now() - 1000).toISOString(), installationId);
   const expired = store.trialStatus({ installationId, credential });
   assert.equal(expired.allowed, false);

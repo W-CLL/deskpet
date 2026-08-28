@@ -9,6 +9,7 @@ const { createApplication, signedManifestPayload } = require('../server');
 const { hashPassword, verifyPassword } = require('../lib/security');
 const { ReleaseStore } = require('../lib/storage');
 const { AnalyticsService } = require('../src/services/analytics-service');
+const { AnalyticsStore } = require('../lib/analytics-store');
 
 async function jsonResponse(response) {
   const payload = await response.json();
@@ -28,7 +29,7 @@ test('usage summary separates online, 7-day and 15-day inactive devices', () => 
   const service = new AnalyticsService({
     analyticsStore: {
       usageDetails: () => ({
-        devices: [], downloads: [], apiRoutes: [], featureTotals: [], featureEvents: []
+        devices: [], downloads: [], apiRequestTotal: 0, apiRoutes: [], featureTotals: [], featureEvents: []
       })
     },
     config: {}
@@ -45,6 +46,36 @@ test('usage summary separates online, 7-day and 15-day inactive devices', () => 
   assert.equal(usage.summary.inactive7Days, 2);
   assert.equal(usage.summary.inactive15Days, 1);
   assert.equal(usage.devices.find((item) => item.deviceKey === 'revoked').activityStatus, 'revoked');
+});
+
+test('usage summary apiRequests is the full daily total, not the top-200 listing', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-usage-api-'));
+  const store = new AnalyticsStore(dataDirectory);
+  context.after(async () => {
+    store.close();
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+  await store.initialize();
+
+  for (let index = 0; index < 210; index += 1) {
+    store.recordRequest({
+      method: 'GET',
+      path: `/api/demo/${index}`,
+      platform: 'windows',
+      appVersion: '3.2.3',
+      status: 200,
+      occurredAt: '2026-08-26T12:00:00.000Z'
+    });
+  }
+
+  const details = store.usageDetails();
+  assert.equal(details.apiRequestTotal, 210);
+  assert.equal(details.apiRoutes.length, 200);
+
+  const service = new AnalyticsService({ analyticsStore: store, config: {} });
+  const usage = service.usageSummary([], Date.parse('2026-08-26T12:00:00.000Z'));
+  assert.equal(usage.summary.apiRequests, 210);
+  assert.equal(usage.apiRoutes.length, 200);
 });
 
 test('admin shell includes the Android management hooks used by admin.js', async () => {

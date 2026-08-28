@@ -176,7 +176,7 @@ class AnalyticsService {
         trialDevices: trials.length,
         activeTrials: trials.filter((item) => item.authorizationState === 'active').length,
         releaseDownloads: details.downloads.reduce((total, item) => total + item.downloadCount, 0),
-        apiRequests: details.apiRoutes.reduce((total, item) => total + item.requestCount, 0),
+        apiRequests: Number(details.apiRequestTotal || 0),
         companionTrialVisits: details.featureTotals
           .filter((item) => item.feature === 'trial_visit' && item.category === 'companion')
           .reduce((total, item) => total + item.count, 0)

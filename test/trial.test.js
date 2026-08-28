@@ -31,6 +31,8 @@ test('online trial starts once and cannot be extended by the local clock', async
   const trialRecord = store.database.prepare(`
     SELECT started_at, expires_at FROM trials WHERE installation_id = ?
   `).get(installationId);
+  assert.equal(first.expiresAt, trialRecord.expires_at);
+  assert.ok(first.serverTime);
   const storedDuration = Date.parse(trialRecord.expires_at) - Date.parse(trialRecord.started_at);
   assert.ok(storedDuration >= 7 * 24 * 60 * 60 * 1000 - 1000);
   assert.ok(storedDuration <= 7 * 24 * 60 * 60 * 1000 + 1000);
@@ -65,4 +67,70 @@ test('online trial starts once and cannot be extended by the local clock', async
     installationId,
     credential: crypto.randomBytes(32).toString('base64url')
   }), null);
+});
+
+test('activating a device clears its trial and does not start another', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-trial-activate-'));
+  const store = new ActivationStore(dataDirectory);
+  context.after(async () => {
+    store.close();
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+  await store.initialize();
+
+  const firstInstallationId = crypto.randomBytes(16).toString('hex');
+  const firstCredential = crypto.randomBytes(32).toString('base64url');
+  const secondInstallationId = crypto.randomBytes(16).toString('hex');
+  const secondCredential = crypto.randomBytes(32).toString('base64url');
+  assert.equal(store.trialStatus({
+    installationId: firstInstallationId,
+    credential: firstCredential,
+    appVersion: '3.2.5'
+  }).allowed, true);
+  assert.equal(store.trialStatus({
+    installationId: secondInstallationId,
+    credential: secondCredential,
+    appVersion: '3.2.5'
+  }).allowed, true);
+
+  const code = store.createCodes({ count: 1, expiresInDays: 30 }).codes[0];
+  const first = store.activate({
+    code,
+    installationId: firstInstallationId,
+    credential: firstCredential,
+    appVersion: '3.2.5',
+    platform: 'windows'
+  });
+  assert.ok(first.licenseId);
+  assert.equal(store.database.prepare(
+    'SELECT COUNT(*) AS count FROM trials WHERE installation_id = ?'
+  ).get(firstInstallationId).count, 0);
+  assert.equal(store.authenticateTrial(`Trial ${firstInstallationId}.${firstCredential}`), null);
+  const afterActivate = store.trialStatus({
+    installationId: firstInstallationId,
+    credential: firstCredential
+  });
+  assert.equal(afterActivate.allowed, false);
+  assert.equal(afterActivate.remainingSeconds, 0);
+  assert.equal(store.database.prepare(
+    'SELECT COUNT(*) AS count FROM trials WHERE installation_id = ?'
+  ).get(firstInstallationId).count, 0);
+
+  const second = store.activate({
+    code,
+    installationId: secondInstallationId,
+    credential: secondCredential,
+    appVersion: '3.2.5',
+    platform: 'android'
+  });
+  assert.equal(second.accountId, first.accountId);
+  assert.equal(store.database.prepare(
+    'SELECT COUNT(*) AS count FROM trials WHERE installation_id = ?'
+  ).get(secondInstallationId).count, 0);
+  const inventory = store.deviceInventory();
+  assert.equal(inventory.filter((item) => item.authorizationType === 'trial').length, 0);
+  assert.equal(
+    inventory.filter((item) => item.authorizationType === 'license' && item.authorizationState === 'active').length,
+    2
+  );
 });

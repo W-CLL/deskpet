@@ -4,9 +4,11 @@ const {
   normalizePlatform,
   normalizeVersion
 } = require('../../lib/storage');
+const { dateKey } = require('../../lib/analytics-store');
 const { collapseNewlines: clean } = require('../../lib/text');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
+const { trialDeviceKey } = require('../middleware/usage-tracking');
 
 const EVENT_ID_PATTERN = /^[A-Za-z0-9:_-]{8,160}$/;
 const VISITOR_ID_PATTERN = /^[A-Za-z0-9_-]{12,100}$/;
@@ -25,19 +27,6 @@ const PUBLIC_EVENT_TYPES = new Set([
   'app_session_start',
   'app_daily_active'
 ]);
-
-function dateKey(date) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Shanghai',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(date).reduce((result, part) => {
-    if (part.type !== 'literal') result[part.type] = part.value;
-    return result;
-  }, {});
-  return `${parts.year}-${parts.month}-${parts.day}`;
-}
 
 function hashInstallationId(value) {
   return crypto.createHash('sha256').update(`deskpet-analytics-v1:${value}`).digest('hex');
@@ -128,6 +117,10 @@ class AnalyticsService {
 
   recordFeature(event) {
     this.analyticsStore.recordFeature(event);
+  }
+
+  forgetTrialDevice(installationId) {
+    this.analyticsStore.removeUsageDevice(trialDeviceKey(installationId));
   }
 
   usageSummary(inventory = [], now = Date.now()) {

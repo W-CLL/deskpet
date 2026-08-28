@@ -64,6 +64,7 @@ async function createApplication(options = {}) {
     visitStickerStore.initialize()
   ]);
   interactionStore.pruneRawEvents();
+  analyticsStore.pruneUsage();
 
   const signingKeySource = options.signingPrivateKey
     || await fs.promises.readFile(config.signingPrivateKeyPath);
@@ -202,6 +203,7 @@ async function createApplication(options = {}) {
   const interactionCleanupTimer = setInterval(() => {
     interactionService.cleanup();
     analyticsStore.pruneRawEvents();
+    analyticsStore.pruneUsage();
   }, 6 * 60 * 60 * 1000);
   interactionCleanupTimer.unref();
   const companionCleanupTimer = setInterval(() => {

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=usage-details-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=remote-config-1">
 </head>
 <body>
   <main class="app-root">
@@ -171,12 +171,50 @@
                       <button id="copyManifestButton" class="button button-secondary" type="button">复制地址</button>
                     </span>
                   </div>
-                  <form id="siteSettingsForm" class="address-field">
-                    <label for="xianyuUrl">官网闲鱼交易链接</label>
-                    <span class="copy-row">
+                  <form id="siteSettingsForm" class="remote-config">
+                    <div class="address-field">
+                      <label for="xianyuUrl">官网闲鱼交易链接</label>
                       <input id="xianyuUrl" type="url" inputmode="url" maxlength="500" placeholder="https://www.goofish.com/...">
-                      <button id="saveSiteSettingsButton" class="button button-secondary" type="submit">保存</button>
-                    </span>
+                    </div>
+                    <div class="address-field">
+                      <label for="wechatId">客服微信号</label>
+                      <input id="wechatId" type="text" maxlength="32" placeholder="wcl_lcw627" autocomplete="off">
+                    </div>
+                    <div class="address-field">
+                      <label for="announcement">客户端公告（可空）</label>
+                      <input id="announcement" type="text" maxlength="120" placeholder="只显示给已安装的客户端">
+                    </div>
+                    <fieldset class="remote-flags">
+                      <legend>远程功能开关</legend>
+                      <label><input id="featureTrialVisits" type="checkbox"> 体验来访</label>
+                      <label><input id="featureCompanionHall" type="checkbox"> 搭子大厅</label>
+                      <label><input id="featureFishMode" type="checkbox"> 摸鱼广告</label>
+                      <label><input id="featureAutoUpdates" type="checkbox"> 自动检查更新</label>
+                    </fieldset>
+                    <div class="remote-defaults">
+                      <label for="defaultPersonality">新安装默认性格</label>
+                      <select id="defaultPersonality">
+                        <option value="lively">活泼</option>
+                        <option value="shy">害羞</option>
+                        <option value="clingy">黏人</option>
+                        <option value="chaotic">混乱</option>
+                      </select>
+                      <label for="defaultInteractionMode">新安装默认互动</label>
+                      <select id="defaultInteractionMode">
+                        <option value="quiet">安静</option>
+                        <option value="standard">标准</option>
+                        <option value="lively">热闹</option>
+                      </select>
+                      <label for="defaultTheaterInterval">新安装默认剧场间隔</label>
+                      <select id="defaultTheaterInterval">
+                        <option value="60">1 分钟</option>
+                        <option value="180">3 分钟</option>
+                        <option value="300">5 分钟</option>
+                        <option value="600">10 分钟</option>
+                        <option value="1800">30 分钟</option>
+                      </select>
+                    </div>
+                    <button id="saveSiteSettingsButton" class="button button-secondary" type="submit">保存远程配置</button>
                   </form>
                 </div>
               </section>
@@ -1138,6 +1176,6 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin.js?v=usage-details-1" defer></script>
+  <script src="/assets/admin.js?v=remote-config-1" defer></script>
 </body>
 </html>

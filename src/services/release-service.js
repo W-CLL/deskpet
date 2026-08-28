@@ -128,10 +128,14 @@ class ReleaseService {
   async updateSiteSettings(req, body) {
     let settings;
     try {
-      settings = await this.releaseStore.updateSiteSettings(body?.xianyuUrl);
+      settings = await this.releaseStore.updateSiteSettings(body);
     } catch (error) {
-      if (/闲鱼链接|闲鱼 HTTPS 链接/.test(error?.message || '')) {
-        throw new HttpError(400, error.message, 'INVALID_XIANYU_URL');
+      const message = error?.message || '';
+      if (/闲鱼链接|闲鱼 HTTPS 链接/.test(message)) {
+        throw new HttpError(400, message, 'INVALID_XIANYU_URL');
+      }
+      if (/微信号/.test(message)) {
+        throw new HttpError(400, message, 'INVALID_WECHAT_ID');
       }
       throw error;
     }
@@ -139,7 +143,8 @@ class ReleaseService {
       action: 'update_site_settings',
       outcome: 'success',
       ip: clientIp(req, this.config),
-      xianyuEnabled: Boolean(settings.xianyuUrl)
+      xianyuEnabled: Boolean(settings.xianyuUrl),
+      features: settings.features
     });
     return settings;
   }

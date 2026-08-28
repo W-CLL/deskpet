@@ -21,6 +21,15 @@ const elements = {
   manifestUrl: document.querySelector('#manifestUrl'),
   siteSettingsForm: document.querySelector('#siteSettingsForm'),
   xianyuUrl: document.querySelector('#xianyuUrl'),
+  wechatId: document.querySelector('#wechatId'),
+  announcement: document.querySelector('#announcement'),
+  featureTrialVisits: document.querySelector('#featureTrialVisits'),
+  featureCompanionHall: document.querySelector('#featureCompanionHall'),
+  featureFishMode: document.querySelector('#featureFishMode'),
+  featureAutoUpdates: document.querySelector('#featureAutoUpdates'),
+  defaultPersonality: document.querySelector('#defaultPersonality'),
+  defaultInteractionMode: document.querySelector('#defaultInteractionMode'),
+  defaultTheaterInterval: document.querySelector('#defaultTheaterInterval'),
   saveSiteSettingsButton: document.querySelector('#saveSiteSettingsButton'),
   copyManifestButton: document.querySelector('#copyManifestButton'),
   uploadForm: document.querySelector('#uploadForm'),
@@ -1796,10 +1805,24 @@ async function loadDashboard() {
   ]);
 }
 
+function fillSiteSettings(settings) {
+  elements.xianyuUrl.value = settings.xianyuUrl || '';
+  elements.wechatId.value = settings.wechatId || '';
+  elements.announcement.value = settings.announcement || '';
+  const features = settings.features || {};
+  elements.featureTrialVisits.checked = features.trialVisits !== false;
+  elements.featureCompanionHall.checked = features.companionHall !== false;
+  elements.featureFishMode.checked = features.fishMode !== false;
+  elements.featureAutoUpdates.checked = features.autoUpdates !== false;
+  const defaults = settings.defaults || {};
+  elements.defaultPersonality.value = defaults.personality || 'lively';
+  elements.defaultInteractionMode.value = defaults.interactionMode || 'standard';
+  elements.defaultTheaterInterval.value = String(defaults.theaterIntervalSeconds || 300);
+}
+
 async function loadSiteSettings() {
   try {
-    const settings = await api('/api/admin/site-settings');
-    elements.xianyuUrl.value = settings.xianyuUrl || '';
+    fillSiteSettings(await api('/api/admin/site-settings'));
   } catch (error) {
     showToast(error.message, 'error');
   }
@@ -1898,10 +1921,25 @@ elements.siteSettingsForm.addEventListener('submit', async (event) => {
   try {
     const settings = await api('/api/admin/site-settings', {
       method: 'PUT',
-      body: { xianyuUrl: elements.xianyuUrl.value.trim() }
+      body: {
+        xianyuUrl: elements.xianyuUrl.value.trim(),
+        wechatId: elements.wechatId.value.trim(),
+        announcement: elements.announcement.value.trim(),
+        features: {
+          trialVisits: elements.featureTrialVisits.checked,
+          companionHall: elements.featureCompanionHall.checked,
+          fishMode: elements.featureFishMode.checked,
+          autoUpdates: elements.featureAutoUpdates.checked
+        },
+        defaults: {
+          personality: elements.defaultPersonality.value,
+          interactionMode: elements.defaultInteractionMode.value,
+          theaterIntervalSeconds: Number(elements.defaultTheaterInterval.value)
+        }
+      }
     });
-    elements.xianyuUrl.value = settings.xianyuUrl || '';
-    showToast(settings.xianyuUrl ? '官网闲鱼入口已更新' : '官网闲鱼入口已隐藏');
+    fillSiteSettings(settings);
+    showToast('远程配置已保存');
   } catch (error) {
     showToast(error.message, 'error');
   } finally {

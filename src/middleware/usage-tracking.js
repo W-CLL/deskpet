@@ -43,14 +43,22 @@ function responseIdentity(req, res, initial) {
   return null;
 }
 
-function normalizedPath(req) {
-  const path = String(req.originalUrl || req.url || '/').split('?', 1)[0];
-  if (path.startsWith('/downloads/')) return '/downloads/:fileName';
-  return path
-    .replace(/\/api\/companion\/hall\/deliveries\/[^/]+$/, '/api/companion/hall/deliveries/:recipientId')
-    .replace(/\/api\/companion\/deliveries\/[^/]+\/(file|acknowledge)$/, '/api/companion/deliveries/:id/$1')
-    .replace(/\/api\/trial\/visit-stickers\/[^/]+\/file$/, '/api/trial/visit-stickers/:id/file')
-    .replace(/\/resource-packs\/[^/]+\/download$/, '/resource-packs/:id/download');
+function normalizedPath(req, status = 0) {
+  const raw = String(req.originalUrl || req.url || '/').split('?', 1)[0];
+  if (status === 404) {
+    if (raw.startsWith('/downloads/')) return '/downloads/:unmatched';
+    if (raw.startsWith('/api/')) return '/api/:unmatched';
+  }
+  let path = raw;
+  if (path.startsWith('/downloads/')) path = '/downloads/:fileName';
+  else {
+    path = path
+      .replace(/\/api\/companion\/hall\/deliveries\/[^/]+$/, '/api/companion/hall/deliveries/:recipientId')
+      .replace(/\/api\/companion\/deliveries\/[^/]+\/(file|acknowledge)$/, '/api/companion/deliveries/:id/$1')
+      .replace(/\/api\/trial\/visit-stickers\/[^/]+\/file$/, '/api/trial/visit-stickers/:id/file')
+      .replace(/\/resource-packs\/[^/]+\/download$/, '/resource-packs/:id/download');
+  }
+  return path.slice(0, 160);
 }
 
 function detectedFeature(req, path) {
@@ -71,9 +79,9 @@ function detectedFeature(req, path) {
 
 function createUsageTracking({ activationService, analyticsService }) {
   return function trackUsage(req, res, next) {
-    const path = normalizedPath(req);
-    if ((!path.startsWith('/api/') && !path.startsWith('/downloads/'))
-      || path.startsWith('/api/admin/')
+    const trackedPath = String(req.originalUrl || req.url || '/').split('?', 1)[0];
+    if ((!trackedPath.startsWith('/api/') && !trackedPath.startsWith('/downloads/'))
+      || trackedPath.startsWith('/api/admin/')
       || req.method === 'OPTIONS') {
       next();
       return;
@@ -82,6 +90,7 @@ function createUsageTracking({ activationService, analyticsService }) {
     try { identity = identityFromLicense(activationService.authenticate(req)); } catch { }
     res.once('finish', () => {
       try {
+        const path = normalizedPath(req, res.statusCode);
         identity = responseIdentity(req, res, identity);
         const platform = String(
           req.headers['x-deskpet-platform'] || identity?.platform || res.locals.releaseDownload?.platform || 'unknown'

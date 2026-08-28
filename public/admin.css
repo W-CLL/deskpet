@@ -852,6 +852,42 @@ input[readonly] {
   font-weight: 700;
 }
 
+.remote-config {
+  display: grid;
+  gap: 12px;
+}
+
+.remote-flags,
+.remote-defaults {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.remote-flags legend {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.remote-flags label,
+.remote-defaults label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.remote-defaults select {
+  min-height: 34px;
+}
+
 .release-editor-heading {
   display: flex;
   align-items: center;

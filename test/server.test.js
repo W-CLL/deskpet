@@ -78,6 +78,54 @@ test('usage summary apiRequests is the full daily total, not the top-200 listing
   assert.equal(usage.apiRoutes.length, 200);
 });
 
+test('usage request dates use Asia/Shanghai and unknown API paths collapse', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-usage-path-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const authRecord = await hashPassword('usage path password 123');
+  await fs.promises.writeFile(path.join(dataDirectory, 'auth.json'), JSON.stringify(authRecord), { mode: 0o600 });
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const firstUnknown = await fetch(`${baseUrl}/api/no-such/route/a`);
+  assert.equal(firstUnknown.status, 404);
+  await firstUnknown.text();
+  const secondUnknown = await fetch(`${baseUrl}/api/no-such/other`);
+  assert.equal(secondUnknown.status, 404);
+  await secondUnknown.text();
+
+  const rows = application.analyticsStore.database.prepare(`
+    SELECT path, SUM(request_count) AS request_count FROM usage_api_daily GROUP BY path
+  `).all();
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].path, '/api/:unmatched');
+  assert.equal(Number(rows[0].request_count), 2);
+
+  application.analyticsStore.recordRequest({
+    method: 'GET',
+    path: '/api/trial',
+    platform: 'windows',
+    appVersion: '3.2.5',
+    status: 200,
+    occurredAt: '2026-08-26T16:30:00.000Z'
+  });
+  const shanghai = application.analyticsStore.database.prepare(`
+    SELECT date FROM usage_api_daily WHERE path = '/api/trial'
+  `).get();
+  assert.equal(shanghai.date, '2026-08-27');
+});
+
 test('admin shell includes the Android management hooks used by admin.js', async () => {
   const publicDirectory = path.join(__dirname, '..', 'public');
   const [adminMarkup, adminScript] = await Promise.all([
@@ -89,10 +137,14 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
   assert.match(adminMarkup, /id="androidDeviceRows"/);
   assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
-  assert.match(adminMarkup, /admin\.js\?v=usage-details-1/);
+  assert.match(adminMarkup, /admin\.js\?v=remote-config-1/);
+  assert.match(adminMarkup, /id="featureTrialVisits"/);
+  assert.match(adminMarkup, /id="defaultPersonality"/);
   assert.match(adminScript, /if \(elements\.manageAndroidReleasesButton\)/);
   assert.match(adminScript, /if \(elements\.manageAndroidDevicesButton\)/);
   assert.match(adminScript, /renderVisitStickers/);
+  assert.match(adminScript, /features: \{/);
+  assert.match(adminScript, /theaterIntervalSeconds/);
 });
 
 test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {
@@ -310,6 +362,9 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
     headers: { Cookie: cookie }
   }));
   assert.equal(initialSiteSettings.payload.xianyuUrl, '');
+  assert.equal(initialSiteSettings.payload.wechatId, 'wcl_lcw627');
+  assert.equal(initialSiteSettings.payload.features.trialVisits, true);
+  assert.equal(initialSiteSettings.payload.defaults.personality, 'lively');
 
   const invalidSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/admin/site-settings`, {
     method: 'PUT',
@@ -331,10 +386,36 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken
     },
-    body: JSON.stringify({ xianyuUrl })
+    body: JSON.stringify({
+      xianyuUrl,
+      wechatId: 'deskpet_support',
+      announcement: '今晚体验来访暂停维护',
+      features: { trialVisits: false, companionHall: false, fishMode: true, autoUpdates: false },
+      defaults: { personality: 'shy', interactionMode: 'quiet', theaterIntervalSeconds: 600 }
+    })
   }));
   assert.equal(updatedSiteSettings.response.status, 200);
   assert.equal(updatedSiteSettings.payload.xianyuUrl, xianyuUrl);
+  assert.equal(updatedSiteSettings.payload.wechatId, 'deskpet_support');
+  assert.equal(updatedSiteSettings.payload.announcement, '今晚体验来访暂停维护');
+  assert.equal(updatedSiteSettings.payload.features.trialVisits, false);
+  assert.equal(updatedSiteSettings.payload.features.companionHall, false);
+  assert.equal(updatedSiteSettings.payload.features.autoUpdates, false);
+  assert.equal(updatedSiteSettings.payload.defaults.personality, 'shy');
+  assert.equal(updatedSiteSettings.payload.defaults.interactionMode, 'quiet');
+  assert.equal(updatedSiteSettings.payload.defaults.theaterIntervalSeconds, 600);
+
+  const invalidWechat = await jsonResponse(await fetch(`${baseUrl}/api/admin/site-settings`, {
+    method: 'PUT',
+    headers: {
+      Cookie: cookie,
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({ wechatId: 'bad wechat' })
+  }));
+  assert.equal(invalidWechat.response.status, 400);
+  assert.equal(invalidWechat.payload.code, 'INVALID_WECHAT_ID');
 
   const publicSiteSettings = await jsonResponse(await fetch(`${baseUrl}/api/public/site-settings`, {
     headers: { Origin: 'https://desktoppet.online' }
@@ -342,10 +423,12 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(publicSiteSettings.response.status, 200);
   assert.equal(publicSiteSettings.response.headers.get('access-control-allow-origin'), 'https://desktoppet.online');
   assert.equal(publicSiteSettings.payload.xianyuUrl, xianyuUrl);
+  assert.equal(publicSiteSettings.payload.features.trialVisits, false);
   const releaseMetadata = JSON.parse(
     await fs.promises.readFile(path.join(dataDirectory, 'releases.json'), 'utf8')
   );
   assert.equal(releaseMetadata.siteSettings.xianyuUrl, xianyuUrl);
+  assert.equal(releaseMetadata.siteSettings.features.companionHall, false);
 
   const executable = Buffer.from('MZ deskpet release test payload', 'utf8');
   const releaseInfo = {

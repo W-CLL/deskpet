@@ -1,6 +1,7 @@
 const { LoginRateLimiter } = require('../../lib/security');
 const { HttpError } = require('../errors/http-error');
 const { clientIp } = require('../http/request-context');
+const { trialDeviceKey } = require('../middleware/usage-tracking');
 
 const DEFAULT_IP_RATE_OPTIONS = {
   maxFailures: 8,
@@ -208,6 +209,7 @@ class ActivationService {
       licenseId: license.licenseId
     });
     this.analyticsService?.recordActivation(req, license, body);
+    this.analyticsService?.forgetTrialDevice(installationId);
     return license;
   }
 

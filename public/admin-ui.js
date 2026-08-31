@@ -113,6 +113,9 @@
   function createListView(name, { emptyElement, renderPage, matches }) {
     const controls = document.querySelector(`[data-list-controls="${name}"]`);
     const pagination = document.querySelector(`[data-list-pagination="${name}"]`);
+    if (!pagination) {
+      throw new Error(`缺少分页容器：${name}`);
+    }
     const filterElements = Array.from(controls?.querySelectorAll('[data-list-filter]') || []);
     const pageSize = document.createElement('select');
     pageSize.setAttribute('aria-label', '每页显示条数');

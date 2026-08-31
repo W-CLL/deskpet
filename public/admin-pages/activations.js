@@ -57,29 +57,34 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
     }
   }
 
+  const androidListView = createListView('android-devices', {
+    emptyElement: byId('emptyAndroidDevices'),
+    renderPage(devices) {
+      fillTable(byId('androidDeviceRows'), devices, (item) => {
+        const active = item.license.status === 'active';
+        return [
+          stackedCell(
+            'license-cell',
+            `设备 …${item.license.installationSuffix}`,
+            item.account ? `账号 …${item.account.suffix}` : '账号 -'
+          ),
+          cell('', `v${item.license.appVersion || '-'}`),
+          cell('', item.license.architecture || 'unknown'),
+          badgeCell(active ? '有效' : '已撤销', active ? 'active' : 'revoked'),
+          cell('', item.license.lastUpdateAt ? formatDate(item.license.lastUpdateAt) : '尚未检查更新')
+        ];
+      });
+    },
+    matches: (item, filters) => (!filters.architecture || item.license.architecture === filters.architecture)
+      && (!filters.status || item.license.status === filters.status)
+  });
+
   function renderAndroidDevices(codes) {
-    const rows = byId('androidDeviceRows');
-    const empty = byId('emptyAndroidDevices');
-    if (!rows || !empty) return;
     const androidDevices = codes
       .flatMap((item) => (item.licenses || (item.license ? [item.license] : []))
         .filter((license) => license.platform === 'android')
-        .map((license) => ({ ...item, license })))
-      .slice(0, 12);
-    fillTable(rows, androidDevices, (item) => {
-      const active = item.license.status === 'active';
-      return [
-        stackedCell(
-          'license-cell',
-          `设备 …${item.license.installationSuffix}`,
-          item.account ? `账号 …${item.account.suffix}` : '账号 -'
-        ),
-        cell('', `v${item.license.appVersion || '-'}`),
-        cell('', item.license.architecture || 'unknown'),
-        badgeCell(active ? '有效' : '已撤销', active ? 'active' : 'revoked'),
-        cell('', item.license.lastUpdateAt ? formatDate(item.license.lastUpdateAt) : '尚未检查更新')
-      ];
-    }, empty);
+        .map((license) => ({ ...item, license })));
+    androidListView.setItems(androidDevices);
   }
 
   const listView = createListView('activations', {

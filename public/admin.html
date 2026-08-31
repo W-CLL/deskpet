@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=admin-pages-1">
+  <link rel="stylesheet" href="/assets/admin.css?v=admin-pages-2">
 </head>
 <body>
   <main class="app-root">
@@ -294,6 +294,24 @@
                   </div>
                   <button id="manageAndroidDevicesButton" class="button button-secondary" type="button">全部授权</button>
                 </div>
+                <div class="list-toolbar" data-list-controls="android-devices">
+                  <label>
+                    <span>架构</span>
+                    <select data-list-filter="architecture">
+                      <option value="">全部架构</option>
+                      <option value="arm64-v8a">ARM64</option>
+                      <option value="armeabi-v7a">ARMv7</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>状态</span>
+                    <select data-list-filter="status">
+                      <option value="">全部状态</option>
+                      <option value="active">有效</option>
+                      <option value="revoked">已撤销</option>
+                    </select>
+                  </label>
+                </div>
                 <div class="table-wrap android-device-table-wrap">
                   <table class="android-device-table">
                     <thead>
@@ -309,6 +327,7 @@
                   </table>
                   <p id="emptyAndroidDevices" class="empty-state" hidden>暂无 Android 授权设备</p>
                 </div>
+                <div class="list-pagination" data-list-pagination="android-devices"></div>
               </section>
             </div>
           </section>
@@ -570,6 +589,17 @@
                 <div><p class="eyebrow">实际文件传输</p><h2>版本下载次数</h2></div>
                 <span id="usageUpdatedAt" class="panel-note">-</span>
               </div>
+              <div class="list-toolbar" data-list-controls="usage-downloads">
+                <label>
+                  <span>平台</span>
+                  <select data-list-filter="platform">
+                    <option value="">全部平台</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="android">Android</option>
+                  </select>
+                </label>
+              </div>
               <div class="table-wrap usage-table-wrap">
                 <table>
                   <thead><tr><th>平台</th><th>架构</th><th>版本</th><th>下载次数</th><th>最近下载</th></tr></thead>
@@ -577,9 +607,32 @@
                 </table>
                 <p id="emptyUsageDownloads" class="empty-state" hidden>部署统计后还没有版本下载</p>
               </div>
+              <div class="list-pagination" data-list-pagination="usage-downloads"></div>
 
               <div class="panel-heading usage-heading">
                 <div><p class="eyebrow">接口心跳</p><h2>设备在线与活跃明细</h2></div>
+              </div>
+              <div class="list-toolbar" data-list-controls="usage-devices">
+                <label>
+                  <span>授权</span>
+                  <select data-list-filter="authorization">
+                    <option value="">全部授权</option>
+                    <option value="license">正式授权</option>
+                    <option value="trial">体验</option>
+                  </select>
+                </label>
+                <label>
+                  <span>状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="online">在线</option>
+                    <option value="recent">近期活跃</option>
+                    <option value="inactive7">7 天不活跃</option>
+                    <option value="inactive15">15 天不活跃</option>
+                    <option value="revoked">已撤销</option>
+                    <option value="expired">体验已过期</option>
+                  </select>
+                </label>
               </div>
               <div class="table-wrap usage-table-wrap">
                 <table class="usage-device-table">
@@ -588,19 +641,39 @@
                 </table>
                 <p id="emptyUsageDevices" class="empty-state" hidden>暂无设备记录</p>
               </div>
+              <div class="list-pagination" data-list-pagination="usage-devices"></div>
 
               <div class="analytics-tables usage-tables">
                 <div>
                   <div class="panel-heading usage-heading"><div><p class="eyebrow">功能事件</p><h2>最近使用明细</h2></div></div>
+                  <div class="list-toolbar" data-list-controls="usage-features">
+                    <label>
+                      <span>功能</span>
+                      <select data-list-filter="feature">
+                        <option value="">全部功能</option>
+                        <option value="trial_visit">体验来访</option>
+                        <option value="companion_pair">绑定搭子</option>
+                        <option value="companion_unpair">解除搭子</option>
+                        <option value="companion_send">发送给搭子</option>
+                        <option value="companion_hall_send">大厅发送</option>
+                        <option value="companion_hall_open">开启大厅</option>
+                        <option value="companion_hall_close">关闭大厅</option>
+                      </select>
+                    </label>
+                  </div>
                   <div class="table-wrap">
                     <table><thead><tr><th>功能</th><th>设备 / 账号</th><th>平台版本</th><th>时间</th></tr></thead><tbody id="usageFeatureRows"></tbody></table>
+                    <p id="emptyUsageFeatures" class="empty-state" hidden>暂无功能事件</p>
                   </div>
+                  <div class="list-pagination" data-list-pagination="usage-features"></div>
                 </div>
                 <div>
                   <div class="panel-heading usage-heading"><div><p class="eyebrow">统一中间件</p><h2>接口调用明细</h2></div></div>
                   <div class="table-wrap">
                     <table><thead><tr><th>接口</th><th>平台版本</th><th>请求</th><th>成功</th><th>最近调用</th></tr></thead><tbody id="usageApiRows"></tbody></table>
+                    <p id="emptyUsageApi" class="empty-state" hidden>暂无接口调用</p>
                   </div>
+                  <div class="list-pagination" data-list-pagination="usage-api"></div>
                 </div>
               </div>
 
@@ -611,11 +684,15 @@
                     <tbody id="analyticsPlatformRows"></tbody>
                   </table>
                 </div>
-                <div class="table-wrap">
-                  <table>
-                    <thead><tr><th>激活 cohort</th><th>设备数</th><th>D1</th><th>D7</th><th>D30</th></tr></thead>
-                    <tbody id="analyticsCohortRows"></tbody>
-                  </table>
+                <div>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>激活 cohort</th><th>设备数</th><th>D1</th><th>D7</th><th>D30</th></tr></thead>
+                      <tbody id="analyticsCohortRows"></tbody>
+                    </table>
+                    <p id="emptyAnalyticsCohorts" class="empty-state" hidden>当前区间暂无 cohort 数据</p>
+                  </div>
+                  <div class="list-pagination" data-list-pagination="analytics-cohorts"></div>
                 </div>
               </div>
               <p id="analyticsEmpty" class="empty-state" hidden>当前区间暂无增长数据</p>
@@ -720,12 +797,53 @@
 
               <div class="panel-heading companion-history-heading"><div><p class="eyebrow">当前关系</p><h2>谁和谁绑定</h2></div></div>
               <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>第一位</th><th>账号</th><th>第二位</th><th>账号</th><th>绑定时间</th></tr></thead><tbody id="companionPairRows"></tbody></table><p id="emptyCompanionPairs" class="empty-state" hidden>当前没有搭子绑定</p></div>
+              <div class="list-pagination" data-list-pagination="companion-pairs"></div>
 
               <div class="panel-heading companion-history-heading"><div><p class="eyebrow">账号状态</p><h2>联机档案明细</h2></div></div>
+              <div class="list-toolbar" data-list-controls="companion-profiles">
+                <label>
+                  <span>大厅</span>
+                  <select data-list-filter="hall">
+                    <option value="">全部状态</option>
+                    <option value="online">大厅在线</option>
+                    <option value="offline">大厅离线</option>
+                    <option value="disabled">未开启</option>
+                  </select>
+                </label>
+                <label>
+                  <span>绑定</span>
+                  <select data-list-filter="paired">
+                    <option value="">全部账号</option>
+                    <option value="paired">已绑定</option>
+                    <option value="unpaired">未绑定</option>
+                  </select>
+                </label>
+              </div>
               <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>昵称</th><th>账号</th><th>当前搭子</th><th>大厅</th><th>最近在线</th><th>最近更新</th></tr></thead><tbody id="companionProfileRows"></tbody></table><p id="emptyCompanionProfiles" class="empty-state" hidden>暂无联机档案</p></div>
+              <div class="list-pagination" data-list-pagination="companion-profiles"></div>
 
               <div class="panel-heading companion-history-heading"><div><p class="eyebrow">最近 200 条</p><h2>投递明细</h2></div></div>
+              <div class="list-toolbar" data-list-controls="companion-deliveries">
+                <label>
+                  <span>来源</span>
+                  <select data-list-filter="source">
+                    <option value="">全部来源</option>
+                    <option value="pair">绑定搭子</option>
+                    <option value="hall">陌生人大厅</option>
+                  </select>
+                </label>
+                <label>
+                  <span>状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="received">已领取</option>
+                    <option value="pending">待领取</option>
+                    <option value="expired">已过期</option>
+                  </select>
+                </label>
+              </div>
               <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>来源</th><th>发送方</th><th>接收方</th><th>留言</th><th>大小</th><th>状态</th><th>时间</th></tr></thead><tbody id="companionDeliveryRows"></tbody></table><p id="emptyCompanionDeliveries" class="empty-state" hidden>暂无搭子投递</p></div>
+              <div class="list-pagination" data-list-pagination="companion-deliveries"></div>
             </section>
           </section>
 
@@ -1176,17 +1294,17 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin-ui.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/settings.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/releases.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/resource-packs.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/visit-stickers.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/activations.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/interactions.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/companions.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/analytics.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/content.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin-pages/feedback.js?v=admin-pages-1" defer></script>
-  <script src="/assets/admin.js?v=admin-pages-1" defer></script>
+  <script src="/assets/admin-ui.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/settings.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/releases.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/resource-packs.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/visit-stickers.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/activations.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/interactions.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/companions.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/analytics.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/content.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-pages/feedback.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin.js?v=admin-pages-2" defer></script>
 </body>
 </html>

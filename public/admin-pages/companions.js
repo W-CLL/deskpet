@@ -1,7 +1,60 @@
 registerAdminPage(function createCompanionsPage({ ui }) {
   const {
-    byId, setText, bindClick, formatBytes, formatDate, formatRate, cell, fillTable, loadJson
+    byId, setText, bindClick, formatBytes, formatDate, formatRate, cell, fillTable,
+    createListView, loadJson
   } = ui;
+
+  function hallStatus(item) {
+    if (!item.hallEnabled) return 'disabled';
+    return item.online ? 'online' : 'offline';
+  }
+
+  const pairList = createListView('companion-pairs', {
+    emptyElement: byId('emptyCompanionPairs'),
+    renderPage(items) {
+      fillTable(byId('companionPairRows'), items, (item) => [
+        cell('', item.firstName),
+        cell('hash', `…${item.firstAccountSuffix}`),
+        cell('', item.secondName),
+        cell('hash', `…${item.secondAccountSuffix}`),
+        cell('', formatDate(item.pairedAt))
+      ]);
+    }
+  });
+
+  const profileList = createListView('companion-profiles', {
+    emptyElement: byId('emptyCompanionProfiles'),
+    renderPage(items) {
+      fillTable(byId('companionProfileRows'), items, (item) => [
+        cell('', item.displayName),
+        cell('hash', `…${item.accountSuffix}`),
+        cell('', item.partner ? `${item.partner.displayName} · …${item.partner.accountSuffix}` : '未绑定'),
+        cell('', item.hallEnabled ? (item.online ? '大厅在线' : '大厅离线') : '未开启'),
+        cell('', item.lastSeenAt ? formatDate(item.lastSeenAt) : '-'),
+        cell('', formatDate(item.updatedAt))
+      ]);
+    },
+    matches: (item, filters) => (!filters.hall || hallStatus(item) === filters.hall)
+      && (!filters.paired || (item.partner ? 'paired' : 'unpaired') === filters.paired)
+  });
+
+  const deliveryStatus = { received: '已领取', pending: '待领取', expired: '已过期' };
+  const deliveryList = createListView('companion-deliveries', {
+    emptyElement: byId('emptyCompanionDeliveries'),
+    renderPage(items) {
+      fillTable(byId('companionDeliveryRows'), items, (item) => [
+        cell('', item.source === 'hall' ? '陌生人大厅' : '绑定搭子'),
+        cell('', `${item.sender.displayName} · …${item.sender.accountSuffix}`),
+        cell('', `${item.recipient.displayName} · …${item.recipient.accountSuffix}`),
+        cell('', item.message || '-'),
+        cell('', formatBytes(item.size)),
+        cell('', deliveryStatus[item.status] || item.status),
+        cell('', formatDate(item.createdAt))
+      ]);
+    },
+    matches: (item, filters) => (!filters.source || item.source === filters.source)
+      && (!filters.status || item.status === filters.status)
+  });
 
   function renderCompanions(payload) {
     const summary = payload.summary || {};
@@ -29,34 +82,9 @@ registerAdminPage(function createCompanionsPage({ ui }) {
       cell('', item.expired),
       cell('', item.sent > 0 ? formatRate(item.received / item.sent) : '-')
     ], byId('emptyCompanions'));
-
-    fillTable(byId('companionPairRows'), payload.pairs || [], (item) => [
-      cell('', item.firstName),
-      cell('hash', `…${item.firstAccountSuffix}`),
-      cell('', item.secondName),
-      cell('hash', `…${item.secondAccountSuffix}`),
-      cell('', formatDate(item.pairedAt))
-    ], byId('emptyCompanionPairs'));
-
-    fillTable(byId('companionProfileRows'), payload.profiles || [], (item) => [
-      cell('', item.displayName),
-      cell('hash', `…${item.accountSuffix}`),
-      cell('', item.partner ? `${item.partner.displayName} · …${item.partner.accountSuffix}` : '未绑定'),
-      cell('', item.hallEnabled ? (item.online ? '大厅在线' : '大厅离线') : '未开启'),
-      cell('', item.lastSeenAt ? formatDate(item.lastSeenAt) : '-'),
-      cell('', formatDate(item.updatedAt))
-    ], byId('emptyCompanionProfiles'));
-
-    const deliveryStatus = { received: '已领取', pending: '待领取', expired: '已过期' };
-    fillTable(byId('companionDeliveryRows'), payload.recentDeliveries || [], (item) => [
-      cell('', item.source === 'hall' ? '陌生人大厅' : '绑定搭子'),
-      cell('', `${item.sender.displayName} · …${item.sender.accountSuffix}`),
-      cell('', `${item.recipient.displayName} · …${item.recipient.accountSuffix}`),
-      cell('', item.message || '-'),
-      cell('', formatBytes(item.size)),
-      cell('', deliveryStatus[item.status] || item.status),
-      cell('', formatDate(item.createdAt))
-    ], byId('emptyCompanionDeliveries'));
+    pairList.setItems(payload.pairs || []);
+    profileList.setItems(payload.profiles || []);
+    deliveryList.setItems(payload.recentDeliveries || []);
   }
 
   async function loadCompanions() {

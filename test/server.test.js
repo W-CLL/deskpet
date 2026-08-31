@@ -141,16 +141,20 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminMarkup, /id="manageAndroidReleasesButton"/);
   assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
   assert.match(adminMarkup, /id="androidDeviceRows"/);
+  assert.match(adminMarkup, /data-list-pagination="android-devices"/);
+  assert.match(adminMarkup, /data-list-pagination="usage-devices"/);
+  assert.match(adminMarkup, /data-list-pagination="companion-deliveries"/);
   assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
-  assert.match(adminMarkup, /admin-ui\.js\?v=admin-pages-1/);
-  assert.match(adminMarkup, /admin-pages\/releases\.js\?v=admin-pages-1/);
-  assert.match(adminMarkup, /admin\.js\?v=admin-pages-1/);
+  assert.match(adminMarkup, /admin-ui\.js\?v=admin-pages-2/);
+  assert.match(adminMarkup, /admin-pages\/releases\.js\?v=admin-pages-2/);
+  assert.match(adminMarkup, /admin\.js\?v=admin-pages-2/);
   assert.match(adminMarkup, /id="featureTrialVisits"/);
   assert.match(adminMarkup, /id="defaultPersonality"/);
   assert.match(adminScript, /createAdminPages\(/);
   assert.match(adminScript, /function loadDashboard/);
   assert.match(releasesPage, /manageAndroidReleasesButton/);
   assert.match(activationsPage, /manageAndroidDevicesButton/);
+  assert.match(activationsPage, /createListView\('android-devices'/);
   assert.match(visitStickersPage, /renderVisitStickers/);
   assert.match(settingsPage, /features: \{/);
   assert.match(settingsPage, /theaterIntervalSeconds/);
@@ -347,12 +351,12 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(adminCss.headers.get('cache-control'), 'no-cache');
   assert.match(await adminCss.text(), /\.admin-shell\s*\{/);
 
-  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-1`);
+  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-2`);
   assert.equal(adminUi.status, 200);
   assert.equal(adminUi.headers.get('cache-control'), 'no-cache');
   assert.match(await adminUi.text(), /function createListView/);
 
-  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-1`);
+  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-2`);
   assert.equal(releasesPage.status, 200);
   assert.equal(releasesPage.headers.get('cache-control'), 'no-cache');
 

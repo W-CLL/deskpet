@@ -128,23 +128,38 @@ test('usage request dates use Asia/Shanghai and unknown API paths collapse', asy
 
 test('admin shell includes the Android management hooks used by admin.js', async () => {
   const publicDirectory = path.join(__dirname, '..', 'public');
-  const [adminMarkup, adminScript] = await Promise.all([
+  const [adminMarkup, adminScript, adminUi, releasesPage, activationsPage, visitStickersPage, settingsPage] = await Promise.all([
     fs.promises.readFile(path.join(publicDirectory, 'admin.html'), 'utf8'),
-    fs.promises.readFile(path.join(publicDirectory, 'admin.js'), 'utf8')
+    fs.promises.readFile(path.join(publicDirectory, 'admin.js'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin-ui.js'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin-pages/releases.js'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin-pages/activations.js'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin-pages/visit-stickers.js'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin-pages/settings.js'), 'utf8')
   ]);
   assert.match(adminMarkup, /data-page-panel="android"/);
   assert.match(adminMarkup, /id="manageAndroidReleasesButton"/);
   assert.match(adminMarkup, /id="manageAndroidDevicesButton"/);
   assert.match(adminMarkup, /id="androidDeviceRows"/);
   assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
-  assert.match(adminMarkup, /admin\.js\?v=remote-config-1/);
+  assert.match(adminMarkup, /admin-ui\.js\?v=admin-pages-1/);
+  assert.match(adminMarkup, /admin-pages\/releases\.js\?v=admin-pages-1/);
+  assert.match(adminMarkup, /admin\.js\?v=admin-pages-1/);
   assert.match(adminMarkup, /id="featureTrialVisits"/);
   assert.match(adminMarkup, /id="defaultPersonality"/);
-  assert.match(adminScript, /if \(elements\.manageAndroidReleasesButton\)/);
-  assert.match(adminScript, /if \(elements\.manageAndroidDevicesButton\)/);
-  assert.match(adminScript, /renderVisitStickers/);
-  assert.match(adminScript, /features: \{/);
-  assert.match(adminScript, /theaterIntervalSeconds/);
+  assert.match(adminScript, /createAdminPages\(/);
+  assert.match(adminScript, /function loadDashboard/);
+  assert.match(releasesPage, /manageAndroidReleasesButton/);
+  assert.match(activationsPage, /manageAndroidDevicesButton/);
+  assert.match(visitStickersPage, /renderVisitStickers/);
+  assert.match(settingsPage, /features: \{/);
+  assert.match(settingsPage, /theaterIntervalSeconds/);
+  assert.match(adminUi, /function createListView/);
+  assert.match(adminUi, /async function withBusy/);
+  assert.match(adminUi, /async function loadJson/);
+  assert.match(adminUi, /async function submitUpload/);
+  assert.match(adminUi, /function fillTable/);
+  assert.match(adminUi, /function registerAdminPage/);
 });
 
 test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {
@@ -331,6 +346,15 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(adminCss.status, 200);
   assert.equal(adminCss.headers.get('cache-control'), 'no-cache');
   assert.match(await adminCss.text(), /\.admin-shell\s*\{/);
+
+  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-1`);
+  assert.equal(adminUi.status, 200);
+  assert.equal(adminUi.headers.get('cache-control'), 'no-cache');
+  assert.match(await adminUi.text(), /function createListView/);
+
+  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-1`);
+  assert.equal(releasesPage.status, 200);
+  assert.equal(releasesPage.headers.get('cache-control'), 'no-cache');
 
   const adminScript = await fetch(`${baseUrl}/assets/admin.js?v=sidebar-1`);
   assert.equal(adminScript.status, 200);

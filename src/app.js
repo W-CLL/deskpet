@@ -181,10 +181,25 @@ async function createApplication(options = {}) {
     '/assets/admin.css',
     serveFile(path.join(publicDirectory, 'admin.css'), 'no-cache')
   );
-  app.get(
-    '/assets/admin.js',
-    serveFile(path.join(publicDirectory, 'admin.js'), 'no-cache')
-  );
+  for (const relativePath of [
+    'admin-ui.js',
+    'admin.js',
+    'admin-pages/settings.js',
+    'admin-pages/releases.js',
+    'admin-pages/resource-packs.js',
+    'admin-pages/visit-stickers.js',
+    'admin-pages/activations.js',
+    'admin-pages/interactions.js',
+    'admin-pages/companions.js',
+    'admin-pages/analytics.js',
+    'admin-pages/content.js',
+    'admin-pages/feedback.js'
+  ]) {
+    app.get(
+      `/assets/${relativePath}`,
+      serveFile(path.join(publicDirectory, relativePath), 'no-cache')
+    );
+  }
   app.get(
     '/assets/app-icon.png',
     serveFile(config.brandIconPath, 'public, max-age=3600')

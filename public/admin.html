@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light">
   <title>桌搭子更新中心</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <link rel="stylesheet" href="/assets/admin.css?v=admin-pages-2">
+  <link rel="stylesheet" href="/assets/admin.css?v=admin-pages-3">
 </head>
 <body>
   <main class="app-root">
@@ -778,6 +778,42 @@
                 <article class="metric-item"><span>GIF 存储</span><strong id="companionStorage">0 B</strong><small>服务器当前实际文件占用</small></article>
               </div>
 
+              <form id="companionSendForm" class="upload-form companion-send-form">
+                <section class="release-form-block">
+                  <div class="form-block-heading">
+                    <span class="form-block-index">01</span>
+                    <h3>发给在线设备</h3>
+                  </div>
+                  <p class="panel-note">选自己的桌宠账号当发送方，再选对方设备。走现有搭子来访，对方客户端自己来收。</p>
+                  <div class="resource-pack-form-grid">
+                    <label>
+                      <span>发送账号</span>
+                      <select id="companionSendSender" required>
+                        <option value="">先刷新列表</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>对方设备</span>
+                      <select id="companionSendRecipient" required>
+                        <option value="">暂无 5 分钟内在线设备</option>
+                      </select>
+                    </label>
+                    <label>
+                      <span>GIF</span>
+                      <input id="companionSendFile" type="file" accept="image/gif,.gif" required>
+                    </label>
+                    <label class="resource-pack-description">
+                      <span>话语（可选）</span>
+                      <textarea id="companionSendMessage" rows="2" maxlength="120" placeholder="最多 120 字，对方桌宠来访时会一起显示"></textarea>
+                    </label>
+                  </div>
+                </section>
+                <div class="upload-actions">
+                  <span id="companionSendHint" class="panel-note">在线窗口 5 分钟</span>
+                  <button id="companionSendButton" class="button button-primary" type="submit">发送来访</button>
+                </div>
+              </form>
+
               <div class="panel-heading companion-history-heading">
                 <div>
                   <p class="eyebrow">近 14 天</p>
@@ -830,6 +866,7 @@
                     <option value="">全部来源</option>
                     <option value="pair">绑定搭子</option>
                     <option value="hall">陌生人大厅</option>
+                    <option value="admin">管理后台</option>
                   </select>
                 </label>
                 <label>
@@ -1294,17 +1331,17 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/admin-ui.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/settings.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/releases.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/resource-packs.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/visit-stickers.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/activations.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/interactions.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/companions.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/analytics.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/content.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin-pages/feedback.js?v=admin-pages-2" defer></script>
-  <script src="/assets/admin.js?v=admin-pages-2" defer></script>
+  <script src="/assets/admin-ui.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/settings.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/releases.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/resource-packs.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/visit-stickers.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/activations.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/interactions.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/companions.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/analytics.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/content.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin-pages/feedback.js?v=admin-pages-3" defer></script>
+  <script src="/assets/admin.js?v=admin-pages-3" defer></script>
 </body>
 </html>

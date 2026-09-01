@@ -4,7 +4,7 @@ const pages = {
   android: ['Android 管理', '查看 APK 发布与安卓授权设备'],
   activations: ['激活授权', '管理激活码与设备授权'],
   interactions: ['互动统计', '查看账号互动、心情与内容记录'],
-  companions: ['搭子联机', '查看配对与 GIF 投递聚合数据'],
+  companions: ['搭子联机', '用自己的桌宠给在线设备发来访，并查看配对与投递'],
   analytics: ['增长数据', '官网访问、下载转化与设备留存'],
   content: ['内容库', '维护客户端在线与离线互动资源'],
   'resource-packs': ['资源包', '上传互动词包和小剧场剧本供官网下载'],

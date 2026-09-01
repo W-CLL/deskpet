@@ -1072,6 +1072,22 @@ input[readonly] {
   min-height: 84px;
 }
 
+.companion-send-form {
+  margin: 4px 0 22px;
+}
+
+.companion-send-form .panel-note {
+  margin: 0;
+}
+
+.companion-send-form .upload-actions {
+  justify-content: space-between;
+}
+
+.companion-send-form textarea {
+  min-height: 64px;
+}
+
 .upload-actions {
   display: flex;
   min-height: 66px;

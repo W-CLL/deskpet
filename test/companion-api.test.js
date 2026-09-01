@@ -188,6 +188,9 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   assert.equal(adminStats.payload.recentDeliveries.length, 1);
   assert.equal(adminStats.payload.recentDeliveries[0].source, 'pair');
   assert.equal(adminStats.payload.recentDeliveries[0].status, 'received');
+  assert.ok(Array.isArray(adminStats.payload.sendOptions.senders));
+  assert.ok(Array.isArray(adminStats.payload.sendOptions.devices));
+  assert.equal(adminStats.payload.sendOptions.onlineWindowMinutes, 5);
   assert.deepEqual(
     Object.fromEntries(['sent', 'received', 'expired'].map((key) => [key, adminStats.payload.daily[0][key]])),
     { sent: 2, received: 1, expired: 1 }
@@ -423,4 +426,116 @@ test('hall users can see online strangers and send a GIF with a message', async 
   ));
   assert.equal(offline.response.status, 409);
   assert.equal(offline.payload.code, 'COMPANION_HALL_RECIPIENT_OFFLINE');
+});
+
+test('admin can send a GIF from a chosen account to an online device', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-companion-admin-send-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const authRecord = await hashPassword('test admin password 123');
+  await fs.promises.writeFile(
+    path.join(dataDirectory, 'auth.json'),
+    JSON.stringify(authRecord),
+    { mode: 0o600 }
+  );
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey,
+    companionOptions: { cooldownMs: 30_000, maxPending: 3 }
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const sender = await activate(application, baseUrl);
+  const recipient = await activate(application, baseUrl);
+  await fetch(`${baseUrl}/api/companion`, {
+    method: 'PATCH',
+    headers: { ...sender.headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ displayName: '运营桌宠' })
+  });
+  await fetch(`${baseUrl}/api/companion`, {
+    method: 'PATCH',
+    headers: { ...recipient.headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ displayName: '在线用户' })
+  });
+  await fetch(`${baseUrl}/api/companion/deliveries`, { headers: sender.headers });
+  await fetch(`${baseUrl}/api/companion/deliveries`, { headers: recipient.headers });
+
+  const login = await jsonResponse(await fetch(`${baseUrl}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'test admin password 123' })
+  }));
+  const cookie = login.response.headers.get('set-cookie').split(';', 1)[0];
+  const csrfToken = login.payload.csrfToken;
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+  const message = '后台来串门啦';
+  const adminHeaders = {
+    Cookie: cookie,
+    'Content-Type': 'image/gif',
+    'X-CSRF-Token': csrfToken
+  };
+
+  const options = await jsonResponse(await fetch(`${baseUrl}/api/admin/companions`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(options.response.status, 200);
+  assert.equal(options.payload.sendOptions.senders.length, 2);
+  assert.equal(options.payload.sendOptions.devices.length, 2);
+  const recipientDevice = options.payload.sendOptions.devices.find(
+    (item) => item.accountId === recipient.accountId
+  );
+  assert.ok(recipientDevice?.licenseId);
+
+  const missingCsrf = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/companions/deliveries?senderAccountId=${sender.accountId}&recipientLicenseId=${recipientDevice.licenseId}`,
+    { method: 'POST', headers: { Cookie: cookie, 'Content-Type': 'image/gif' }, body: gif }
+  ));
+  assert.equal(missingCsrf.response.status, 403);
+
+  const sent = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/companions/deliveries?senderAccountId=${sender.accountId}&recipientLicenseId=${recipientDevice.licenseId}&message=${encodeURIComponent(message)}`,
+    { method: 'POST', headers: adminHeaders, body: gif }
+  ));
+  assert.equal(sent.response.status, 201);
+  assert.equal(sent.payload.recipientName, '在线用户');
+
+  const pending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: recipient.headers
+  }));
+  assert.equal(pending.payload.deliveries.length, 1);
+  assert.equal(pending.payload.deliveries[0].senderName, '运营桌宠');
+  assert.equal(pending.payload.deliveries[0].message, message);
+
+  const downloaded = await fetch(`${baseUrl}${pending.payload.deliveries[0].downloadPath}`, {
+    headers: recipient.headers
+  });
+  assert.equal(downloaded.status, 200);
+  assert.deepEqual(Buffer.from(await downloaded.arrayBuffer()), gif);
+
+  const secondSend = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/companions/deliveries?senderAccountId=${sender.accountId}&recipientLicenseId=${recipientDevice.licenseId}`,
+    { method: 'POST', headers: adminHeaders, body: gif }
+  ));
+  assert.equal(secondSend.response.status, 201);
+
+  const selfSend = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/companions/deliveries?senderAccountId=${sender.accountId}&recipientLicenseId=${options.payload.sendOptions.devices.find((item) => item.accountId === sender.accountId).licenseId}`,
+    { method: 'POST', headers: adminHeaders, body: gif }
+  ));
+  assert.equal(selfSend.response.status, 400);
+  assert.equal(selfSend.payload.code, 'COMPANION_ADMIN_SELF');
+
+  const stats = await jsonResponse(await fetch(`${baseUrl}/api/admin/companions`, {
+    headers: { Cookie: cookie }
+  }));
+  assert.equal(stats.payload.recentDeliveries[0].source, 'admin');
+  assert.equal(stats.payload.recentDeliveries[1].source, 'admin');
 });

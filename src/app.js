@@ -126,7 +126,13 @@ async function createApplication(options = {}) {
     resourcePackStore,
     auditService
   });
-  const companionService = new CompanionService({ companionStore, activationService });
+  const companionService = new CompanionService({
+    companionStore,
+    activationService,
+    analyticsService,
+    auditService,
+    config
+  });
   const visitStickerService = new VisitStickerService({
     config,
     visitStickerStore,

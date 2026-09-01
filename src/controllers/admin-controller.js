@@ -105,6 +105,14 @@ class AdminController {
     res.status(200).json(await this.companionService.adminStats());
   }
 
+  async sendCompanionDelivery(req, res) {
+    res.status(201).json(await this.companionService.adminSend(req, req.body, {
+      senderAccountId: queryValue(req, 'senderAccountId'),
+      recipientLicenseId: queryValue(req, 'recipientLicenseId'),
+      message: queryValue(req, 'message')
+    }));
+  }
+
   analytics(req, res) {
     res.status(200).json({
       ...this.analyticsService.summary({

@@ -2,6 +2,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const { HttpError } = require('../errors/http-error');
+const { clientIp } = require('../http/request-context');
 
 const MAX_GIF_BYTES = 8 * 1024 * 1024;
 const MAX_GIF_DIMENSION = 2048;
@@ -20,6 +21,8 @@ function inspectGif(buffer) {
   return { width, height };
 }
 
+const ACCOUNT_ID_PATTERN = /^[0-9a-f-]{36}$/i;
+
 function mapStoreError(error) {
   const mappings = new Map([
     ['昵称不能为空', [400, 'INVALID_COMPANION_NAME']],
@@ -27,7 +30,8 @@ function mapStoreError(error) {
     ['其中一方已经绑定搭子', [409, 'COMPANION_ALREADY_PAIRED']],
     ['请先绑定搭子', [409, 'COMPANION_NOT_PAIRED']],
     ['发送太快，请稍后再试', [429, 'COMPANION_RATE_LIMITED']],
-    ['对方还有未查看的来访', [409, 'COMPANION_QUEUE_FULL']]
+    ['对方还有未查看的来访', [409, 'COMPANION_QUEUE_FULL']],
+    ['不能发给自己', [400, 'COMPANION_ADMIN_SELF']]
   ]);
   mappings.set('HALL_SENDER_DISABLED', [409, 'COMPANION_HALL_DISABLED', '请先打开桌宠大厅']);
   mappings.set('HALL_RECIPIENT_OFFLINE', [409, 'COMPANION_HALL_RECIPIENT_OFFLINE', '对方已经离线']);
@@ -35,10 +39,20 @@ function mapStoreError(error) {
   return mapping ? new HttpError(mapping[0], mapping[2] || error.message, mapping[1]) : error;
 }
 
+function isActiveLicenseDevice(device) {
+  return device?.authorizationType === 'license'
+    && device?.authorizationState === 'active'
+    && Boolean(device.accountId)
+    && Boolean(device.licenseId);
+}
+
 class CompanionService {
-  constructor({ companionStore, activationService }) {
+  constructor({ companionStore, activationService, analyticsService, auditService, config }) {
     this.companionStore = companionStore;
     this.activationService = activationService;
+    this.analyticsService = analyticsService || null;
+    this.auditService = auditService || null;
+    this.config = config || null;
   }
 
   requireAccount(req) {
@@ -165,6 +179,40 @@ class CompanionService {
     return result;
   }
 
+  usageDevices() {
+    if (!this.analyticsService) return [];
+    return this.analyticsService.usageSummary(this.activationService.devices()).devices || [];
+  }
+
+  adminSendOptions(profiles = []) {
+    const devices = this.usageDevices();
+    const profileByAccount = new Map(profiles.map((item) => [item.accountId, item]));
+    const licensedDevices = devices.filter(isActiveLicenseDevice);
+    const onlineDevices = licensedDevices.filter((item) => item.activityStatus === 'online');
+    const senderIds = new Set(licensedDevices.map((item) => item.accountId));
+    const senders = [...senderIds].map((accountId) => ({
+      accountId,
+      accountSuffix: String(accountId).slice(-8),
+      displayName: profileByAccount.get(accountId)?.displayName || '桌搭子'
+    })).sort((left, right) => left.displayName.localeCompare(right.displayName, 'zh')
+      || left.accountSuffix.localeCompare(right.accountSuffix));
+    return {
+      onlineWindowMinutes: 5,
+      senders,
+      devices: onlineDevices.map((item) => ({
+        licenseId: item.licenseId,
+        accountId: item.accountId,
+        accountSuffix: String(item.accountId).slice(-8),
+        installationSuffix: item.installationSuffix,
+        displayName: profileByAccount.get(item.accountId)?.displayName || '桌搭子',
+        platform: item.platform || 'unknown',
+        architecture: item.architecture || '',
+        appVersion: item.appVersion || '',
+        lastSeenAt: item.lastSeenAt
+      }))
+    };
+  }
+
   async adminStats() {
     const stats = this.companionStore.adminStats();
     let storageBytes = 0;
@@ -181,7 +229,65 @@ class CompanionService {
       }
     }
     stats.summary.storageBytes = storageBytes;
+    stats.sendOptions = this.adminSendOptions(stats.profiles);
     return stats;
+  }
+
+  async adminSend(req, buffer, { senderAccountId, recipientLicenseId, message } = {}) {
+    const sender = String(senderAccountId || '').trim();
+    const licenseId = String(recipientLicenseId || '').trim();
+    if (!ACCOUNT_ID_PATTERN.test(sender) || !ACCOUNT_ID_PATTERN.test(licenseId)) {
+      throw new HttpError(400, '请选择发送账号和对方设备', 'INVALID_COMPANION_ADMIN_TARGET');
+    }
+    const devices = this.usageDevices();
+    const senderAccount = devices.find((item) => isActiveLicenseDevice(item) && item.accountId === sender)
+      || this.activationService.devices().find((item) => isActiveLicenseDevice(item) && item.accountId === sender);
+    if (!senderAccount) {
+      throw new HttpError(404, '发送账号不存在或未授权', 'COMPANION_ADMIN_SENDER_NOT_FOUND');
+    }
+    const recipientDevice = devices.find((item) => (
+      item.licenseId === licenseId
+      && isActiveLicenseDevice(item)
+      && item.activityStatus === 'online'
+    ));
+    if (!recipientDevice) {
+      throw new HttpError(409, '对方设备当前不在线', 'COMPANION_ADMIN_RECIPIENT_OFFLINE');
+    }
+    if (recipientDevice.accountId === sender) {
+      throw new HttpError(400, '不能发给自己的设备', 'COMPANION_ADMIN_SELF');
+    }
+    const { width, height } = inspectGif(buffer);
+    const id = crypto.randomUUID();
+    const fileName = `${id}.gif`;
+    const filePath = path.join(this.companionStore.filesDirectory, fileName);
+    await fs.promises.writeFile(filePath, buffer, { flag: 'wx', mode: 0o600 });
+    try {
+      const result = this.companionStore.createAdminDelivery(sender, recipientDevice.accountId, {
+        id,
+        fileName,
+        size: buffer.length,
+        sha256: crypto.createHash('sha256').update(buffer).digest('hex'),
+        width,
+        height,
+        message
+      });
+      if (this.auditService && this.config) {
+        await this.auditService.write({
+          action: 'companion-admin-send',
+          outcome: 'success',
+          ip: clientIp(req, this.config),
+          senderAccountId: sender,
+          recipientAccountId: recipientDevice.accountId,
+          recipientLicenseId: licenseId,
+          deliveryId: result.id,
+          size: buffer.length
+        });
+      }
+      return result;
+    } catch (error) {
+      await fs.promises.rm(filePath, { force: true });
+      throw mapStoreError(error);
+    }
   }
 
   async cleanup() {

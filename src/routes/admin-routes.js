@@ -1,6 +1,7 @@
 const express = require('express');
 const { MAX_JSON_BODY } = require('../config/app-config');
 const { jsonBody } = require('../middleware/json-body');
+const { MAX_GIF_BYTES } = require('../services/companion-service');
 
 const MAX_CONTENT_IMPORT_BODY = 2 * 1024 * 1024;
 
@@ -126,6 +127,12 @@ function createAdminRouter({ controller, authService }) {
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
   router.get('/interactions', requireSession, (req, res) => controller.interactions(req, res));
   router.get('/companions', requireSession, (req, res) => controller.companions(req, res));
+  router.post(
+    '/companions/deliveries',
+    requireWriteSession,
+    express.raw({ type: 'image/gif', limit: MAX_GIF_BYTES }),
+    (req, res) => controller.sendCompanionDelivery(req, res)
+  );
   router.get('/analytics', requireSession, (req, res) => controller.analytics(req, res));
   router.get('/content', requireSession, (req, res) => controller.content(req, res));
   router.post(

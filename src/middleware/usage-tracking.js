@@ -8,8 +8,8 @@ function identityFromLicense(license) {
   if (!license?.installationId) return null;
   return {
     deviceKey: license.trial ? trialDeviceKey(license.installationId) : license.id,
-    licenseId: license.trial ? null : license.id,
-    accountId: license.trial ? null : license.accountId,
+    licenseId: license.trial ? trialDeviceKey(license.installationId) : license.id,
+    accountId: license.trial ? `trial:${license.installationId}` : license.accountId,
     installationSuffix: String(license.installationId).slice(-8),
     authorizationType: license.trial ? 'trial' : 'license',
     platform: license.platform || 'unknown',

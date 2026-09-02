@@ -22,6 +22,7 @@ function inspectGif(buffer) {
 }
 
 const ACCOUNT_ID_PATTERN = /^[0-9a-f-]{36}$/i;
+const RECIPIENT_ID_PATTERN = /^(?:[0-9a-f-]{36}|trial:[0-9a-f]{64})$/i;
 
 function mapStoreError(error) {
   const mappings = new Map([
@@ -46,6 +47,20 @@ function isActiveLicenseDevice(device) {
     && Boolean(device.licenseId);
 }
 
+function isOnlineRecipientDevice(device) {
+  if (device?.authorizationState !== 'active' || !device.accountId || !device.licenseId) return false;
+  if (device.authorizationType === 'license') return true;
+  return device.authorizationType === 'trial';
+}
+
+function isValidSenderAccountId(value) {
+  return ACCOUNT_ID_PATTERN.test(value);
+}
+
+function isValidRecipientId(value) {
+  return RECIPIENT_ID_PATTERN.test(value);
+}
+
 class CompanionService {
   constructor({ companionStore, activationService, analyticsService, auditService, config }) {
     this.companionStore = companionStore;
@@ -55,9 +70,9 @@ class CompanionService {
     this.config = config || null;
   }
 
-  requireAccount(req) {
+  requireAccount(req, { allowTrial = false } = {}) {
     const license = this.activationService.requireLicense(req);
-    if (license.trial) {
+    if (license.trial && !allowTrial) {
       throw new HttpError(403, '激活完整版本后可以使用搭子联机', 'COMPANION_ACTIVATION_REQUIRED');
     }
     return license;
@@ -157,12 +172,12 @@ class CompanionService {
   }
 
   pending(req) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     return { deliveries: this.companionStore.pending(license.accountId, license.id) };
   }
 
   file(req) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     const delivery = this.companionStore.delivery(license.accountId, license.id, req.params.id);
     if (!delivery) throw new HttpError(404, '来访 GIF 不存在或已失效', 'COMPANION_DELIVERY_NOT_FOUND');
     return {
@@ -173,7 +188,7 @@ class CompanionService {
   }
 
   acknowledge(req) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     const result = this.companionStore.acknowledge(license.accountId, license.id, req.params.id);
     if (!result) throw new HttpError(404, '来访 GIF 不存在或已处理', 'COMPANION_DELIVERY_NOT_FOUND');
     return result;
@@ -188,7 +203,9 @@ class CompanionService {
     const devices = this.usageDevices();
     const profileByAccount = new Map(profiles.map((item) => [item.accountId, item]));
     const licensedDevices = devices.filter(isActiveLicenseDevice);
-    const onlineDevices = licensedDevices.filter((item) => item.activityStatus === 'online');
+    const onlineDevices = devices.filter((item) => (
+      isOnlineRecipientDevice(item) && item.activityStatus === 'online'
+    ));
     const senderIds = new Set(licensedDevices.map((item) => item.accountId));
     const senders = [...senderIds].map((accountId) => ({
       accountId,
@@ -204,11 +221,14 @@ class CompanionService {
         accountId: item.accountId,
         accountSuffix: String(item.accountId).slice(-8),
         installationSuffix: item.installationSuffix,
-        displayName: profileByAccount.get(item.accountId)?.displayName || '桌搭子',
+        displayName: item.authorizationType === 'trial'
+          ? '体验设备'
+          : (profileByAccount.get(item.accountId)?.displayName || '桌搭子'),
         platform: item.platform || 'unknown',
         architecture: item.architecture || '',
         appVersion: item.appVersion || '',
-        lastSeenAt: item.lastSeenAt
+        lastSeenAt: item.lastSeenAt,
+        authorizationType: item.authorizationType
       }))
     };
   }
@@ -236,7 +256,7 @@ class CompanionService {
   async adminSend(req, buffer, { senderAccountId, recipientLicenseId, message } = {}) {
     const sender = String(senderAccountId || '').trim();
     const licenseId = String(recipientLicenseId || '').trim();
-    if (!ACCOUNT_ID_PATTERN.test(sender) || !ACCOUNT_ID_PATTERN.test(licenseId)) {
+    if (!isValidSenderAccountId(sender) || !isValidRecipientId(licenseId)) {
       throw new HttpError(400, '请选择发送账号和对方设备', 'INVALID_COMPANION_ADMIN_TARGET');
     }
     const devices = this.usageDevices();
@@ -247,7 +267,7 @@ class CompanionService {
     }
     const recipientDevice = devices.find((item) => (
       item.licenseId === licenseId
-      && isActiveLicenseDevice(item)
+      && isOnlineRecipientDevice(item)
       && item.activityStatus === 'online'
     ));
     if (!recipientDevice) {

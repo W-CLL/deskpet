@@ -91,6 +91,8 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   }));
   assert.match(firstProfile.payload.pairingCode, /^[23456789A-HJ-NP-Z]{8}$/);
   assert.equal(firstProfile.payload.partner, null);
+  assert.equal(firstProfile.payload.hallEnabled, true);
+  assert.equal(secondProfile.payload.hallEnabled, true);
 
   await fetch(`${baseUrl}/api/companion`, {
     method: 'PATCH',
@@ -538,4 +540,118 @@ test('admin can send a GIF from a chosen account to an online device', async (co
   }));
   assert.equal(stats.payload.recentDeliveries[0].source, 'admin');
   assert.equal(stats.payload.recentDeliveries[1].source, 'admin');
+});
+
+test('admin can send a visit to an online trial device', async (context) => {
+  const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-companion-admin-trial-'));
+  const { privateKey } = crypto.generateKeyPairSync('ed25519');
+  const authRecord = await hashPassword('test admin password 123');
+  await fs.promises.writeFile(
+    path.join(dataDirectory, 'auth.json'),
+    JSON.stringify(authRecord),
+    { mode: 0o600 }
+  );
+  const application = await createApplication({
+    publicUrl: 'http://127.0.0.1',
+    dataDirectory,
+    cookieSecure: false,
+    signingPrivateKey: privateKey,
+    companionOptions: { cooldownMs: 0, maxPending: 3 }
+  });
+  const server = http.createServer(application.handler);
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const baseUrl = `http://127.0.0.1:${server.address().port}`;
+  context.after(async () => {
+    application.close();
+    await new Promise((resolve) => server.close(resolve));
+    await fs.promises.rm(dataDirectory, { recursive: true, force: true });
+  });
+
+  const sender = await activate(application, baseUrl);
+  await fetch(`${baseUrl}/api/companion`, {
+    method: 'PATCH',
+    headers: { ...sender.headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ displayName: '运营桌宠' })
+  });
+  await fetch(`${baseUrl}/api/companion/deliveries`, { headers: sender.headers });
+
+  const trialInstallationId = crypto.randomBytes(16).toString('hex');
+  const trialCredential = crypto.randomBytes(32).toString('base64url');
+  const trialHeaders = {
+    Authorization: `Trial ${trialInstallationId}.${trialCredential}`,
+    'X-DeskPet-Version': '3.1.0',
+    'X-DeskPet-Platform': 'windows'
+  };
+  const started = await jsonResponse(await fetch(`${baseUrl}/api/trial`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-DeskPet-Platform': 'windows' },
+    body: JSON.stringify({
+      installationId: trialInstallationId,
+      credential: trialCredential,
+      appVersion: '3.1.0'
+    })
+  }));
+  assert.equal(started.response.status, 200);
+  const trialInbox = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: trialHeaders
+  }));
+  assert.equal(trialInbox.response.status, 200);
+  assert.deepEqual(trialInbox.payload.deliveries, []);
+
+  const trialDeniedSend = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    method: 'POST',
+    headers: { ...trialHeaders, 'Content-Type': 'image/gif' },
+    body: Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64')
+  }));
+  assert.equal(trialDeniedSend.response.status, 403);
+  assert.equal(trialDeniedSend.payload.code, 'COMPANION_ACTIVATION_REQUIRED');
+
+  const login = await jsonResponse(await fetch(`${baseUrl}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'test admin password 123' })
+  }));
+  const cookie = login.response.headers.get('set-cookie').split(';', 1)[0];
+  const csrfToken = login.payload.csrfToken;
+  const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+  const message = '体验期也来串门';
+
+  const options = await jsonResponse(await fetch(`${baseUrl}/api/admin/companions`, {
+    headers: { Cookie: cookie }
+  }));
+  const trialDevice = options.payload.sendOptions.devices.find(
+    (item) => item.authorizationType === 'trial'
+  );
+  assert.ok(trialDevice?.licenseId);
+  assert.match(trialDevice.licenseId, /^trial:[0-9a-f]{64}$/i);
+
+  const sent = await jsonResponse(await fetch(
+    `${baseUrl}/api/admin/companions/deliveries?senderAccountId=${sender.accountId}&recipientLicenseId=${encodeURIComponent(trialDevice.licenseId)}&message=${encodeURIComponent(message)}`,
+    {
+      method: 'POST',
+      headers: { Cookie: cookie, 'Content-Type': 'image/gif', 'X-CSRF-Token': csrfToken },
+      body: gif
+    }
+  ));
+  assert.equal(sent.response.status, 201);
+
+  const pending = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
+    headers: trialHeaders
+  }));
+  assert.equal(pending.response.status, 200);
+  assert.equal(pending.payload.deliveries.length, 1);
+  assert.equal(pending.payload.deliveries[0].senderName, '运营桌宠');
+  assert.equal(pending.payload.deliveries[0].message, message);
+
+  const downloaded = await fetch(`${baseUrl}${pending.payload.deliveries[0].downloadPath}`, {
+    headers: trialHeaders
+  });
+  assert.equal(downloaded.status, 200);
+  assert.deepEqual(Buffer.from(await downloaded.arrayBuffer()), gif);
+
+  const acknowledged = await jsonResponse(await fetch(
+    `${baseUrl}/api/companion/deliveries/${pending.payload.deliveries[0].id}/acknowledge`,
+    { method: 'POST', headers: trialHeaders }
+  ));
+  assert.equal(acknowledged.response.status, 200);
 });

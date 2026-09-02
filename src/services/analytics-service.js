@@ -137,6 +137,9 @@ class AnalyticsService {
       devices.set(tracked.deviceKey, {
         ...existing,
         ...tracked,
+        licenseId: tracked.licenseId || existing?.licenseId || null,
+        accountId: tracked.accountId || existing?.accountId || null,
+        authorizationType: existing?.authorizationType || tracked.authorizationType,
         authorizationState: existing?.authorizationState || 'active',
         firstSeenAt: earlierDate(existing?.firstSeenAt, tracked.firstSeenAt),
         lastSeenAt: laterDate(existing?.lastSeenAt, tracked.lastSeenAt)

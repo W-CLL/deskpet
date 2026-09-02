@@ -44,11 +44,11 @@ registerAdminPage(function createCompanionsPage({ ui, api, showToast, showLogin 
       .map((item) => ({
         value: item.licenseId,
         label: [
-          item.displayName,
-          `…${item.accountSuffix}`,
+          item.authorizationType === 'trial' ? '体验' : item.displayName,
+          item.authorizationType === 'trial' ? `设备 …${item.installationSuffix}` : `…${item.accountSuffix}`,
           platformLabel[item.platform] || item.platform,
           item.appVersion,
-          `设备 …${item.installationSuffix}`
+          item.authorizationType === 'trial' ? '' : `设备 …${item.installationSuffix}`
         ].filter(Boolean).join(' · ')
       }));
   }

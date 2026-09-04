@@ -76,7 +76,15 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
       });
     },
     matches: (item, filters) => (!filters.architecture || item.license.architecture === filters.architecture)
-      && (!filters.status || item.license.status === filters.status)
+      && (!filters.status || item.license.status === filters.status),
+    searchPlaceholder: '搜索设备、账号或版本',
+    searchText: (item) => [
+      item.license?.installationSuffix,
+      item.account?.suffix,
+      item.license?.appVersion,
+      item.license?.architecture,
+      item.license?.status
+    ]
   });
 
   function renderAndroidDevices(codes) {
@@ -176,7 +184,24 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
     matches: (item, filters) => (!filters.platform
       || (item.licenses || [item.license]).some((license) => (license?.platform || 'unknown') === filters.platform))
       && (!filters.status || activationStatusKey(item) === filters.status)
-      && (!filters.purpose || (item.purpose || 'new_account') === filters.purpose)
+      && (!filters.purpose || (item.purpose || 'new_account') === filters.purpose),
+    searchPlaceholder: '搜索激活码、备注、账号或设备',
+    searchText: (item) => {
+      const licenses = item.licenses?.length ? item.licenses : (item.license ? [item.license] : []);
+      return [
+        item.maskedCode,
+        item.note,
+        item.purpose,
+        item.account?.suffix,
+        item.account?.id,
+        ...licenses.flatMap((license) => [
+          license.installationSuffix,
+          license.platform,
+          license.architecture,
+          license.appVersion
+        ])
+      ];
+    }
   });
 
   function renderActivations(payload) {

@@ -114,7 +114,9 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
       });
     },
     matches: (item, filters) => (!filters.platform || item.platform === filters.platform)
-      && (!filters.status || releaseStatusKey(item) === filters.status)
+      && (!filters.status || releaseStatusKey(item) === filters.status),
+    searchPlaceholder: '搜索版本、文件名或说明',
+    searchText: (item) => [item.version, item.fileName, item.notes, item.platform, item.architecture, item.sha256]
   });
 
   function renderReleases(payload) {

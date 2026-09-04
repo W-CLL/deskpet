@@ -242,7 +242,19 @@ registerAdminPage(function createContentPage({ ui, api, showToast, confirmAction
       updateContentBulkControls();
     },
     matches: (item, filters) => (!filters.type || item.type === filters.type)
-      && (!filters.active || (item.active ? 'active' : 'disabled') === filters.active)
+      && (!filters.active || (item.active ? 'active' : 'disabled') === filters.active),
+    searchPlaceholder: '搜索题面、答案、标签或 ID',
+    searchText: (item) => [
+      item.id,
+      typeLabels[item.type],
+      item.type,
+      item.prompt,
+      item.answer,
+      item.explanation,
+      item.locale,
+      item.tags,
+      item.choices
+    ]
   });
 
   function renderContent(payload) {

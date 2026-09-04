@@ -1404,6 +1404,16 @@ progress {
   padding: 5px 28px 5px 9px;
 }
 
+.list-toolbar .list-search {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.list-toolbar .list-search input {
+  min-height: 34px;
+  width: 100%;
+}
+
 .content-bulk-toolbar,
 .content-selection-summary,
 .content-type-disable {
@@ -2311,7 +2321,13 @@ dialog p {
     flex: 1 1 calc(50% - 5px);
   }
 
-  .list-toolbar select {
+  .list-toolbar .list-search {
+    min-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .list-toolbar select,
+  .list-toolbar .list-search input {
     width: 100%;
     min-width: 0;
   }

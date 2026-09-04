@@ -144,10 +144,12 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminMarkup, /data-list-pagination="android-devices"/);
   assert.match(adminMarkup, /data-list-pagination="usage-devices"/);
   assert.match(adminMarkup, /data-list-pagination="companion-deliveries"/);
+  assert.match(adminMarkup, /data-list-filter="platform"/);
+  assert.match(adminMarkup, /data-list-filter="status"/);
   assert.match(adminMarkup, /data-page-panel="visit-stickers"/);
-  assert.match(adminMarkup, /admin-ui\.js\?v=admin-pages-4/);
-  assert.match(adminMarkup, /admin-pages\/releases\.js\?v=admin-pages-4/);
-  assert.match(adminMarkup, /admin\.js\?v=admin-pages-4/);
+  assert.match(adminMarkup, /admin-ui\.js\?v=admin-pages-5/);
+  assert.match(adminMarkup, /admin-pages\/releases\.js\?v=admin-pages-5/);
+  assert.match(adminMarkup, /admin\.js\?v=admin-pages-5/);
   assert.match(adminMarkup, /id="companionSendForm"/);
   assert.match(adminMarkup, /id="companionSendSender"/);
   assert.match(adminMarkup, /id="companionSendRecipient"/);
@@ -162,6 +164,8 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(settingsPage, /features: \{/);
   assert.match(settingsPage, /theaterIntervalSeconds/);
   assert.match(adminUi, /function createListView/);
+  assert.match(adminUi, /function matchesQuery/);
+  assert.match(adminUi, /function ensureSearchFilter/);
   assert.match(adminUi, /async function withBusy/);
   assert.match(adminUi, /async function loadJson/);
   assert.match(adminUi, /async function submitUpload/);
@@ -354,12 +358,15 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.equal(adminCss.headers.get('cache-control'), 'no-cache');
   assert.match(await adminCss.text(), /\.admin-shell\s*\{/);
 
-  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-4`);
+  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-5`);
   assert.equal(adminUi.status, 200);
   assert.equal(adminUi.headers.get('cache-control'), 'no-cache');
-  assert.match(await adminUi.text(), /function createListView/);
+  const adminUiText = await adminUi.text();
+  assert.match(adminUiText, /function createListView/);
+  assert.match(adminUiText, /function matchesQuery/);
+  assert.match(adminUiText, /function ensureSearchFilter/);
 
-  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-4`);
+  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-5`);
   assert.equal(releasesPage.status, 200);
   assert.equal(releasesPage.headers.get('cache-control'), 'no-cache');
 

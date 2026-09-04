@@ -33,7 +33,9 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
         cell('', formatDate(item.lastDownloadAt))
       ]);
     },
-    matches: (item, filters) => !filters.platform || item.platform === filters.platform
+    matches: (item, filters) => !filters.platform || item.platform === filters.platform,
+    searchPlaceholder: '搜索平台、架构或版本',
+    searchText: (item) => [item.platform, item.architecture, item.version]
   });
 
   const deviceList = createListView('usage-devices', {
@@ -53,7 +55,18 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
     },
     matches: (item, filters) => (!filters.authorization
       || (item.authorizationType === 'trial' ? 'trial' : 'license') === filters.authorization)
-      && (!filters.status || item.activityStatus === filters.status)
+      && (!filters.status || item.activityStatus === filters.status),
+    searchPlaceholder: '搜索设备、账号、版本或接口',
+    searchText: (item) => [
+      item.installationSuffix,
+      item.accountId,
+      item.authorizationType,
+      item.platform,
+      item.architecture,
+      item.appVersion,
+      item.lastPath,
+      activityLabels[item.activityStatus]
+    ]
   });
 
   const featureList = createListView('usage-features', {
@@ -72,7 +85,18 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
         ];
       });
     },
-    matches: (item, filters) => !filters.feature || item.feature === filters.feature
+    matches: (item, filters) => !filters.feature || item.feature === filters.feature,
+    searchPlaceholder: '搜索功能、设备或账号',
+    searchText: (item) => [
+      featureLabels[item.feature],
+      item.feature,
+      categoryLabels[item.category],
+      item.category,
+      item.accountId,
+      item.installationSuffix,
+      item.platform,
+      item.appVersion
+    ]
   });
 
   const apiList = createListView('usage-api', {
@@ -90,7 +114,9 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
           cell('', formatDate(item.lastSeenAt))
         ];
       });
-    }
+    },
+    searchPlaceholder: '搜索接口、平台或版本',
+    searchText: (item) => [item.method, item.path, item.platform, item.appVersion]
   });
 
   const cohortList = createListView('analytics-cohorts', {
@@ -103,7 +129,9 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
         cell('', formatRate(item.d7Rate)),
         cell('', formatRate(item.d30Rate))
       ]);
-    }
+    },
+    searchPlaceholder: '搜索激活日期',
+    searchText: (item) => [item.date]
   });
 
   function renderUsage(usage) {

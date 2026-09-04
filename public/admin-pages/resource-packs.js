@@ -43,7 +43,9 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
         ];
       });
     },
-    matches: (item, filters) => !filters.category || item.category === filters.category
+    matches: (item, filters) => !filters.category || item.category === filters.category,
+    searchPlaceholder: '搜索标题、简介或文件名',
+    searchText: (item) => [item.title, item.description, item.originalName, item.category, categoryLabel(item.category)]
   });
 
   async function loadResourcePacks() {

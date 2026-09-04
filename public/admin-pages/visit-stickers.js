@@ -36,7 +36,9 @@ registerAdminPage(function createVisitStickersPage({ ui, api, showToast, confirm
         actionsCell(actionButton('删除', 'button-danger', () => deleteVisitStickerPack(pack)))
       ]);
     },
-    matches: (item, filters) => !filters.category || item.category === filters.category
+    matches: (item, filters) => !filters.category || item.category === filters.category,
+    searchPlaceholder: '搜索标题或备注',
+    searchText: (item) => [item.title, item.note, item.originalName, item.category, categoryLabel(item.category)]
   });
 
   function renderVisitStickers(payload) {

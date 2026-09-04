@@ -110,13 +110,53 @@
     if (emptyElement) emptyElement.hidden = items.length > 0;
   }
 
-  function createListView(name, { emptyElement, renderPage, matches }) {
-    const controls = document.querySelector(`[data-list-controls="${name}"]`);
+  function matchesQuery(query, values) {
+    const needle = String(query || '').trim().toLowerCase();
+    if (!needle) return true;
+    return (Array.isArray(values) ? values : [values])
+      .flat(Infinity)
+      .some((value) => String(value || '').toLowerCase().includes(needle));
+  }
+
+  function ensureListControls(name, pagination) {
+    let controls = document.querySelector(`[data-list-controls="${name}"]`);
+    if (controls) return controls;
+    controls = document.createElement('div');
+    controls.className = 'list-toolbar';
+    controls.dataset.listControls = name;
+    let insertBefore = pagination;
+    let sibling = pagination.previousElementSibling;
+    while (sibling && (sibling.classList.contains('table-wrap') || sibling.classList.contains('empty-state'))) {
+      insertBefore = sibling;
+      sibling = sibling.previousElementSibling;
+    }
+    pagination.parentElement.insertBefore(controls, insertBefore);
+    return controls;
+  }
+
+  function ensureSearchFilter(controls, placeholder) {
+    if (controls.querySelector('[data-list-filter="query"]')) return;
+    const label = document.createElement('label');
+    label.className = 'list-search';
+    const caption = document.createElement('span');
+    caption.textContent = '搜索';
+    const input = document.createElement('input');
+    input.type = 'search';
+    input.dataset.listFilter = 'query';
+    input.placeholder = placeholder || '搜索当前列表';
+    input.autocomplete = 'off';
+    label.append(caption, input);
+    controls.prepend(label);
+  }
+
+  function createListView(name, { emptyElement, renderPage, matches, searchText, searchPlaceholder }) {
     const pagination = document.querySelector(`[data-list-pagination="${name}"]`);
     if (!pagination) {
       throw new Error(`缺少分页容器：${name}`);
     }
-    const filterElements = Array.from(controls?.querySelectorAll('[data-list-filter]') || []);
+    const controls = ensureListControls(name, pagination);
+    ensureSearchFilter(controls, searchPlaceholder);
+    const filterElements = Array.from(controls.querySelectorAll('[data-list-filter]'));
     const pageSize = document.createElement('select');
     pageSize.setAttribute('aria-label', '每页显示条数');
     for (const value of PAGE_SIZES) {
@@ -162,7 +202,11 @@
 
     function render() {
       const filters = filterValues();
-      const filtered = matches ? items.filter((item) => matches(item, filters)) : [...items];
+      const filtered = items.filter((item) => {
+        if (matches && !matches(item, filters)) return false;
+        if (searchText && !matchesQuery(filters.query, searchText(item))) return false;
+        return true;
+      });
       const size = Number(pageSize.value);
       const pageCount = Math.max(1, Math.ceil(filtered.length / size));
       currentPage = Math.min(currentPage, pageCount);
@@ -179,7 +223,8 @@
     }
 
     for (const element of filterElements) {
-      element.addEventListener('change', () => {
+      const eventName = element.tagName === 'SELECT' ? 'change' : 'input';
+      element.addEventListener(eventName, () => {
         currentPage = 1;
         render();
       });
@@ -371,6 +416,7 @@
       hashCell,
       actionsCell,
       fillTable,
+      matchesQuery,
       createListView,
       withBusy,
       loadJson,

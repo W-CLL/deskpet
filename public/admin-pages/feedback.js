@@ -77,7 +77,18 @@ registerAdminPage(function createFeedbackPage({ ui, api, showToast }) {
       });
     },
     matches: (item, filters) => (!filters.type || item.type === filters.type)
-      && (!filters.status || item.status === filters.status)
+      && (!filters.status || item.status === filters.status),
+    searchPlaceholder: '搜索标题、内容、设备或备注',
+    searchText: (item) => [
+      item.title,
+      item.content,
+      item.adminNote,
+      item.installationSuffix,
+      item.platform,
+      item.appVersion,
+      types[item.type],
+      statuses[item.status]
+    ]
   });
 
   function renderFeedback(payload) {

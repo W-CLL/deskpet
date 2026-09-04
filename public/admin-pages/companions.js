@@ -79,7 +79,16 @@ registerAdminPage(function createCompanionsPage({ ui, api, showToast, showLogin 
         cell('hash', `…${item.secondAccountSuffix}`),
         cell('', formatDate(item.pairedAt))
       ]);
-    }
+    },
+    searchPlaceholder: '搜索昵称或账号',
+    searchText: (item) => [
+      item.firstName,
+      item.secondName,
+      item.firstAccountSuffix,
+      item.secondAccountSuffix,
+      item.firstAccountId,
+      item.secondAccountId
+    ]
   });
 
   const profileList = createListView('companion-profiles', {
@@ -95,7 +104,15 @@ registerAdminPage(function createCompanionsPage({ ui, api, showToast, showLogin 
       ]);
     },
     matches: (item, filters) => (!filters.hall || hallStatus(item) === filters.hall)
-      && (!filters.paired || (item.partner ? 'paired' : 'unpaired') === filters.paired)
+      && (!filters.paired || (item.partner ? 'paired' : 'unpaired') === filters.paired),
+    searchPlaceholder: '搜索昵称或账号',
+    searchText: (item) => [
+      item.displayName,
+      item.accountSuffix,
+      item.accountId,
+      item.partner?.displayName,
+      item.partner?.accountSuffix
+    ]
   });
 
   const deliveryStatus = { received: '已领取', pending: '待领取', expired: '已过期' };
@@ -113,7 +130,17 @@ registerAdminPage(function createCompanionsPage({ ui, api, showToast, showLogin 
       ]);
     },
     matches: (item, filters) => (!filters.source || item.source === filters.source)
-      && (!filters.status || item.status === filters.status)
+      && (!filters.status || item.status === filters.status),
+    searchPlaceholder: '搜索发送方、接收方或留言',
+    searchText: (item) => [
+      item.source,
+      item.message,
+      item.sender?.displayName,
+      item.sender?.accountSuffix,
+      item.recipient?.displayName,
+      item.recipient?.accountSuffix,
+      deliveryStatus[item.status]
+    ]
   });
 
   function renderCompanions(payload) {

@@ -34,7 +34,9 @@ registerAdminPage(function createInteractionsPage({ ui }) {
     },
     matches: (item, filters) => (!filters.mode || item.profile.mode === filters.mode)
       && (!filters.enabled
-        || (item.profile.promptsEnabled ? 'enabled' : 'disabled') === filters.enabled)
+        || (item.profile.promptsEnabled ? 'enabled' : 'disabled') === filters.enabled),
+    searchPlaceholder: '搜索账号',
+    searchText: (item) => [item.accountSuffix, item.accountId, modes[item.profile.mode], item.profile.mode]
   });
 
   function renderInteractions(payload) {

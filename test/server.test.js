@@ -353,12 +353,12 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.match(adminMarkup, /data-page-panel="interactions"/);
   assert.match(adminMarkup, /data-page-panel="content"/);
 
-  const adminCss = await fetch(`${baseUrl}/assets/admin.css?v=sidebar-1`);
+  const adminCss = await fetch(`${baseUrl}/assets/admin/css/layout.css`);
   assert.equal(adminCss.status, 200);
   assert.equal(adminCss.headers.get('cache-control'), 'no-cache');
   assert.match(await adminCss.text(), /\.admin-shell\s*\{/);
 
-  const adminUi = await fetch(`${baseUrl}/assets/admin-ui.js?v=admin-pages-5`);
+  const adminUi = await fetch(`${baseUrl}/assets/admin/js/core/ui.js`);
   assert.equal(adminUi.status, 200);
   assert.equal(adminUi.headers.get('cache-control'), 'no-cache');
   const adminUiText = await adminUi.text();
@@ -366,11 +366,11 @@ test('admin upload, publish, manifest and download workflow', async (context) =>
   assert.match(adminUiText, /function matchesQuery/);
   assert.match(adminUiText, /function ensureSearchFilter/);
 
-  const releasesPage = await fetch(`${baseUrl}/assets/admin-pages/releases.js?v=admin-pages-5`);
+  const releasesPage = await fetch(`${baseUrl}/assets/admin/js/pages/releases.js`);
   assert.equal(releasesPage.status, 200);
   assert.equal(releasesPage.headers.get('cache-control'), 'no-cache');
 
-  const adminScript = await fetch(`${baseUrl}/assets/admin.js?v=sidebar-1`);
+  const adminScript = await fetch(`${baseUrl}/assets/admin/js/main.js`);
   assert.equal(adminScript.status, 200);
   assert.equal(adminScript.headers.get('cache-control'), 'no-cache');
 

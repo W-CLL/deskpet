@@ -23,7 +23,8 @@ class AdminController {
     analyticsService,
     resourcePackService,
     companionService,
-    visitStickerService
+    visitStickerService,
+    overviewService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -35,6 +36,7 @@ class AdminController {
     this.resourcePackService = resourcePackService;
     this.companionService = companionService;
     this.visitStickerService = visitStickerService;
+    this.overviewService = overviewService;
   }
 
   async login(req, res) {
@@ -51,6 +53,10 @@ class AdminController {
     const result = await this.authService.logout(req);
     res.setHeader('Set-Cookie', result.cookie);
     res.status(200).json(result.payload);
+  }
+
+  async overview(_req, res) {
+    res.status(200).json(await this.overviewService.build());
   }
 
   releases(_req, res) {
@@ -114,12 +120,26 @@ class AdminController {
   }
 
   analytics(req, res) {
+    const usage = this.analyticsService.usageSummary(this.activationService.devices());
+    const displayNames = this.companionService.displayNameByAccountId();
+    usage.devices = (usage.devices || []).map((item) => ({
+      ...item,
+      online: item.activityStatus === 'online',
+      displayName: item.authorizationType === 'trial'
+        ? '体验设备'
+        : (displayNames.get(item.accountId) || '桌搭子'),
+      deviceCode: item.deviceCode || item.installationSuffix || '-',
+      activatedAt: item.activatedAt || item.firstSeenAt || null,
+      activationCode: item.authorizationType === 'trial'
+        ? null
+        : (item.activationCode || item.maskedCode || null)
+    }));
     res.status(200).json({
       ...this.analyticsService.summary({
         from: queryValue(req, 'from') || undefined,
         to: queryValue(req, 'to') || undefined
       }),
-      usage: this.analyticsService.usageSummary(this.activationService.devices())
+      usage
     });
   }
 

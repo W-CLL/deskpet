@@ -199,6 +199,10 @@ class CompanionService {
     return this.analyticsService.usageSummary(this.activationService.devices()).devices || [];
   }
 
+  displayNameByAccountId() {
+    return this.companionStore.displayNameByAccountId();
+  }
+
   adminSendOptions(profiles = []) {
     const devices = this.usageDevices();
     const profileByAccount = new Map(profiles.map((item) => [item.accountId, item]));

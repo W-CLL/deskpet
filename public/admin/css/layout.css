@@ -1,0 +1,472 @@
+.app-root { min-height: 100vh; }
+
+/* Login */
+.login-view {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  background: var(--canvas);
+}
+
+.login-hero {
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: 48px clamp(28px, 6vw, 72px);
+  color: var(--login-hero-text);
+  background:
+    radial-gradient(circle at 20% 20%, rgb(16 185 129 / 28%), transparent 42%),
+    linear-gradient(160deg, #064e3b 0%, #0f172a 55%, #111827 100%);
+}
+
+.login-hero h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+}
+
+.login-hero p {
+  margin: 0;
+  max-width: 420px;
+  color: var(--login-hero-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.login-hero ul {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--login-hero-list);
+  font-size: 13px;
+}
+
+.login-hero li::before {
+  content: "✓ ";
+  color: var(--login-hero-check);
+  font-weight: 700;
+}
+
+.login-side {
+  display: grid;
+  place-items: center;
+  padding: 28px 18px;
+}
+
+.login-panel {
+  display: grid;
+  width: min(100%, 400px);
+  gap: 16px;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.login-brand,
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-brand img,
+.sidebar-brand img {
+  border-radius: 10px;
+}
+
+.login-brand strong,
+.sidebar-brand strong {
+  display: block;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.login-brand span,
+.sidebar-brand span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.login-heading {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+/* Shell */
+.admin-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  padding: 20px 14px;
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+}
+
+.sidebar-brand {
+  min-height: 56px;
+  margin: 0 6px 16px;
+  padding: 6px 10px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 18px;
+  overflow: auto;
+  padding: 6px;
+}
+
+.nav-group {
+  display: grid;
+  gap: 6px;
+}
+
+.sidebar-label {
+  margin: 0 10px 4px;
+  color: var(--muted-soft);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  color: var(--ink-soft);
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.nav-item span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.nav-item small {
+  display: none;
+}
+
+.nav-item:hover {
+  background: var(--sidebar-hover);
+}
+
+.nav-item[aria-current="page"] {
+  color: var(--brand-ink);
+  background: var(--sidebar-active);
+  border-color: var(--nav-active-border);
+}
+
+.nav-tree {
+  display: grid;
+  gap: 2px;
+}
+
+.nav-parent {
+  font-weight: 650;
+}
+
+.nav-caret {
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  opacity: 0.65;
+  transform: rotate(-45deg);
+  transition: transform 120ms ease;
+}
+
+.nav-tree.is-open > .nav-parent .nav-caret {
+  transform: rotate(45deg);
+}
+
+.nav-children {
+  display: grid;
+  gap: 2px;
+  margin: 2px 0 4px;
+  padding: 2px 0 2px 10px;
+  border-left: 2px solid var(--line);
+  margin-left: 12px;
+}
+
+.nav-child {
+  padding: 7px 10px;
+  color: var(--muted);
+}
+
+.nav-child span {
+  font-size: 12.5px;
+  font-weight: 550;
+}
+
+.nav-child[aria-current="page"] {
+  color: var(--brand-ink);
+  background: var(--sidebar-active);
+}
+
+.nav-parent[aria-current="page"]:not(.nav-child) {
+  color: var(--ink);
+  background: transparent;
+}
+
+.page-subpanel {
+  display: grid;
+  gap: 12px;
+}
+
+.sidebar-status {
+  display: grid;
+  margin-top: auto;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 12px;
+  padding: 18px 12px 6px;
+  border-top: 1px solid var(--line);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  background: var(--brand);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgb(16 185 129 / 16%);
+}
+
+.sidebar-status strong {
+  display: block;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.sidebar-status span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.admin-content {
+  min-width: 0;
+  min-height: 100vh;
+  background: var(--canvas);
+}
+
+.content-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  min-height: var(--header-h);
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px var(--page-inline);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+}
+
+.header-title {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.header-kicker {
+  color: var(--brand);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.content-header h1 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-header p {
+  margin: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-body {
+  width: 100%;
+  max-width: 1480px;
+  padding: var(--page-block) var(--page-inline) 36px;
+}
+
+.admin-page {
+  display: grid;
+  gap: var(--section-gap);
+}
+
+.panel,
+.tool-panel,
+.manifest-panel,
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Nested forms/uploads are sections, not another card */
+.upload-form {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.panel,
+.card,
+.manifest-panel,
+.tool-panel {
+  padding: var(--card-pad);
+}
+
+.panel-heading,
+.inline-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.panel-heading .header-actions,
+.inline-heading .header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline-heading { align-items: center; }
+
+@media (max-width: 980px) {
+  .admin-shell {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .login-view {
+    grid-template-columns: 1fr;
+  }
+
+  .login-hero { display: none; }
+
+  .admin-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: sticky;
+    z-index: 25;
+    height: auto;
+    padding: 0;
+    border-right: 0;
+  }
+
+  .sidebar-brand {
+    margin: 0;
+    padding: 10px 16px;
+  }
+
+  .sidebar-label,
+  .sidebar-status,
+  .nav-caret {
+    display: none;
+  }
+
+  .sidebar-nav {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-group,
+  .nav-tree,
+  .nav-children {
+    display: contents;
+  }
+
+  .nav-children[hidden] {
+    display: contents !important;
+  }
+
+  .nav-item,
+  .nav-child,
+  .nav-parent {
+    flex: 0 0 auto;
+    min-width: 84px;
+    justify-content: center;
+    text-align: center;
+    border-radius: 0;
+    border: 0;
+    padding: 10px 8px;
+  }
+
+  .nav-item[aria-current="page"],
+  .nav-child[aria-current="page"] {
+    border-bottom: 2px solid var(--brand);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .nav-parent {
+    display: none;
+  }
+
+  .content-header,
+  .page-body {
+    padding-inline: 20px;
+  }
+
+  .page-body {
+    padding-block: 20px 32px;
+  }
+
+  .admin-page {
+    gap: 20px;
+  }
+
+  .panel,
+  .card,
+  .manifest-panel {
+    padding: 18px;
+  }
+}

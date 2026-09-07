@@ -1,0 +1,1 @@
+/* Hash routing is handled in main.js for now. */

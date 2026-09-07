@@ -30,6 +30,7 @@ const { AnalyticsService } = require('./services/analytics-service');
 const { ResourcePackService } = require('./services/resource-pack-service');
 const { CompanionService } = require('./services/companion-service');
 const { VisitStickerService } = require('./services/visit-sticker-service');
+const { OverviewService } = require('./services/overview-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -139,6 +140,15 @@ async function createApplication(options = {}) {
     activationService,
     auditService
   });
+  const overviewService = new OverviewService({
+    analyticsService,
+    activationService,
+    feedbackService,
+    contentService,
+    resourcePackService,
+    companionService,
+    releaseService
+  });
   const adminController = new AdminController({
     authService,
     activationService,
@@ -149,7 +159,8 @@ async function createApplication(options = {}) {
     analyticsService,
     resourcePackService,
     companionService,
-    visitStickerService
+    visitStickerService,
+    overviewService
   });
   const publicController = new PublicController({
     authService,
@@ -178,34 +189,23 @@ async function createApplication(options = {}) {
   }));
 
   const publicDirectory = path.join(config.projectRoot, 'public');
+  const adminDirectory = path.join(publicDirectory, 'admin');
   app.get('/', (_req, res) => res.redirect(308, '/admin'));
   app.get(
     '/admin',
-    serveFile(path.join(publicDirectory, 'admin.html'), 'no-store')
+    serveFile(path.join(adminDirectory, 'index.html'), 'no-store')
   );
-  app.get(
-    '/assets/admin.css',
-    serveFile(path.join(publicDirectory, 'admin.css'), 'no-cache')
-  );
-  for (const relativePath of [
-    'admin-ui.js',
-    'admin.js',
-    'admin-pages/settings.js',
-    'admin-pages/releases.js',
-    'admin-pages/resource-packs.js',
-    'admin-pages/visit-stickers.js',
-    'admin-pages/activations.js',
-    'admin-pages/interactions.js',
-    'admin-pages/companions.js',
-    'admin-pages/analytics.js',
-    'admin-pages/content.js',
-    'admin-pages/feedback.js'
-  ]) {
-    app.get(
-      `/assets/${relativePath}`,
-      serveFile(path.join(publicDirectory, relativePath), 'no-cache')
-    );
-  }
+  app.use('/assets/admin', express.static(adminDirectory, {
+    fallthrough: false,
+    index: false,
+    setHeaders(res) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }));
+  // Legacy asset paths kept for older bookmarks/tests during migration.
+  app.get('/assets/admin.css', (_req, res) => res.redirect(308, '/assets/admin/css/tokens.css'));
+  app.get('/assets/admin.js', (_req, res) => res.redirect(308, '/assets/admin/js/main.js'));
+  app.get('/assets/admin-ui.js', (_req, res) => res.redirect(308, '/assets/admin/js/core/ui.js'));
   app.get(
     '/assets/app-icon.png',
     serveFile(config.brandIconPath, 'public, max-age=3600')

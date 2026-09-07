@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>桌搭子管理后台</title>
+  <link rel="icon" href="/assets/app-icon.png">
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('deskpet-admin-theme');
+        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
+      } catch (error) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-devices">
+  <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-devices">
+  <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-devices">
+  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-v3-devices">
+</head>
+<body>
+  <main class="app-root">
+    <section id="loginView" class="login-view">
+      <div class="login-hero">
+        <div class="login-brand">
+          <img src="/assets/app-icon.png" width="44" height="44" alt="">
+          <div>
+            <strong>桌搭子</strong>
+            <span>Update & Ops Console</span>
+          </div>
+        </div>
+        <h1>把发布、授权、内容和反馈放在同一处处理</h1>
+        <p>浅色现代后台，强调有用的运营指标、清晰的表格操作，以及独立的系统设置。</p>
+        <ul>
+          <li>近 7 日访问 / 下载 / 授权概况</li>
+          <li>内容库存与启用率</li>
+          <li>版本、反馈、搭子待办</li>
+        </ul>
+      </div>
+      <div class="login-side">
+        <form id="loginForm" class="login-panel">
+          <div class="section-heading login-heading">
+            <p class="eyebrow">安全访问</p>
+            <h1>登录管理后台</h1>
+          </div>
+          <label>
+            <span>用户名</span>
+            <input name="username" autocomplete="username" required>
+          </label>
+          <label>
+            <span>密码</span>
+            <input name="password" type="password" autocomplete="current-password" required autofocus>
+          </label>
+          <p id="loginError" class="form-error" role="alert"></p>
+          <button class="button button-primary button-block" type="submit">登录</button>
+        </form>
+      </div>
+    </section>
+
+    <div id="adminView" class="admin-shell" hidden>
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <img src="/assets/app-icon.png" width="36" height="36" alt="">
+          <div>
+            <strong>桌搭子</strong>
+            <span>管理后台</span>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="后台导航">
+          <div class="nav-group">
+            <p class="sidebar-label">总览</p>
+            <button class="nav-item" type="button" data-route="overview" aria-current="page"><span>概览</span></button>
+          </div>
+
+          <div class="nav-group">
+            <p class="sidebar-label">发布与授权</p>
+            <button class="nav-item" type="button" data-route="releases"><span>版本发布</span></button>
+            <div class="nav-tree" data-nav-parent="android">
+              <button class="nav-item nav-parent" type="button" data-nav-toggle="android" aria-expanded="false">
+                <span>Android</span>
+                <i class="nav-caret" aria-hidden="true"></i>
+              </button>
+              <div class="nav-children" hidden>
+                <button class="nav-item nav-child" type="button" data-route="android/packages"><span>安装包状态</span></button>
+                <button class="nav-item nav-child" type="button" data-route="android/devices"><span>授权设备</span></button>
+              </div>
+            </div>
+            <button class="nav-item" type="button" data-route="activations"><span>激活授权</span></button>
+          </div>
+
+          <div class="nav-group">
+            <p class="sidebar-label">运营数据</p>
+            <div class="nav-tree" data-nav-parent="analytics">
+              <button class="nav-item nav-parent" type="button" data-nav-toggle="analytics" aria-expanded="false">
+                <span>增长数据</span>
+                <i class="nav-caret" aria-hidden="true"></i>
+              </button>
+              <div class="nav-children" hidden>
+                <button class="nav-item nav-child" type="button" data-route="analytics/overview"><span>漏斗概览</span></button>
+                <button class="nav-item nav-child" type="button" data-route="analytics/downloads"><span>版本下载</span></button>
+                <button class="nav-item nav-child" type="button" data-route="analytics/devices"><span>设备活跃</span></button>
+                <button class="nav-item nav-child" type="button" data-route="analytics/features"><span>功能与接口</span></button>
+                <button class="nav-item nav-child" type="button" data-route="analytics/retention"><span>平台与留存</span></button>
+              </div>
+            </div>
+            <button class="nav-item" type="button" data-route="interactions"><span>互动统计</span></button>
+            <div class="nav-tree" data-nav-parent="companions">
+              <button class="nav-item nav-parent" type="button" data-nav-toggle="companions" aria-expanded="false">
+                <span>搭子联机</span>
+                <i class="nav-caret" aria-hidden="true"></i>
+              </button>
+              <div class="nav-children" hidden>
+                <button class="nav-item nav-child" type="button" data-route="companions/overview"><span>概览与发送</span></button>
+                <button class="nav-item nav-child" type="button" data-route="companions/pairs"><span>绑定关系</span></button>
+                <button class="nav-item nav-child" type="button" data-route="companions/profiles"><span>联机档案</span></button>
+                <button class="nav-item nav-child" type="button" data-route="companions/deliveries"><span>投递明细</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-group">
+            <p class="sidebar-label">内容运营</p>
+            <button class="nav-item" type="button" data-route="content"><span>内容库</span></button>
+            <button class="nav-item" type="button" data-route="resource-packs"><span>资源包</span></button>
+            <button class="nav-item" type="button" data-route="visit-stickers"><span>体验来访</span></button>
+          </div>
+
+          <div class="nav-group">
+            <p class="sidebar-label">支持与设置</p>
+            <button class="nav-item" type="button" data-route="feedback"><span>问题反馈</span></button>
+            <button class="nav-item" type="button" data-route="settings"><span>系统设置</span></button>
+          </div>
+        </nav>
+
+        <div class="sidebar-status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <div>
+            <strong id="connectionStatus">管理服务正常</strong>
+            <span>安全会话已建立</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="admin-content">
+        <header class="content-header">
+          <div class="header-title">
+            <span class="header-kicker">管理工作区</span>
+            <h1 id="pageTitle">概览</h1>
+            <p id="pageSubtitle">今天先处理这些</p>
+          </div>
+          <div class="header-actions">
+            <button id="themeToggleButton" class="button button-secondary" type="button" title="切换到浅色主题">浅色</button>
+            <button id="refreshPageButton" class="button button-secondary" type="button">刷新</button>
+            <button id="logoutButton" class="button button-secondary" type="button">退出</button>
+          </div>
+        </header>
+
+        <div class="page-body">
+          <section class="admin-page" data-page-panel="overview">
+<div class="kpi-grid" id="overviewKpiGrid" aria-label="运营概览"></div>
+
+<div class="overview-workbench">
+  <section class="card">
+    <div class="panel-heading">
+      <div>
+        <p class="eyebrow">内容健康度</p>
+        <h2>词库库存</h2>
+      </div>
+    </div>
+    <div class="stock-bars" id="overviewContentStock"></div>
+  </section>
+
+  <section class="quick-section">
+    <div class="panel-heading">
+      <p class="eyebrow">今天先看</p>
+      <h2>待办</h2>
+    </div>
+    <div class="quick-grid" id="overviewTodoList"></div>
+  </section>
+</div>
+
+<section class="card">
+  <div class="panel-heading">
+    <div>
+      <p class="eyebrow">运维</p>
+      <h2>当前发布版本</h2>
+    </div>
+  </div>
+  <div class="summary-strip" id="overviewReleaseStrip" aria-label="各端当前版本"></div>
+</section>
+          </section>
+
+          <section class="admin-page" data-page-panel="android" hidden>
+<div class="summary-strip android-summary" aria-label="Android 管理概览">
+              <span class="summary-item" data-tone="success">有效设备 <strong id="androidActiveDevices">0</strong></span>
+              <span class="summary-item" data-tone="neutral">APK 记录 <strong id="androidReleaseTotal">0</strong></span>
+              <span class="summary-item" data-tone="info">ARM64 <strong id="androidArm64Version">未发布</strong></span>
+              <span class="summary-item" data-tone="info">ARMv7 <strong id="androidArmv7Version">未发布</strong></span>
+            </div>
+
+            <div class="android-workbench">
+              <div class="page-subpanel" data-subpanel="packages"><section class="tool-panel android-release-panel">
+                <div class="panel-heading inline-heading">
+                  <div>
+                    <p class="eyebrow">APK 发布</p>
+                    <h2>Android 双架构状态</h2>
+                  </div>
+                  <button id="manageAndroidReleasesButton" class="button button-primary" type="button">上传 APK</button>
+                </div>
+                <div class="android-target-list">
+                  <article class="android-target-row">
+                    <div>
+                      <strong>ARM64</strong>
+                      <span>arm64-v8a · 绝大多数现代安卓设备</span>
+                    </div>
+                    <span id="androidArm64Status" class="status-badge">未发布</span>
+                  </article>
+                  <article class="android-target-row">
+                    <div>
+                      <strong>ARMv7</strong>
+                      <span>armeabi-v7a · 较旧的 32 位设备</span>
+                    </div>
+                    <span id="androidArmv7Status" class="status-badge">未发布</span>
+                  </article>
+                </div>
+                <p class="android-package-rule">文件名必须为 <code>ZhuoDazi-Android-版本-arm64.apk</code> 或 <code>ZhuoDazi-Android-版本-armv7.apk</code>。</p>
+              </section>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="devices" hidden><section class="tool-panel android-device-panel">
+                <div class="panel-heading inline-heading">
+                  <div>
+                    <p class="eyebrow">设备授权</p>
+                    <h2>Android 设备</h2>
+                  </div>
+                  <button id="manageAndroidDevicesButton" class="button button-secondary" type="button">全部授权</button>
+                </div>
+                <div class="list-toolbar" data-list-controls="android-devices">
+                  <label>
+                    <span>架构</span>
+                    <select data-list-filter="architecture">
+                      <option value="">全部架构</option>
+                      <option value="arm64-v8a">ARM64</option>
+                      <option value="armeabi-v7a">ARMv7</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>状态</span>
+                    <select data-list-filter="status">
+                      <option value="">全部状态</option>
+                      <option value="active">有效</option>
+                      <option value="revoked">已撤销</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="table-wrap android-device-table-wrap">
+                  <table class="android-device-table">
+                    <thead>
+                      <tr>
+                        <th>设备</th>
+                        <th>版本</th>
+                        <th>ABI</th>
+                        <th>状态</th>
+                        <th>最近检查</th>
+                      </tr>
+                    </thead>
+                    <tbody id="androidDeviceRows"></tbody>
+                  </table>
+                  <p id="emptyAndroidDevices" class="empty-state" hidden>暂无 Android 授权设备</p>
+                </div>
+                <div class="list-pagination" data-list-pagination="android-devices"></div>
+              </section>
+            </div>
+            </div>
+          </section>
+
+          <section class="admin-page" data-page-panel="releases" hidden>
+            <div class="summary-strip" aria-label="版本统计">
+              <span class="summary-item" data-tone="neutral">全部 <strong id="releasePageTotal">0</strong></span>
+              <span class="summary-item" data-tone="success">已发布 <strong id="releasePagePublished">0</strong></span>
+              <span class="summary-item" data-tone="warning">草稿 <strong id="releasePageDrafts">0</strong></span>
+              <span class="summary-item" data-tone="info">当前通道 <strong id="activeVersion">0</strong></span>
+            </div>
+
+            <section class="tool-panel releases-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">版本记录</p>
+                  <h2>发布管理</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="createReleaseButton" class="button button-primary" type="button">创建草稿</button>
+                </div>
+              </div>
+
+              <div class="list-toolbar" data-list-controls="releases">
+                <label>
+                  <span>平台</span>
+                  <select data-list-filter="platform">
+                    <option value="">全部平台</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="android">Android</option>
+                  </select>
+                </label>
+                <label>
+                  <span>状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="active">当前发布</option>
+                    <option value="published">已发布</option>
+                    <option value="draft">草稿</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>版本</th>
+                      <th>平台</th>
+                      <th>状态</th>
+                      <th>文件</th>
+                      <th>SHA-256</th>
+                      <th>创建时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="releaseRows"></tbody>
+                </table>
+                <p id="emptyReleases" class="empty-state" hidden>暂无版本</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="releases"></div>
+            </section>
+
+            <form id="uploadForm" class="upload-form release-drawer-form" hidden>
+              <div class="drawer-form-stack">
+                <label>
+                  <span>版本号</span>
+                  <input id="releaseVersion" name="version" inputmode="decimal" placeholder="3.1.5" pattern="\d+(\.\d+){1,3}(-[0-9A-Za-z.-]+)?" required>
+                </label>
+
+                <fieldset class="platform-segment">
+                  <legend>发布平台</legend>
+                  <div class="platform-options">
+                    <label class="platform-choice">
+                      <input name="platform" type="radio" value="windows" checked>
+                      <span><strong>Windows</strong><small>EXE</small></span>
+                    </label>
+                    <label class="platform-choice">
+                      <input name="platform" type="radio" value="macos">
+                      <span><strong>macOS</strong><small>ZIP</small></span>
+                    </label>
+                    <label class="platform-choice">
+                      <input name="platform" type="radio" value="android">
+                      <span><strong>Android</strong><small>APK</small></span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <label>
+                  <span>目标架构</span>
+                  <select id="releaseArchitecture" name="architecture"></select>
+                </label>
+
+                <label>
+                  <span id="releaseFileLabel">Windows 安装包</span>
+                  <input id="releaseFile" name="file" type="file" accept=".exe,application/octet-stream" required>
+                </label>
+
+                <label>
+                  <span>更新说明</span>
+                  <textarea id="releaseNotes" name="notes" rows="5" maxlength="1200" placeholder="每行一项，例如：&#10;- 修复登录闪退&#10;- 优化启动速度"></textarea>
+                </label>
+
+                <div id="uploadProgress" class="progress-wrap" hidden>
+                  <progress id="uploadProgressBar" max="100" value="0"></progress>
+                  <span id="uploadProgressText">0%</span>
+                </div>
+              </div>
+            </form>
+          </section>
+
+          <section class="admin-page" data-page-panel="activations" hidden>
+<section class="tool-panel activation-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">账号与设备授权</p>
+                  <h2>激活码管理</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshActivationButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="createActivationButton" class="button button-primary" type="button">生成激活码</button>
+                </div>
+              </div>
+
+              <div class="summary-strip" aria-label="激活码统计">
+                <span class="summary-item" data-tone="neutral">全部 <strong id="activationTotal">0</strong></span>
+                <span class="summary-item" data-tone="neutral">账号 <strong id="activationAccounts">0</strong></span>
+                <span class="summary-item" data-tone="info">未使用 <strong id="activationUnused">0</strong></span>
+                <span class="summary-item" data-tone="success">有效授权 <strong id="activationActive">0</strong></span>
+                <span class="summary-item" data-tone="danger">已撤销 <strong id="activationRevoked">0</strong></span>
+              </div>
+
+              <form id="generateCodeForm" class="activation-form drawer-form-stack" hidden>
+                <label>
+                  <span>生成数量</span>
+                  <input id="activationCount" name="count" type="number" min="1" max="100" value="1" required>
+                </label>
+                <label>
+                  <span>未使用有效期（天）</span>
+                  <input id="activationExpiry" name="expiresInDays" type="number" min="1" max="365" value="30" required>
+                </label>
+                <label class="activation-note-field">
+                  <span>备注</span>
+                  <input id="activationNote" name="note" maxlength="120" placeholder="例如：测试设备或发放批次">
+                </label>
+              </form>
+
+              <div class="list-toolbar" data-list-controls="activations">
+                <label>
+                  <span>平台</span>
+                  <select data-list-filter="platform">
+                    <option value="">全部平台</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="android">Android</option>
+                    <option value="unknown">待识别</option>
+                  </select>
+                </label>
+                <label>
+                  <span>状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="unused">未使用</option>
+                    <option value="used">已使用</option>
+                    <option value="expired">已过期</option>
+                    <option value="revoked">已撤销</option>
+                  </select>
+                </label>
+                <label>
+                  <span>用途</span>
+                  <select data-list-filter="purpose">
+                    <option value="">全部用途</option>
+                    <option value="new_account">普通激活码</option>
+                    <option value="rebind">换机码</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap activation-table-wrap">
+                <table class="activation-table">
+                  <thead>
+                    <tr>
+                      <th>激活码</th>
+                      <th>状态</th>
+                      <th>备注</th>
+                      <th>生成与有效期</th>
+                      <th>账号与设备</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activationRows"></tbody>
+                </table>
+                <p id="emptyActivations" class="empty-state" hidden>暂无激活码</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="activations"></div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="interactions" hidden>
+<section class="tool-panel interaction-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">账号互动数据</p>
+                  <h2>互动统计</h2>
+                </div>
+                <button id="refreshInteractionButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="summary-strip interaction-summary" aria-label="互动统计汇总">
+                <span class="summary-item" data-tone="neutral">已建档账号 <strong id="interactionAccounts">0</strong></span>
+                <span class="summary-item" data-tone="info">有互动账号 <strong id="interactionActiveAccounts">0</strong></span>
+                <span class="summary-item" data-tone="success">互动次数 <strong id="interactionTotal">0</strong></span>
+                <span class="summary-item" data-tone="success">开心次数 <strong id="interactionHappy">0</strong></span>
+                <span class="summary-item" data-tone="warning">笑话查看 <strong id="interactionJokes">0</strong></span>
+                <span class="summary-item" data-tone="info">答题次数 <strong id="interactionQuizzes">0</strong></span>
+              </div>
+
+              <div class="list-toolbar" data-list-controls="interactions">
+                <label>
+                  <span>互动频率</span>
+                  <select data-list-filter="mode">
+                    <option value="">全部频率</option>
+                    <option value="quiet">安静</option>
+                    <option value="standard">标准</option>
+                    <option value="lively">热闹</option>
+                  </select>
+                </label>
+                <label>
+                  <span>随机互动</span>
+                  <select data-list-filter="enabled">
+                    <option value="">全部状态</option>
+                    <option value="enabled">已开启</option>
+                    <option value="disabled">已关闭</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap interaction-table-wrap">
+                <table class="interaction-table">
+                  <thead>
+                    <tr>
+                      <th>账号</th>
+                      <th>互动设置</th>
+                      <th>互动总数</th>
+                      <th>心情选择</th>
+                      <th>内容互动</th>
+                      <th>最近互动</th>
+                    </tr>
+                  </thead>
+                  <tbody id="interactionRows"></tbody>
+                </table>
+                <p id="emptyInteractions" class="empty-state" hidden>暂无互动账号</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="interactions"></div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="companions" hidden>
+<section class="tool-panel companion-section">
+              <div class="page-subpanel" data-subpanel="overview">
+              
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">近 90 天聚合数据</p>
+                  <h2>搭子联机</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshCompanionButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="createCompanionSendButton" class="button button-primary" type="button">发给在线设备</button>
+                </div>
+              </div>
+
+              <div class="metric-grid companion-metrics" aria-label="搭子联机统计汇总">
+                <article class="metric-item"><span>联机档案</span><strong id="companionProfiles">0</strong><small>已打开过联机设置的账号</small></article>
+                <article class="metric-item metric-primary"><span>当前配对</span><strong id="companionPairs">0</strong><small>仍保持绑定的搭子关系</small></article>
+                <article class="metric-item"><span>发送</span><strong id="companionSent">0</strong><small>近 90 天 GIF 投递数</small></article>
+                <article class="metric-item"><span>已领取</span><strong id="companionReceived">0</strong><small>客户端下载并确认的投递</small></article>
+                <article class="metric-item"><span>待领取</span><strong id="companionPending">0</strong><small>当前仍在有效期内</small></article>
+                <article class="metric-item"><span>已过期</span><strong id="companionExpired">0</strong><small>近 90 天未领取投递</small></article>
+                <article class="metric-item"><span>领取率</span><strong id="companionReceiptRate">-</strong><small>已领取 / 发送</small></article>
+                <article class="metric-item"><span>GIF 存储</span><strong id="companionStorage">0 B</strong><small>服务器当前实际文件占用</small></article>
+              </div>
+
+              <form id="companionSendForm" class="upload-form companion-send-form drawer-form-stack" hidden>
+                <p class="panel-note" id="companionSendHint">选发送账号和对方设备。体验期设备也能收。</p>
+                <label>
+                  <span>发送账号</span>
+                  <select id="companionSendSender" required>
+                    <option value="">先刷新列表</option>
+                  </select>
+                </label>
+                <label>
+                  <span>对方设备</span>
+                  <select id="companionSendRecipient" required>
+                    <option value="">暂无 5 分钟内在线设备</option>
+                  </select>
+                </label>
+                <label>
+                  <span>GIF</span>
+                  <input id="companionSendFile" type="file" accept="image/gif,.gif" required>
+                </label>
+                <label>
+                  <span>话语（可选）</span>
+                  <textarea id="companionSendMessage" rows="3" maxlength="120" placeholder="最多 120 字，对方桌宠来访时会一起显示"></textarea>
+                </label>
+              </form>
+
+              <div class="panel-heading companion-history-heading">
+                <div>
+                  <p class="eyebrow">近 14 天</p>
+                  <h2>每日投递</h2>
+                </div>
+                <span id="companionUpdatedAt" class="panel-note">-</span>
+              </div>
+              <div class="table-wrap">
+                <table class="companion-table">
+                  <thead>
+                    <tr><th>日期</th><th>发送</th><th>已领取</th><th>已过期</th><th>领取率</th></tr>
+                  </thead>
+                  <tbody id="companionRows"></tbody>
+                </table>
+                <p id="emptyCompanions" class="empty-state" hidden>近 14 天暂无联机投递</p>
+              </div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="pairs" hidden>
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">当前关系</p><h2>谁和谁绑定</h2></div></div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>第一位</th><th>账号</th><th>第二位</th><th>账号</th><th>绑定时间</th></tr></thead><tbody id="companionPairRows"></tbody></table><p id="emptyCompanionPairs" class="empty-state" hidden>当前没有搭子绑定</p></div>
+              <div class="list-pagination" data-list-pagination="companion-pairs"></div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="profiles" hidden>
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">账号状态</p><h2>联机档案明细</h2></div></div>
+              <div class="list-toolbar" data-list-controls="companion-profiles">
+                <label>
+                  <span>大厅</span>
+                  <select data-list-filter="hall">
+                    <option value="">全部状态</option>
+                    <option value="online">大厅在线</option>
+                    <option value="offline">大厅离线</option>
+                    <option value="disabled">未开启</option>
+                  </select>
+                </label>
+                <label>
+                  <span>绑定</span>
+                  <select data-list-filter="paired">
+                    <option value="">全部账号</option>
+                    <option value="paired">已绑定</option>
+                    <option value="unpaired">未绑定</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>昵称</th><th>账号</th><th>当前搭子</th><th>大厅</th><th>最近在线</th><th>最近更新</th></tr></thead><tbody id="companionProfileRows"></tbody></table><p id="emptyCompanionProfiles" class="empty-state" hidden>暂无联机档案</p></div>
+              <div class="list-pagination" data-list-pagination="companion-profiles"></div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="deliveries" hidden>
+              <div class="panel-heading companion-history-heading"><div><p class="eyebrow">最近 200 条</p><h2>投递明细</h2></div></div>
+              <div class="list-toolbar" data-list-controls="companion-deliveries">
+                <label>
+                  <span>来源</span>
+                  <select data-list-filter="source">
+                    <option value="">全部来源</option>
+                    <option value="pair">绑定搭子</option>
+                    <option value="hall">陌生人大厅</option>
+                    <option value="admin">管理后台</option>
+                  </select>
+                </label>
+                <label>
+                  <span>状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="received">已领取</option>
+                    <option value="pending">待领取</option>
+                    <option value="expired">已过期</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap"><table class="companion-detail-table"><thead><tr><th>来源</th><th>发送方</th><th>接收方</th><th>留言</th><th>大小</th><th>状态</th><th>时间</th></tr></thead><tbody id="companionDeliveryRows"></tbody></table><p id="emptyCompanionDeliveries" class="empty-state" hidden>暂无搭子投递</p></div>
+              <div class="list-pagination" data-list-pagination="companion-deliveries"></div>
+            </div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="analytics" hidden>
+<section class="tool-panel analytics-section">
+              <div class="page-subpanel" data-subpanel="overview">
+              
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">官网与客户端漏斗</p>
+                  <h2>增长数据</h2>
+                </div>
+                <form id="analyticsForm" class="inline-form">
+                  <label><span>开始日期</span><input id="analyticsFrom" type="date"></label>
+                  <label><span>结束日期</span><input id="analyticsTo" type="date"></label>
+                  <button id="refreshAnalyticsButton" class="button button-secondary" type="submit">刷新</button>
+                </form>
+              </div>
+
+              <div class="metric-grid analytics-metrics" aria-label="增长数据汇总">
+                <article class="metric-item metric-primary"><span>独立访客</span><strong id="analyticsVisitors">0</strong><small>官网页面访问者</small></article>
+                <article class="metric-item"><span>安装包下载</span><strong id="analyticsDownloads">0</strong><small>安装包按钮点击</small></article>
+                <article class="metric-item"><span>资源包下载</span><strong id="analyticsResourceDownloads">0</strong><small>词包与剧本下载点击</small></article>
+                <article class="metric-item"><span>点击率</span><strong id="analyticsClickRate">-</strong><small>下载访客 / 独立访客</small></article>
+                <article class="metric-item"><span>首次启动</span><strong id="analyticsFirstLaunches">0</strong><small>安装设备首次上报</small></article>
+                <article class="metric-item"><span>安装成功率</span><strong id="analyticsInstallRate">-</strong><small>首次启动设备 / 下载访客</small></article>
+                <article class="metric-item"><span>下载到激活</span><strong id="analyticsDownloadActivationRate">-</strong><small>激活设备 / 首次启动设备</small></article>
+                <article class="metric-item"><span>每周活跃设备</span><strong id="analyticsWeeklyActive">0</strong><small>最近 7 天去重设备</small></article>
+                <article class="metric-item metric-primary"><span>真实安装包下载</span><strong id="usageReleaseDownloads">0</strong><small>服务端实际开始传输的版本包</small></article>
+                <article class="metric-item"><span>记录设备</span><strong id="usageTrackedDevices">0</strong><small>正式授权与体验设备合计</small></article>
+                <article class="metric-item"><span>当前在线</span><strong id="usageOnlineDevices">0</strong><small>最近 5 分钟调用过授权接口</small></article>
+                <article class="metric-item"><span>7 天不活跃</span><strong id="usageInactive7">0</strong><small>有效设备中至少 7 天未调用</small></article>
+                <article class="metric-item"><span>15 天不活跃</span><strong id="usageInactive15">0</strong><small>有效设备中至少 15 天未调用</small></article>
+                <article class="metric-item"><span>体验设备</span><strong id="usageTrialDevices">0</strong><small id="usageActiveTrials">当前有效 0</small></article>
+                <article class="metric-item"><span>搭子来访体验</span><strong id="usageCompanionVisits">0</strong><small>体验期选择“搭子来访”次数</small></article>
+                <article class="metric-item"><span>接口请求</span><strong id="usageApiRequests">0</strong><small>部署统计后累计客户端请求</small></article>
+              </div>
+
+              
+              </div>
+              <div class="page-subpanel" data-subpanel="downloads" hidden>
+              <div class="panel-heading usage-heading">
+                <div><p class="eyebrow">实际文件传输</p><h2>版本下载次数</h2></div>
+                <span id="usageUpdatedAt" class="panel-note">-</span>
+              </div>
+              <div class="list-toolbar" data-list-controls="usage-downloads">
+                <label>
+                  <span>平台</span>
+                  <select data-list-filter="platform">
+                    <option value="">全部平台</option>
+                    <option value="windows">Windows</option>
+                    <option value="macos">macOS</option>
+                    <option value="android">Android</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap usage-table-wrap">
+                <table>
+                  <thead><tr><th>平台</th><th>架构</th><th>版本</th><th>下载次数</th><th>最近下载</th></tr></thead>
+                  <tbody id="usageDownloadRows"></tbody>
+                </table>
+                <p id="emptyUsageDownloads" class="empty-state" hidden>部署统计后还没有版本下载</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="usage-downloads"></div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="devices" hidden>
+              <div class="panel-heading usage-heading">
+                <div><p class="eyebrow">接口心跳</p><h2>设备在线与活跃明细</h2></div>
+              </div>
+              <div class="list-toolbar" data-list-controls="usage-devices">
+                <label>
+                  <span>类型</span>
+                  <select data-list-filter="authorization">
+                    <option value="">全部</option>
+                    <option value="license">已激活</option>
+                    <option value="trial">体验</option>
+                  </select>
+                </label>
+                <label>
+                  <span>在线</span>
+                  <select data-list-filter="status">
+                    <option value="">全部</option>
+                    <option value="online">在线</option>
+                    <option value="offline">离线</option>
+                    <option value="inactive7">7 天不活跃</option>
+                    <option value="inactive15">15 天不活跃</option>
+                    <option value="revoked">已撤销</option>
+                    <option value="expired">体验已过期</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap usage-table-wrap">
+                <table class="usage-device-table">
+                  <thead>
+                    <tr>
+                      <th>类型</th>
+                      <th>在线</th>
+                      <th>激活码</th>
+                      <th>激活日期</th>
+                      <th>桌搭子昵称</th>
+                      <th>设备码</th>
+                      <th>最近在线</th>
+                    </tr>
+                  </thead>
+                  <tbody id="usageDeviceRows"></tbody>
+                </table>
+                <p id="emptyUsageDevices" class="empty-state" hidden>暂无设备记录</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="usage-devices"></div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="features" hidden>
+              <div class="analytics-tables usage-tables">
+                <div>
+                  <div class="panel-heading usage-heading"><div><p class="eyebrow">功能事件</p><h2>最近使用明细</h2></div></div>
+                  <div class="list-toolbar" data-list-controls="usage-features">
+                    <label>
+                      <span>功能</span>
+                      <select data-list-filter="feature">
+                        <option value="">全部功能</option>
+                        <option value="trial_visit">体验来访</option>
+                        <option value="companion_pair">绑定搭子</option>
+                        <option value="companion_unpair">解除搭子</option>
+                        <option value="companion_send">发送给搭子</option>
+                        <option value="companion_hall_send">大厅发送</option>
+                        <option value="companion_hall_open">开启大厅</option>
+                        <option value="companion_hall_close">关闭大厅</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="table-wrap">
+                    <table><thead><tr><th>功能</th><th>设备 / 账号</th><th>平台版本</th><th>时间</th></tr></thead><tbody id="usageFeatureRows"></tbody></table>
+                    <p id="emptyUsageFeatures" class="empty-state" hidden>暂无功能事件</p>
+                  </div>
+                  <div class="list-pagination" data-list-pagination="usage-features"></div>
+                </div>
+                <div>
+                  <div class="panel-heading usage-heading"><div><p class="eyebrow">统一中间件</p><h2>接口调用明细</h2></div></div>
+                  <div class="table-wrap">
+                    <table><thead><tr><th>接口</th><th>平台版本</th><th>请求</th><th>成功</th><th>最近调用</th></tr></thead><tbody id="usageApiRows"></tbody></table>
+                    <p id="emptyUsageApi" class="empty-state" hidden>暂无接口调用</p>
+                  </div>
+                  <div class="list-pagination" data-list-pagination="usage-api"></div>
+                </div>
+              </div>
+
+              </div>
+              <div class="page-subpanel" data-subpanel="retention" hidden>
+              <div class="analytics-tables">
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>平台</th><th>下载点击</th><th>激活设备</th><th>活跃设备</th></tr></thead>
+                    <tbody id="analyticsPlatformRows"></tbody>
+                  </table>
+                </div>
+                <div>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>激活 cohort</th><th>设备数</th><th>D1</th><th>D7</th><th>D30</th></tr></thead>
+                      <tbody id="analyticsCohortRows"></tbody>
+                    </table>
+                    <p id="emptyAnalyticsCohorts" class="empty-state" hidden>当前区间暂无 cohort 数据</p>
+                  </div>
+                  <div class="list-pagination" data-list-pagination="analytics-cohorts"></div>
+                </div>
+              </div>
+              <p id="analyticsEmpty" class="empty-state" hidden>当前区间暂无增长数据</p>
+            </div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="content" hidden>
+            <div class="summary-strip content-summary" aria-label="内容库统计">
+              <span class="summary-item" data-tone="neutral">目录 <strong id="contentCatalogVersion">0</strong></span>
+              <span class="summary-item" data-tone="success">启用 <strong id="contentActive">0</strong></span>
+              <span class="summary-item" data-tone="info">启用率 <strong id="contentActiveRate">0%</strong></span>
+              <span class="summary-item" data-tone="muted">停用 <strong id="contentDisabled">0</strong></span>
+              <span class="summary-item" data-tone="warning">笑话 <strong id="contentJokes">0</strong></span>
+              <span class="summary-item" data-tone="info">数学 <strong id="contentMath">0</strong></span>
+              <span class="summary-item" data-tone="neutral">趣味 <strong id="contentTrivia">0</strong></span>
+              <span class="summary-item" data-tone="warning">脑筋 <strong id="contentRiddles">0</strong></span>
+              <span class="summary-item" data-tone="info">贴士 <strong id="contentTips">0</strong></span>
+              <span class="summary-item" data-tone="success">关怀 <strong id="contentCare">0</strong></span>
+            </div>
+
+            <section class="tool-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">在线资源库</p>
+                  <h2>互动内容</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshContentButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="openImportContentButton" class="button button-secondary" type="button">批量导入</button>
+                  <button id="createContentButton" class="button button-primary" type="button">新增内容</button>
+                </div>
+              </div>
+
+              <div class="list-toolbar" data-list-controls="content">
+                <label>
+                  <span>内容类型</span>
+                  <select id="contentTypeFilter" data-list-filter="type">
+                    <option value="">全部类型</option>
+                    <option value="joke">冷笑话</option>
+                    <option value="math">数学题</option>
+                    <option value="trivia">趣味知识</option>
+                    <option value="riddle">脑筋急转弯</option>
+                    <option value="tip">生活小贴士</option>
+                    <option value="care">关怀内容</option>
+                  </select>
+                </label>
+                <label>
+                  <span>启用状态</span>
+                  <select data-list-filter="active">
+                    <option value="">全部状态</option>
+                    <option value="active">启用</option>
+                    <option value="disabled">停用</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="content-bulk-toolbar" aria-label="内容批量操作">
+                <div class="content-selection-summary">
+                  <strong id="contentSelectionCount">已选 0 条</strong>
+                  <button id="clearContentSelectionButton" class="button button-secondary" type="button" disabled>清除选择</button>
+                  <button id="disableSelectedContentButton" class="button button-danger" type="button" disabled>批量禁用</button>
+                </div>
+                <div class="content-type-disable">
+                  <label>
+                    <span>按类型禁用</span>
+                    <select id="contentBulkType">
+                      <option value="">选择内容类型</option>
+                      <option value="joke">冷笑话</option>
+                      <option value="math">数学题</option>
+                      <option value="trivia">趣味知识</option>
+                      <option value="riddle">脑筋急转弯</option>
+                      <option value="tip">生活小贴士</option>
+                      <option value="care">关怀内容</option>
+                    </select>
+                  </label>
+                  <button id="disableContentTypeButton" class="button button-danger" type="button" disabled>禁用该类型</button>
+                </div>
+              </div>
+
+              <div class="table-wrap content-table-wrap">
+                <table class="content-table">
+                  <thead>
+                    <tr>
+                      <th class="selection-column">
+                        <input id="contentSelectVisible" type="checkbox" aria-label="选择当前页启用内容" title="选择当前页启用内容">
+                      </th>
+                      <th>类型与状态</th>
+                      <th>题面与答案</th>
+                      <th>难度与标签</th>
+                      <th>版本与时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="contentRows"></tbody>
+                </table>
+                <p id="emptyContent" class="empty-state" hidden>暂无互动内容</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="content"></div>
+            </section>
+
+            <form id="contentEditorForm" class="content-editor-form drawer-form-stack" hidden>
+              <div class="form-section-heading">
+                <div>
+                  <p class="eyebrow">单条维护</p>
+                  <h3 id="contentEditorTitle">新增内容</h3>
+                </div>
+                <span id="contentEditorState" class="editor-state">新内容</span>
+              </div>
+              <div class="content-form-grid">
+                <label>
+                  <span>类型</span>
+                  <select id="contentType" required>
+                    <option value="joke">冷笑话</option>
+                    <option value="math">数学题</option>
+                    <option value="trivia">趣味知识</option>
+                    <option value="riddle">脑筋急转弯</option>
+                    <option value="tip">生活小贴士</option>
+                    <option value="care">关怀内容</option>
+                  </select>
+                </label>
+                <label>
+                  <span>稳定 ID</span>
+                  <input id="contentId" maxlength="128" placeholder="可留空自动生成">
+                </label>
+                <label>
+                  <span>难度</span>
+                  <select id="contentDifficulty">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </label>
+                <label>
+                  <span>语言</span>
+                  <input id="contentLocale" maxlength="40" value="zh-CN" required>
+                </label>
+                <label class="content-prompt-field">
+                  <span>题面</span>
+                  <textarea id="contentPrompt" rows="3" maxlength="500" required></textarea>
+                </label>
+                <label class="content-answer-field">
+                  <span>答案</span>
+                  <textarea id="contentAnswer" rows="3" maxlength="500" required></textarea>
+                </label>
+                <label class="content-explanation-field">
+                  <span>解释</span>
+                  <textarea id="contentExplanation" rows="3" maxlength="1000"></textarea>
+                </label>
+                <label>
+                  <span>选项（每行一项）</span>
+                  <textarea id="contentChoices" rows="3"></textarea>
+                </label>
+                <label>
+                  <span>标签（逗号分隔）</span>
+                  <input id="contentTags" maxlength="320">
+                </label>
+                <label class="toggle-field">
+                  <input id="contentActiveInput" type="checkbox" checked>
+                  <span>启用</span>
+                </label>
+              </div>
+              <div class="content-form-actions">
+                <button id="cancelContentEditButton" class="button button-secondary" type="button" hidden>取消编辑</button>
+                <button id="saveContentButton" class="button button-primary" type="submit">新增内容</button>
+              </div>
+            </form>
+
+            <form id="contentImportForm" class="content-import-form drawer-form-stack" hidden>
+              <label>
+                <span>内容文件</span>
+                <input id="contentImportFile" type="file" accept=".json,application/json" required>
+              </label>
+              <label class="toggle-field toggle-warning">
+                <input id="contentDisableMissing" type="checkbox">
+                <span>停用文件中未包含的现有内容</span>
+              </label>
+              <p class="panel-note">单次最多导入 500 条。勾选停用后，文件里没有的旧内容会被禁用。</p>
+            </form>
+          </section>
+
+          <section class="admin-page" data-page-panel="resource-packs" hidden>
+            <div class="summary-strip" aria-label="资源包统计">
+              <span class="summary-item" data-tone="neutral">全部 <strong id="resourcePackTotal">0</strong></span>
+              <span class="summary-item" data-tone="success">互动词包 <strong id="resourcePackWords">0</strong></span>
+              <span class="summary-item" data-tone="info">小剧场 <strong id="resourcePackTheater">0</strong></span>
+              <span class="summary-item" data-tone="warning">总大小 <strong id="resourcePackBytes">0 B</strong></span>
+            </div>
+
+            <section class="tool-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">公开资源</p>
+                  <h2>资源包管理</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshResourcePacksButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="createResourcePackButton" class="button button-primary" type="button">上传资源包</button>
+                </div>
+              </div>
+              <div class="list-toolbar" data-list-controls="resource-packs">
+                <label>
+                  <span>分类</span>
+                  <select data-list-filter="category">
+                    <option value="">全部分类</option>
+                    <option value="interaction-words">互动词包</option>
+                    <option value="theater-scripts">小剧场剧本</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>标题</th>
+                      <th>分类</th>
+                      <th>文件</th>
+                      <th>SHA-256</th>
+                      <th>上传时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resourcePackRows"></tbody>
+                </table>
+                <p id="emptyResourcePacks" class="empty-state" hidden>暂无资源包</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="resource-packs"></div>
+            </section>
+
+            <form id="resourcePackForm" class="upload-form drawer-form-stack" hidden>
+              <label>
+                <span>分类</span>
+                <select id="resourcePackCategory" required>
+                  <option value="interaction-words">互动词包</option>
+                  <option value="theater-scripts">小剧场剧本</option>
+                </select>
+              </label>
+              <label>
+                <span>标题</span>
+                <input id="resourcePackTitle" maxlength="80" placeholder="例如：打工人日常词包" required>
+              </label>
+              <label>
+                <span>ZIP 文件</span>
+                <input id="resourcePackFile" type="file" accept=".zip,application/zip" required>
+              </label>
+              <label>
+                <span>简介</span>
+                <textarea id="resourcePackDescription" rows="4" maxlength="600" placeholder="简要说明包含内容和适用场景" required></textarea>
+              </label>
+              <div id="resourcePackProgress" class="progress-wrap" hidden>
+                <progress id="resourcePackProgressBar" max="100" value="0"></progress>
+                <span id="resourcePackProgressText">0%</span>
+              </div>
+            </form>
+          </section>
+
+          <section class="admin-page" data-page-panel="visit-stickers" hidden>
+            <div class="summary-strip" aria-label="来访表情数量">
+              <span class="summary-item" data-tone="success">女友 <strong id="visitStickerGirlfriendCount">0</strong></span>
+              <span class="summary-item" data-tone="info">好友 <strong id="visitStickerFriendCount">0</strong></span>
+              <span class="summary-item" data-tone="warning">搭子 <strong id="visitStickerCompanionCount">0</strong></span>
+            </div>
+
+            <section class="tool-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">线上表情库</p>
+                  <h2>体验来访表情</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="refreshVisitStickersButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="createVisitStickerButton" class="button button-primary" type="button">上传表情包</button>
+                </div>
+              </div>
+              <div class="list-toolbar" data-list-controls="visit-stickers">
+                <label>
+                  <span>分类</span>
+                  <select data-list-filter="category">
+                    <option value="">全部分类</option>
+                    <option value="girlfriend">女友</option>
+                    <option value="friend">好友</option>
+                    <option value="companion">搭子</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>表情包</th>
+                      <th>分类</th>
+                      <th>数量</th>
+                      <th>上传时间</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visitStickerRows"></tbody>
+                </table>
+                <p id="emptyVisitStickers" class="empty-state" hidden>还没有体验来访表情。上传一个 ZIP，里面放 GIF。</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="visit-stickers"></div>
+            </section>
+
+            <form id="visitStickerForm" class="upload-form drawer-form-stack" hidden>
+              <label>
+                <span>分类</span>
+                <select id="visitStickerCategory" required>
+                  <option value="girlfriend">女友</option>
+                  <option value="friend">好友</option>
+                  <option value="companion">搭子</option>
+                </select>
+              </label>
+              <label>
+                <span>标题</span>
+                <input id="visitStickerTitle" maxlength="80" placeholder="例如：下班来串门" required>
+              </label>
+              <label>
+                <span>ZIP 文件</span>
+                <input id="visitStickerFile" type="file" accept=".zip,application/zip" required>
+              </label>
+              <label>
+                <span>备注</span>
+                <textarea id="visitStickerNote" rows="4" maxlength="600" placeholder="可选。压缩包里放 GIF，一层文件夹也可以。"></textarea>
+              </label>
+              <div id="visitStickerProgress" class="progress-wrap" hidden>
+                <progress id="visitStickerProgressBar" max="100" value="0"></progress>
+                <span id="visitStickerProgressText">0%</span>
+              </div>
+            </form>
+          </section>
+
+          <section class="admin-page" data-page-panel="feedback" hidden>
+<section class="tool-panel feedback-section">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">用户声音</p>
+                  <h2>问题反馈与建议</h2>
+                </div>
+                <button id="refreshFeedbackButton" class="button button-secondary" type="button">刷新</button>
+              </div>
+
+              <div class="summary-strip feedback-summary" aria-label="反馈统计">
+                <span class="summary-item" data-tone="neutral">全部 <strong id="feedbackTotal">0</strong></span>
+                <span class="summary-item" data-tone="warning">待处理 <strong id="feedbackPending">0</strong></span>
+                <span class="summary-item" data-tone="info">进行中 <strong id="feedbackInProgress">0</strong></span>
+                <span class="summary-item" data-tone="success">已处理 <strong id="feedbackResolved">0</strong></span>
+                <span class="summary-item" data-tone="muted">已关闭 <strong id="feedbackClosed">0</strong></span>
+              </div>
+
+              <div class="list-toolbar" data-list-controls="feedback">
+                <label>
+                  <span>反馈类型</span>
+                  <select data-list-filter="type">
+                    <option value="">全部类型</option>
+                    <option value="problem">问题反馈</option>
+                    <option value="suggestion">功能建议</option>
+                  </select>
+                </label>
+                <label>
+                  <span>处理状态</span>
+                  <select data-list-filter="status">
+                    <option value="">全部状态</option>
+                    <option value="pending">待处理</option>
+                    <option value="in_progress">进行中</option>
+                    <option value="resolved">已处理</option>
+                    <option value="closed">已关闭</option>
+                  </select>
+                </label>
+              </div>
+              <div class="table-wrap feedback-table-wrap">
+                <table class="feedback-table">
+                  <thead>
+                    <tr>
+                      <th>类型与内容</th>
+                      <th>状态</th>
+                      <th>处理备注</th>
+                      <th class="actions-column">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="feedbackRows"></tbody>
+                </table>
+                <p id="emptyFeedback" class="empty-state" hidden>暂无反馈</p>
+              </div>
+              <div class="list-pagination" data-list-pagination="feedback"></div>
+            </section>
+          </section>
+
+          <section class="admin-page" data-page-panel="settings" hidden>
+            <form id="siteSettingsForm" class="tool-panel settings-panel">
+              <div class="panel-heading inline-heading">
+                <div>
+                  <p class="eyebrow">系统设置</p>
+                  <h2>远程配置</h2>
+                </div>
+                <div class="header-actions">
+                  <button id="saveSiteSettingsButton" class="button button-primary" type="submit">保存配置</button>
+                </div>
+              </div>
+
+              <div class="settings-sections">
+                <section class="settings-block">
+                  <h3>接入地址</h3>
+                  <div class="settings-fields">
+                    <label>
+                      <span>管理后台</span>
+                      <span class="copy-row">
+                        <input id="adminUrl" aria-label="管理后台地址" readonly>
+                        <button id="copyAdminUrlButton" class="button button-secondary" type="button">复制</button>
+                      </span>
+                    </label>
+                    <label>
+                      <span>更新清单</span>
+                      <span class="copy-row">
+                        <input id="manifestUrl" aria-label="更新清单地址" readonly>
+                        <button id="copyManifestButton" class="button button-secondary" type="button">复制</button>
+                      </span>
+                    </label>
+                  </div>
+                </section>
+
+                <section class="settings-block">
+                  <h3>联系与公告</h3>
+                  <div class="settings-fields">
+                    <label for="xianyuUrl">
+                      <span>官网闲鱼交易链接</span>
+                      <input id="xianyuUrl" type="url" inputmode="url" maxlength="500" placeholder="https://www.goofish.com/...">
+                    </label>
+                    <label for="wechatId">
+                      <span>客服微信号</span>
+                      <input id="wechatId" type="text" maxlength="32" placeholder="wcl_lcw627" autocomplete="off">
+                    </label>
+                    <label for="announcement">
+                      <span>客户端公告（可空）</span>
+                      <input id="announcement" type="text" maxlength="120" placeholder="只显示给已安装的客户端">
+                    </label>
+                  </div>
+                </section>
+
+                <section class="settings-block">
+                  <h3>远程功能开关</h3>
+                  <div class="settings-switch-list">
+                    <label class="settings-switch"><input id="featureTrialVisits" type="checkbox"> <span>体验来访</span></label>
+                    <label class="settings-switch"><input id="featureCompanionHall" type="checkbox"> <span>搭子大厅</span></label>
+                    <label class="settings-switch"><input id="featureFishMode" type="checkbox"> <span>摸鱼广告</span></label>
+                    <label class="settings-switch"><input id="featureAutoUpdates" type="checkbox"> <span>自动检查更新</span></label>
+                  </div>
+                </section>
+
+                <section class="settings-block">
+                  <h3>新安装默认值</h3>
+                  <div class="settings-fields settings-fields-3">
+                    <label for="defaultPersonality">
+                      <span>默认性格</span>
+                      <select id="defaultPersonality">
+                        <option value="lively">活泼</option>
+                        <option value="shy">害羞</option>
+                        <option value="clingy">黏人</option>
+                        <option value="chaotic">混乱</option>
+                      </select>
+                    </label>
+                    <label for="defaultInteractionMode">
+                      <span>默认互动</span>
+                      <select id="defaultInteractionMode">
+                        <option value="quiet">安静</option>
+                        <option value="standard">标准</option>
+                        <option value="lively">热闹</option>
+                      </select>
+                    </label>
+                    <label for="defaultTheaterInterval">
+                      <span>默认剧场间隔</span>
+                      <select id="defaultTheaterInterval">
+                        <option value="60">1 分钟</option>
+                        <option value="180">3 分钟</option>
+                        <option value="300">5 分钟</option>
+                        <option value="600">10 分钟</option>
+                        <option value="1800">30 分钟</option>
+                      </select>
+                    </label>
+                  </div>
+                </section>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
+  <aside id="editorDrawer" class="drawer" hidden>
+    <div class="drawer-header">
+      <div>
+        <p class="eyebrow" id="drawerEyebrow">编辑</p>
+        <h2 id="drawerTitle">编辑</h2>
+      </div>
+      <button id="drawerCloseButton" class="button button-ghost" type="button">关闭</button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-footer" id="drawerFooter"></div>
+  </aside>
+
+  <dialog id="confirmDialog">
+    <form method="dialog">
+      <h2 id="confirmTitle">确认操作</h2>
+      <p id="confirmMessage"></p>
+      <div class="dialog-actions">
+        <button class="button button-secondary" value="cancel">取消</button>
+        <button id="confirmButton" class="button button-primary" value="confirm">确认</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="generatedCodesDialog" class="codes-dialog">
+    <form method="dialog">
+      <h2>激活码已生成</h2>
+      <p>完整激活码也可以稍后在管理列表中查看和复制。</p>
+      <textarea id="generatedCodesText" readonly rows="8"></textarea>
+      <div class="dialog-actions">
+        <button id="copyGeneratedCodesButton" class="button button-secondary" type="button">复制全部</button>
+        <button class="button button-primary" value="close">完成</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="/assets/admin/js/core/api.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/ui.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/list-view.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/stats.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/form-kit.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/router.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/overview.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/settings.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/releases.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/activations.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/interactions.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/companions.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/analytics.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/content.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/pages/feedback.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/main.js?v=admin-v3-devices"></script>
+</body>
+</html>

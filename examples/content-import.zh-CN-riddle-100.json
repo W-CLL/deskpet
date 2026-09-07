@@ -1,1997 +1,1997 @@
 {
   "items": [
     {
-      "id": "riddle:zhcn2026:001",
+      "id": "riddle:humor202609:001",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么东西帮别人变干时，自己反而会变湿？",
-      "answer": "毛巾",
-      "explanation": "毛巾吸走水分后自己会变湿。",
+      "prompt": "什么东西越洗越脏？",
+      "answer": "水",
+      "explanation": "",
       "choices": [
-        "毛巾",
-        "鞋子",
-        "回声",
-        "公鸡不会下蛋"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:002",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有城市和河流，却没有房屋和流水？",
-      "answer": "地图",
-      "explanation": "地图用符号表示城市和河流。",
-      "choices": [
-        "桌子",
-        "沉默",
-        "没有烟",
-        "地图"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:003",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有脸有手，却没有腿？",
-      "answer": "钟表",
-      "explanation": "表盘像脸，指针常被称为表的手。",
-      "choices": [
-        "约定",
-        "一样重",
-        "钟表",
-        "硬币"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:004",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有眼睛却看不见？",
-      "answer": "针",
-      "explanation": "针眼只是穿线的小孔。",
-      "choices": [
-        "3 个人",
-        "针",
-        "年龄",
-        "你睡着了吗"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:005",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有很多牙齿，却从不咬人？",
-      "answer": "梳子",
-      "explanation": "梳齿用来整理头发。",
-      "choices": [
-        "梳子",
-        "洞",
-        "球门",
-        "2 个"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:006",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有脖子，却没有头？",
-      "answer": "瓶子",
-      "explanation": "瓶口下方常被称为瓶颈。",
-      "choices": [
-        "你的名字",
-        "蜡烛",
-        "10 条",
-        "瓶子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:007",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有河床，却从来不睡觉？",
-      "answer": "河流",
-      "explanation": "河床是河水流经的槽状地形。",
-      "choices": [
-        "不埋",
-        "9 只",
-        "河流",
-        "影子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:008",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有舌头却不会说话？",
-      "answer": "鞋子",
-      "explanation": "鞋带下方的部件叫鞋舌。",
-      "choices": [
-        "0 只",
-        "鞋子",
-        "回声",
-        "公鸡不会下蛋"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:009",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有四条腿，却一步也不会走？",
-      "answer": "桌子",
-      "explanation": "桌腿只负责支撑。",
-      "choices": [
-        "桌子",
-        "沉默",
-        "没有烟",
-        "火柴"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:010",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西有两面，却没有一张脸？",
-      "answer": "硬币",
-      "explanation": "硬币有正反两面。",
-      "choices": [
-        "约定",
-        "一样重",
-        "1 小时",
-        "硬币"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:011",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西只会上升，不会下降？",
-      "answer": "年龄",
-      "explanation": "人的年龄会随时间增长。",
-      "choices": [
-        "3 个人",
-        "4 个",
-        "年龄",
-        "你睡着了吗"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:012",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西拿走得越多，反而变得越大？",
-      "answer": "洞",
-      "explanation": "从洞里挖走的东西越多，洞越大。",
-      "choices": [
-        "3 根",
-        "洞",
-        "球门",
-        "2 个"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:013",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西属于你，别人却比你用得更多？",
-      "answer": "你的名字",
-      "explanation": "别人称呼你时会使用你的名字。",
-      "choices": [
-        "你的名字",
-        "蜡烛",
-        "10 条",
-        "排成一列"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:014",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西总跟着你，黑暗中却不见了？",
-      "answer": "影子",
-      "explanation": "影子需要光线才能形成。",
-      "choices": [
-        "不埋",
-        "9 只",
-        "他没有头发",
-        "影子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:015",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "你说什么，它就重复什么，却没有嘴？",
-      "answer": "回声",
-      "explanation": "声音反射后形成回声。",
-      "choices": [
-        "0 只",
-        "有破洞的口袋",
-        "回声",
-        "公鸡不会下蛋"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:016",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西一说出来就被打破了？",
-      "answer": "沉默",
-      "explanation": "开口说话就结束了沉默。",
-      "choices": [
-        "100 件",
-        "沉默",
-        "没有烟",
-        "火柴"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:017",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西不用手碰也可能被打破？",
-      "answer": "约定",
-      "explanation": "没有履行约定就叫失约。",
-      "choices": [
-        "约定",
-        "一样重",
-        "1 小时",
-        "20 次"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:018",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么问题在你睡着时无法回答“是”？",
-      "answer": "你睡着了吗",
-      "explanation": "真正睡着时无法开口回答。",
-      "choices": [
-        "3 个人",
-        "4 个",
-        "12 支",
-        "你睡着了吗"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:019",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么门不需要钥匙，比赛时还希望它常开？",
-      "answer": "球门",
-      "explanation": "球门不是用来上锁的门。",
-      "choices": [
-        "3 根",
-        "都不会",
-        "球门",
-        "2 个"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:020",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西越燃烧越短？",
-      "answer": "蜡烛",
-      "explanation": "蜡烛燃烧时会不断消耗。",
-      "choices": [
-        "鸡蛋",
-        "蜡烛",
-        "10 条",
-        "排成一列"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:021",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "飞机在两地交界处迫降，幸存者应该埋在哪里？",
-      "answer": "不埋",
-      "explanation": "幸存者还活着，不应该被埋葬。",
-      "choices": [
-        "不埋",
-        "9 只",
-        "他没有头发",
-        "手指"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:022",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "公鸡在屋顶下了一个蛋，蛋会滚向哪边？",
-      "answer": "公鸡不会下蛋",
-      "explanation": "公鸡是雄性鸡，不会下蛋。",
-      "choices": [
-        "0 只",
-        "有破洞的口袋",
-        "雨",
-        "公鸡不会下蛋"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:023",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "电动火车向北行驶，烟会飘向哪边？",
-      "answer": "没有烟",
-      "explanation": "电动火车正常运行不冒烟。",
-      "choices": [
-        "100 件",
-        "风",
-        "没有烟",
-        "火柴"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:024",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一千克铁和一千克棉花哪个更重？",
-      "answer": "一样重",
-      "explanation": "两者质量都是一千克。",
-      "choices": [
-        "西瓜",
-        "一样重",
-        "1 小时",
-        "20 次"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:025",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "两个父亲和两个儿子一起吃饭，最少有几个人？",
-      "answer": "3 个人",
-      "explanation": "可以是祖父、父亲和儿子。",
-      "choices": [
-        "3 个人",
-        "4 个",
-        "12 支",
-        "彩虹"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:026",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "桌上有三个苹果，你拿走两个，你有几个？",
-      "answer": "2 个",
-      "explanation": "你拿走的两个苹果在你手里。",
-      "choices": [
-        "3 根",
-        "都不会",
-        "雪花",
-        "2 个"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:027",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "鱼缸里有十条鱼，淹死两条，还剩几条？",
-      "answer": "10 条",
-      "explanation": "鱼不会因为在水里而淹死。",
-      "choices": [
-        "鸡蛋",
-        "太阳",
-        "10 条",
-        "排成一列"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:028",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "十七只羊除了九只以外都走丢了，还剩几只？",
-      "answer": "9 只",
-      "explanation": "“除了九只以外”表示留下九只。",
-      "choices": [
-        "月亮",
-        "9 只",
-        "他没有头发",
-        "手指"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:029",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "树上五只鸟，响了一声枪后树上还剩几只？",
-      "answer": "0 只",
-      "explanation": "没被击中的鸟通常也会被声音惊飞。",
-      "choices": [
-        "0 只",
-        "有破洞的口袋",
-        "雨",
-        "针线"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:030",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "黑暗房间里有蜡烛、油灯和火炉，先点什么？",
-      "answer": "火柴",
-      "explanation": "需要先点燃火柴才能点其他东西。",
-      "choices": [
-        "100 件",
-        "风",
-        "铅笔",
-        "火柴"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:031",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "三片药每隔半小时吃一片，多久吃完？",
-      "answer": "1 小时",
-      "explanation": "在零点、半小时和一小时各吃一片。",
-      "choices": [
-        "西瓜",
-        "书页",
-        "1 小时",
-        "20 次"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:032",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "六个鸡蛋，打破两个、煮了两个、吃了两个，还剩几个？",
-      "answer": "4 个",
-      "explanation": "被打破、煮和吃的是同两个鸡蛋。",
-      "choices": [
-        "收音机",
-        "4 个",
-        "12 支",
-        "彩虹"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:033",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "八根蜡烛吹灭三根，最后完整留下几根？",
-      "answer": "3 根",
-      "explanation": "其余五根会继续燃烧变短。",
-      "choices": [
-        "3 根",
-        "都不会",
-        "雪花",
-        "桌子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:034",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "三个人排队，如何做到两人在前、两人在后？",
-      "answer": "排成一列",
-      "explanation": "中间的人前后各有一人。",
-      "choices": [
-        "鸡蛋",
-        "太阳",
-        "钢笔",
-        "排成一列"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:035",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一个人在雨里没打伞，头发为什么没湿？",
-      "answer": "他没有头发",
-      "explanation": "没有头发就谈不上头发被淋湿。",
-      "choices": [
-        "月亮",
-        "星星",
-        "他没有头发",
-        "手指"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:036",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么口袋即使空着，里面也可能有东西？",
-      "answer": "有破洞的口袋",
-      "explanation": "空口袋里还可能有一个洞。",
-      "choices": [
-        "西瓜",
-        "有破洞的口袋",
-        "雨",
-        "针线"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:037",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "五台机器五分钟做五件产品，一百台五分钟做几件？",
-      "answer": "100 件",
-      "explanation": "每台机器五分钟做一件。",
-      "choices": [
-        "100 件",
-        "风",
-        "铅笔",
-        "鞋子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:038",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "从 1 到 100，数字 9 一共出现多少次？",
-      "answer": "20 次",
-      "explanation": "个位出现十次，十位也出现十次。",
-      "choices": [
-        "西瓜",
-        "书页",
-        "蘑菇",
-        "20 次"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:039",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一打铅笔是多少支？",
-      "answer": "12 支",
-      "explanation": "一打表示十二个。",
-      "choices": [
-        "收音机",
+        "名字",
         "菠萝",
-        "12 支",
-        "彩虹"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:040",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "船边梯子随潮水上涨，哪一级会先被淹？",
-      "answer": "都不会",
-      "explanation": "梯子随船一起升高。",
-      "choices": [
-        "苹果",
-        "都不会",
-        "雪花",
-        "桌子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 1,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:041",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "白房子里住着黄客人，外面还穿着硬衣服，是什么？",
-      "answer": "鸡蛋",
-      "explanation": "蛋壳、蛋白和蛋黄对应谜面。",
-      "choices": [
-        "鸡蛋",
-        "太阳",
-        "钢笔",
-        "洋葱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:042",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "五个兄弟住一起，高矮不同不分离，是什么？",
-      "answer": "手指",
-      "explanation": "一只手的五根手指长短不同。",
-      "choices": [
-        "月亮",
-        "星星",
-        "棒棒糖",
-        "手指"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:043",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "千条线、万条线，落进水里都不见，是什么？",
-      "answer": "雨",
-      "explanation": "雨丝落入水中后融为一体。",
-      "choices": [
-        "西瓜",
-        "保温杯",
-        "雨",
-        "针线"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:044",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "没脚能走遍四方，来了树叶就摇晃，是什么？",
-      "answer": "风",
-      "explanation": "风没有脚，却能吹到各处。",
-      "choices": [
-        "电视",
-        "风",
-        "铅笔",
-        "鞋子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:045",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "绿衣服、红肚皮，肚里一群黑孩子，是什么？",
-      "answer": "西瓜",
-      "explanation": "谜面描述西瓜皮、瓜瓤和瓜子。",
-      "choices": [
-        "西瓜",
-        "书页",
-        "蘑菇",
-        "智能音箱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:046",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "弯弯一座彩色桥，雨后挂在半山腰，是什么？",
-      "answer": "彩虹",
-      "explanation": "彩虹常在雨后出现并呈弧形。",
-      "choices": [
-        "收音机",
-        "菠萝",
-        "键盘",
-        "彩虹"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:047",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "小小白花天上栽，一夜北风遍地开，是什么？",
-      "answer": "雪花",
-      "explanation": "雪花从天空落下并覆盖地面。",
-      "choices": [
-        "苹果",
-        "鼠标",
-        "雪花",
-        "桌子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:048",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一位老公公，脸庞红彤彤，晴天早早起，是什么？",
-      "answer": "太阳",
-      "explanation": "太阳常在清晨升起并呈红色。",
-      "choices": [
-        "手机",
-        "太阳",
-        "钢笔",
-        "洋葱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:049",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "晚上才露面，圆缺常改变，是什么？",
-      "answer": "月亮",
-      "explanation": "月亮夜间常见，并呈现不同月相。",
-      "choices": [
-        "月亮",
-        "星星",
-        "棒棒糖",
-        "二维码"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:050",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一根银线两头忙，穿过布料补衣裳，是什么？",
-      "answer": "针线",
-      "explanation": "针带着线穿过布料。",
-      "choices": [
-        "西瓜",
-        "保温杯",
-        "眼镜",
-        "针线"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:051",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "身体细又长，写字有黑香，越用个子越短，是什么？",
-      "answer": "铅笔",
-      "explanation": "铅笔使用时会不断被削短。",
-      "choices": [
-        "电视",
-        "太阳镜",
-        "铅笔",
-        "鞋子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:052",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "方方一块田，字儿种里面，是什么？",
-      "answer": "书页",
-      "explanation": "书页方正，上面印着文字。",
-      "choices": [
-        "硬币",
-        "书页",
-        "蘑菇",
-        "智能音箱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:053",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一间小房四四方，唱歌说话里面藏，是什么？",
-      "answer": "收音机",
-      "explanation": "收音机外壳中传出节目声音。",
-      "choices": [
-        "收音机",
-        "菠萝",
-        "键盘",
-        "洗东西的水"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:054",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "有面没有口，有脚不会走，是什么？",
-      "answer": "桌子",
-      "explanation": "桌面和桌脚构成谜面的双关。",
-      "choices": [
-        "苹果",
-        "鼠标",
-        "瀑布",
-        "桌子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:055",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一头尖来一头圆，肚里装着黑墨水，是什么？",
-      "answer": "钢笔",
-      "explanation": "钢笔有笔尖和储墨结构。",
-      "choices": [
-        "手机",
-        "傻瓜",
-        "钢笔",
-        "洋葱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:056",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "白天躲起来，夜晚亮晶晶，是什么？",
-      "answer": "星星",
-      "explanation": "星星白天被阳光掩盖，夜间容易看见。",
-      "choices": [
-        "木马",
-        "星星",
-        "棒棒糖",
-        "二维码"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:057",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "身穿绿衣裳，肚里水汪汪，夏天最清凉，是什么？",
-      "answer": "西瓜",
-      "explanation": "西瓜外皮绿色且含水丰富。",
-      "choices": [
-        "西瓜",
-        "保温杯",
-        "眼镜",
-        "秘书"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:058",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "小小船儿两头翘，水上不走脚上跑，是什么？",
-      "answer": "鞋子",
-      "explanation": "鞋像小船，却穿在脚上。",
-      "choices": [
-        "电视",
-        "太阳镜",
-        "红绿灯",
-        "鞋子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:059",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一把伞儿不是布，藏在森林泥土处，是什么？",
-      "answer": "蘑菇",
-      "explanation": "蘑菇菌盖形似小伞。",
-      "choices": [
-        "硬币",
-        "银河",
-        "蘑菇",
-        "智能音箱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:060",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "穿着一身刺，果肉香又甜，头顶绿叶冠，是什么？",
-      "answer": "菠萝",
-      "explanation": "菠萝表皮粗糙带刺，顶端有叶冠。",
-      "choices": [
-        "电池",
-        "菠萝",
-        "键盘",
-        "洗东西的水"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:061",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "有红有绿不是花，圆圆身体树上挂，是什么？",
-      "answer": "苹果",
-      "explanation": "苹果有多种颜色并长在树上。",
-      "choices": [
-        "苹果",
-        "鼠标",
-        "瀑布",
+        "水",
         "见面"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:062",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一层一层裹得紧，切开常让人流泪，是什么？",
-      "answer": "洋葱",
-      "explanation": "洋葱有多层鳞片，切开会刺激眼睛。",
-      "choices": [
-        "手机",
-        "傻瓜",
-        "眼球",
-        "洋葱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:063",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一根小棍五彩衣，雨后孩子爱含嘴里，是什么？",
-      "answer": "棒棒糖",
-      "explanation": "棒棒糖通常色彩鲜艳并带小棍。",
-      "choices": [
-        "木马",
-        "风车",
-        "棒棒糖",
-        "二维码"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:064",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "肚大口小会保温，出门喝水常带它，是什么？",
-      "answer": "保温杯",
-      "explanation": "保温杯用于携带并保温饮品。",
-      "choices": [
-        "鼻涕",
-        "保温杯",
-        "眼镜",
-        "秘书"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:065",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "四四方方一扇窗，世界新闻里面装，是什么？",
-      "answer": "电视",
-      "explanation": "电视屏幕像窗口，可播放各地信息。",
-      "choices": [
-        "电视",
-        "太阳镜",
-        "红绿灯",
-        "知识"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:066",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "不用嘴巴会说话，不用耳朵能回答，是什么？",
-      "answer": "智能音箱",
-      "explanation": "智能音箱可以播放语音并响应指令。",
-      "choices": [
-        "硬币",
-        "银河",
-        "风",
-        "智能音箱"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:067",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "小小方块桌上放，轻轻一按字成行，是什么？",
-      "answer": "键盘",
-      "explanation": "按键盘即可输入文字。",
-      "choices": [
-        "电池",
-        "心事",
-        "键盘",
-        "洗东西的水"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:068",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "拖着尾巴桌上跑，点点按按听指挥，是什么？",
-      "answer": "鼠标",
-      "explanation": "有线鼠标像拖着尾巴并用于点击。",
-      "choices": [
-        "时间",
-        "鼠标",
-        "瀑布",
-        "见面"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:069",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "有屏没有窗，有声没有嘴，是什么？",
-      "answer": "手机",
-      "explanation": "手机通过屏幕和扬声器呈现内容。",
-      "choices": [
-        "手机",
-        "傻瓜",
-        "眼球",
-        "电路"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:070",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "远看一个小黑点，近看消息装满面，是什么？",
-      "answer": "二维码",
-      "explanation": "二维码由黑白模块组成并可存储信息。",
-      "choices": [
-        "木马",
-        "风车",
-        "薪水",
-        "二维码"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:071",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "一座小桥不通车，鼻梁上面来安家，是什么？",
-      "answer": "眼镜",
-      "explanation": "眼镜的鼻梁架连接两侧镜片。",
-      "choices": [
-        "鼻涕",
-        "脸蛋",
-        "眼镜",
-        "秘书"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:072",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "两个小窗挂耳边，遮住太阳看得清，是什么？",
-      "answer": "太阳镜",
-      "explanation": "太阳镜通过镜片减弱强光。",
-      "choices": [
-        "浪花",
-        "太阳镜",
-        "红绿灯",
-        "知识"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:073",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "有头有尾没有身体，抛向空中猜输赢，是什么？",
-      "answer": "硬币",
-      "explanation": "硬币常用正反面进行随机选择。",
-      "choices": [
-        "硬币",
-        "银河",
-        "风",
-        "如果"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:074",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "越洗越脏的东西是什么？",
-      "answer": "洗东西的水",
-      "explanation": "水带走污渍后会变脏。",
-      "choices": [
-        "电池",
-        "心事",
-        "视线",
-        "洗东西的水"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:075",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么布不能拿来做衣服？",
-      "answer": "瀑布",
-      "explanation": "“瀑布”虽有布字，却不是布料。",
-      "choices": [
-        "时间",
-        "路口",
-        "瀑布",
-        "见面"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:076",
+      "id": "riddle:humor202609:002",
       "type": "riddle",
       "revision": 1,
       "prompt": "什么瓜不能吃？",
       "answer": "傻瓜",
-      "explanation": "“傻瓜”不是食物。",
+      "explanation": "",
       "choices": [
-        "河床",
         "傻瓜",
-        "眼球",
-        "电路"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:077",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么马不会跑？",
-      "answer": "木马",
-      "explanation": "木马是玩具或器械，不是真马。",
-      "choices": [
-        "木马",
-        "风车",
-        "薪水",
-        "运气"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:078",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么书在书店里买不到？",
-      "answer": "秘书",
-      "explanation": "“秘书”是一种职业称呼。",
-      "choices": [
-        "鼻涕",
-        "脸蛋",
-        "恼火",
+        "针",
+        "键盘",
         "秘书"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:079",
+      "id": "riddle:humor202609:003",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么灯不能照明？",
-      "answer": "红绿灯",
-      "explanation": "红绿灯用于指挥交通，不用于室内照明。",
+      "prompt": "什么马不会跑？",
+      "answer": "木马",
+      "explanation": "",
       "choices": [
-        "浪花",
-        "四边形去掉一个角",
+        "见面",
+        "瀑布",
+        "傻瓜",
+        "木马"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:004",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么布不能做衣服？",
+      "answer": "瀑布",
+      "explanation": "",
+      "choices": [
+        "球门",
+        "洞",
+        "瀑布",
+        "西瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:005",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么门不用钥匙？",
+      "answer": "球门",
+      "explanation": "",
+      "choices": [
+        "水",
+        "球门",
         "红绿灯",
-        "知识"
+        "烟斗"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:080",
+      "id": "riddle:humor202609:006",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么河里没有水？",
-      "answer": "银河",
-      "explanation": "银河是星系名称，不是地面河流。",
+      "prompt": "什么灯不照明？",
+      "answer": "红绿灯",
+      "explanation": "",
       "choices": [
-        "毛巾",
-        "银河",
-        "风",
-        "如果"
+        "下班键",
+        "瀑布",
+        "红绿灯",
+        "书"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:081",
+      "id": "riddle:humor202609:007",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么河没有水？",
+      "answer": "银河",
+      "explanation": "",
+      "choices": [
+        "年龄",
+        "手指",
+        "彩虹",
+        "银河"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:008",
       "type": "riddle",
       "revision": 1,
       "prompt": "什么池不能游泳？",
       "answer": "电池",
-      "explanation": "电池是储存电能的器件。",
+      "explanation": "",
       "choices": [
         "电池",
-        "心事",
-        "视线",
-        "地图"
+        "傻瓜",
+        "指南针",
+        "热搜门槛"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:082",
+      "id": "riddle:humor202609:009",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么面不能吃？",
-      "answer": "见面",
-      "explanation": "“见面”不是食品。",
-      "choices": [
-        "时间",
-        "路口",
-        "钟表",
-        "见面"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:083",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么球离你最近却不能踢？",
+      "prompt": "什么球不能踢？",
       "answer": "眼球",
-      "explanation": "眼球是身体器官。",
+      "explanation": "",
       "choices": [
-        "河床",
-        "针",
+        "看反射",
+        "风",
         "眼球",
-        "电路"
+        "西瓜"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:084",
+      "id": "riddle:humor202609:010",
       "type": "riddle",
       "revision": 1,
       "prompt": "什么车没有轮子？",
       "answer": "风车",
-      "explanation": "风车依靠叶片转动，不靠车轮行驶。",
+      "explanation": "",
       "choices": [
-        "梳子",
         "风车",
-        "薪水",
-        "运气"
+        "电量",
+        "傻瓜",
+        "3 人"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:085",
+      "id": "riddle:humor202609:011",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么东西越冷越爱出来？",
-      "answer": "鼻涕",
-      "explanation": "寒冷刺激可能让人流鼻涕。",
+      "prompt": "什么书书店买不到？",
+      "answer": "秘书",
+      "explanation": "",
       "choices": [
-        "鼻涕",
-        "脸蛋",
-        "恼火",
-        "瓶子"
+        "名字",
+        "回复",
+        "加载圈",
+        "秘书"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:086",
+      "id": "riddle:humor202609:012",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么东西越分享反而越多？",
-      "answer": "知识",
-      "explanation": "知识分享后会被更多人掌握。",
+      "prompt": "什么面不能吃？",
+      "answer": "见面",
+      "explanation": "",
       "choices": [
-        "浪花",
-        "四边形去掉一个角",
-        "河流",
+        "见面",
+        "10 条",
+        "1 小时",
+        "田鸡"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:013",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西说出来就破？",
+      "answer": "沉默",
+      "explanation": "",
+      "choices": [
+        "名字",
+        "沉默",
+        "都不会",
+        "鞋子"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:014",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西属于你，别人用得更多？",
+      "answer": "名字",
+      "explanation": "",
+      "choices": [
+        "见面",
+        "指南针",
+        "名字",
         "知识"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:087",
+      "id": "riddle:humor202609:015",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么东西看不见，却能让风筝飞起来？",
-      "answer": "风",
-      "explanation": "风对风筝产生升力。",
+      "prompt": "什么东西拿走越多反而越大？",
+      "answer": "洞",
+      "explanation": "",
       "choices": [
-        "毛巾",
-        "鞋子",
-        "风",
-        "如果"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:088",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西没有重量，却可能让人心里沉甸甸？",
-      "answer": "心事",
-      "explanation": "心事没有物理重量，却会带来心理负担。",
-      "choices": [
-        "桌子",
-        "心事",
-        "视线",
-        "地图"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:089",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "什么东西走得慢，却从不后退？",
-      "answer": "时间",
-      "explanation": "时间持续向前流逝。",
-      "choices": [
-        "时间",
-        "路口",
-        "钟表",
-        "硬币"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:090",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“路”不能走？",
-      "answer": "电路",
-      "explanation": "电路是电流通路，不是行人道路。",
-      "choices": [
-        "河床",
-        "针",
-        "年龄",
-        "电路"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:091",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“水”不能喝？",
-      "answer": "薪水",
-      "explanation": "薪水指工资，不是饮用水。",
-      "choices": [
-        "梳子",
-        "洞",
-        "薪水",
-        "运气"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:092",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“蛋”不能煮？",
-      "answer": "脸蛋",
-      "explanation": "脸蛋是面部的口语称呼。",
-      "choices": [
-        "你的名字",
-        "脸蛋",
-        "恼火",
-        "瓶子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:093",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“花”没有香味？",
-      "answer": "浪花",
-      "explanation": "浪花是水面翻起的波花。",
-      "choices": [
-        "浪花",
-        "四边形去掉一个角",
-        "河流",
-        "影子"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:094",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“果”不能吃？",
-      "answer": "如果",
-      "explanation": "“如果”是连词，不是果实。",
-      "choices": [
-        "毛巾",
-        "鞋子",
-        "回声",
-        "如果"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:095",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“线”看得见却摸不到？",
-      "answer": "视线",
-      "explanation": "视线表示目光方向，没有实体。",
-      "choices": [
-        "桌子",
+        "木马",
         "沉默",
-        "视线",
-        "地图"
+        "水",
+        "洞"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:096",
+      "id": "riddle:humor202609:016",
       "type": "riddle",
       "revision": 1,
-      "prompt": "哪一种“口”不能吃东西？",
-      "answer": "路口",
-      "explanation": "路口是道路交会处。",
+      "prompt": "什么东西只升不降？",
+      "answer": "年龄",
+      "explanation": "",
       "choices": [
-        "约定",
-        "路口",
-        "钟表",
-        "硬币"
-      ],
-      "tags": [
-        "脑筋急转弯"
-      ],
-      "difficulty": 2,
-      "locale": "zh-CN",
-      "active": true
-    },
-    {
-      "id": "riddle:zhcn2026:097",
-      "type": "riddle",
-      "revision": 1,
-      "prompt": "哪一种“床”不能睡？",
-      "answer": "河床",
-      "explanation": "河床是河流底部。",
-      "choices": [
-        "河床",
-        "针",
         "年龄",
+        "他没有头发",
+        "加载圈",
         "你睡着了吗"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:098",
+      "id": "riddle:humor202609:017",
       "type": "riddle",
       "revision": 1,
-      "prompt": "哪一种“气”装不进气球？",
-      "answer": "运气",
-      "explanation": "运气不是物质气体。",
+      "prompt": "有牙不咬人的是什么？",
+      "answer": "梳子",
+      "explanation": "",
       "choices": [
+        "验证码",
         "梳子",
-        "洞",
+        "针",
+        "银河"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:018",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "有眼看不见的是什么？",
+      "answer": "针",
+      "explanation": "",
+      "choices": [
+        "针",
+        "田鸡",
         "球门",
-        "运气"
+        "100 件"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:099",
+      "id": "riddle:humor202609:019",
       "type": "riddle",
       "revision": 1,
-      "prompt": "哪一种“火”没有温度？",
-      "answer": "恼火",
-      "explanation": "恼火表示生气，不是真火。",
+      "prompt": "有脸有手没腿的是什么？",
+      "answer": "钟表",
+      "explanation": "",
       "choices": [
-        "你的名字",
-        "蜡烛",
-        "恼火",
-        "瓶子"
+        "洞",
+        "破洞口袋",
+        "10 条",
+        "钟表"
       ],
       "tags": [
         "脑筋急转弯"
       ],
-      "difficulty": 2,
+      "difficulty": 1,
       "locale": "zh-CN",
       "active": true
     },
     {
-      "id": "riddle:zhcn2026:100",
+      "id": "riddle:humor202609:020",
       "type": "riddle",
       "revision": 1,
-      "prompt": "什么情况下四减一等于五？",
-      "answer": "四边形去掉一个角",
-      "explanation": "切掉一个角后通常会多出两个新角，共五个角。",
+      "prompt": "有舌头不会说话的是什么？",
+      "answer": "鞋子",
+      "explanation": "",
       "choices": [
-        "不埋",
-        "四边形去掉一个角",
-        "河流",
+        "鞋子",
+        "瀑布",
+        "地图",
+        "木马"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:021",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "有城市有河却没房子流水的是什么？",
+      "answer": "地图",
+      "explanation": "",
+      "choices": [
+        "群消息",
+        "地图",
+        "公鸡不会下蛋",
+        "3 根"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:022",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "帮别人变干自己变湿的是什么？",
+      "answer": "毛巾",
+      "explanation": "",
+      "choices": [
+        "毛巾",
+        "加班猫",
+        "脸蛋",
+        "火柴"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:023",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "总跟着你，黑暗里消失的是什么？",
+      "answer": "影子",
+      "explanation": "",
+      "choices": [
+        "水",
+        "看反射",
+        "眼球",
         "影子"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:024",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "你说什么它重复什么，却没嘴？",
+      "answer": "回声",
+      "explanation": "",
+      "choices": [
+        "琴桥",
+        "没有烟",
+        "回声",
+        "鼠标"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:025",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "千条线万条线，落水都不见？",
+      "answer": "雨",
+      "explanation": "",
+      "choices": [
+        "球门",
+        "雨",
+        "蜗牛",
+        "彩虹"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:026",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "没脚走四方，来了树叶晃？",
+      "answer": "风",
+      "explanation": "",
+      "choices": [
+        "风",
+        "名字",
+        "风车",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:027",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "绿衣红肚皮，肚里黑孩子？",
+      "answer": "西瓜",
+      "explanation": "",
+      "choices": [
+        "洞",
+        "木马",
+        "风车",
+        "西瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:028",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "弯弯彩色桥，雨后半山腰？",
+      "answer": "彩虹",
+      "explanation": "",
+      "choices": [
+        "彩虹",
+        "音箱",
+        "瀑布",
+        "毛巾"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:029",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "小小白花天上栽，北风遍地开？",
+      "answer": "雪花",
+      "explanation": "",
+      "choices": [
+        "眼球",
+        "桌宠",
+        "雪花",
+        "键盘"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:030",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "五个兄弟住一起，高矮不同不分离？",
+      "answer": "手指",
+      "explanation": "",
+      "choices": [
+        "手指",
+        "电池",
+        "红绿灯",
+        "休息"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:031",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "白房子住黄客人，外穿硬衣服？",
+      "answer": "鸡蛋",
+      "explanation": "",
+      "choices": [
+        "进度",
+        "20 次",
+        "回复",
+        "鸡蛋"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:032",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "一层一层裹得紧，切开让人流泪？",
+      "answer": "洋葱",
+      "explanation": "",
+      "choices": [
+        "瀑布",
+        "一样重",
+        "洋葱",
+        "毛巾"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:033",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "穿着一身刺，头顶绿叶冠？",
+      "answer": "菠萝",
+      "explanation": "",
+      "choices": [
+        "木马",
+        "菠萝",
+        "水",
+        "马蜂"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:034",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "一把伞不是布，林中泥土处？",
+      "answer": "蘑菇",
+      "explanation": "",
+      "choices": [
+        "试管",
+        "年龄",
+        "蘑菇",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:035",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "小小船两头翘，水上不走脚上跑？",
+      "answer": "鞋子",
+      "explanation": "",
+      "choices": [
+        "秘书",
+        "名字",
+        "洞",
+        "鞋子"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:036",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "方方一块田，字儿种里面？",
+      "answer": "书",
+      "explanation": "",
+      "choices": [
+        "书",
+        "针",
+        "红绿灯",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:037",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "一座小桥不通车，鼻梁上面安家？",
+      "answer": "眼镜",
+      "explanation": "",
+      "choices": [
+        "水",
+        "眼球",
+        "眼镜",
+        "洋葱"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:038",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "拖着尾巴桌上跑，点点按按听指挥？",
+      "answer": "鼠标",
+      "explanation": "",
+      "choices": [
+        "鼠标",
+        "20 次",
+        "散会",
+        "休息"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:039",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "小小方块桌上放，轻轻一按字成行？",
+      "answer": "键盘",
+      "explanation": "",
+      "choices": [
+        "鼠标",
+        "地图",
+        "破洞口袋",
+        "键盘"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:040",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "远看小黑点，近看消息满面？",
+      "answer": "二维码",
+      "explanation": "",
+      "choices": [
+        "二维码",
+        "水龙头",
+        "100 件",
+        "风车"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:041",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "有屏没有窗，有声没有嘴？",
+      "answer": "手机",
+      "explanation": "",
+      "choices": [
+        "木马",
+        "手机",
+        "银河",
+        "田鸡"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:042",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "越分享反而越多的是什么？",
+      "answer": "知识",
+      "explanation": "",
+      "choices": [
+        "算错时",
+        "瀑布",
+        "知识",
+        "音箱"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:043",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "不用手碰也可能打破的是什么？",
+      "answer": "约定",
+      "explanation": "",
+      "choices": [
+        "钟表",
+        "火柴",
+        "雨",
+        "约定"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:044",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "睡着时无法回答“是”的问题是？",
+      "answer": "你睡着了吗",
+      "explanation": "",
+      "choices": [
+        "木鱼",
+        "田鸡",
+        "你睡着了吗",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:045",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "公鸡下蛋会滚向哪边？",
+      "answer": "公鸡不会下蛋",
+      "explanation": "",
+      "choices": [
+        "陷阱",
+        "公鸡不会下蛋",
+        "银河",
+        "雨"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:046",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "电动火车冒烟飘向哪边？",
+      "answer": "没有烟",
+      "explanation": "",
+      "choices": [
+        "没有烟",
+        "加载圈",
+        "水",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:047",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "一千克铁和一千克棉花谁更重？",
+      "answer": "一样重",
+      "explanation": "",
+      "choices": [
+        "水龙头",
+        "银河",
+        "光盘",
+        "一样重"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:048",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "桌上三个苹果拿走两个，你有几个？",
+      "answer": "2 个",
+      "explanation": "",
+      "choices": [
+        "2 个",
+        "验证码",
+        "螺帽",
+        "火柴"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:049",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "鱼缸十条鱼淹死两条还剩几条？",
+      "answer": "10 条",
+      "explanation": "",
+      "choices": [
+        "望远镜",
+        "秘书",
+        "10 条",
+        "球门"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:050",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "十七只羊除了九只都丢了，剩几只？",
+      "answer": "9 只",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "算错时",
+        "年龄",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 1,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:051",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "树上五只鸟开枪后还剩几只？",
+      "answer": "0 只",
+      "explanation": "",
+      "choices": [
+        "眼球",
+        "银河",
+        "马蜂",
+        "0 只"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:052",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "黑屋有蜡烛油灯火炉，先点什么？",
+      "answer": "火柴",
+      "explanation": "",
+      "choices": [
+        "壁虎",
+        "都不会",
+        "火柴",
+        "鼻涕"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:053",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "三片药每半小时一片，多久吃完？",
+      "answer": "1 小时",
+      "explanation": "",
+      "choices": [
+        "硬币",
+        "1 小时",
+        "雨",
+        "加载圈"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:054",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "六个蛋打破俩煮俩吃俩，还剩几个？",
+      "answer": "4 个",
+      "explanation": "",
+      "choices": [
+        "地图",
+        "鞋子",
+        "4 个",
+        "风车"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:055",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "八根蜡烛吹灭三根，最后剩几根完整？",
+      "answer": "3 根",
+      "explanation": "",
+      "choices": [
+        "电量",
+        "球门",
+        "木马",
+        "3 根"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:056",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "一个人雨里没伞，头发为何不湿？",
+      "answer": "他没有头发",
+      "explanation": "",
+      "choices": [
+        "他没有头发",
+        "陷阱",
+        "瀑布",
+        "回复"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:057",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么口袋空着也可能有东西？",
+      "answer": "破洞口袋",
+      "explanation": "",
+      "choices": [
+        "球门",
+        "20 次",
+        "破洞口袋",
+        "木马"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:058",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "五机五分钟五件，百机五分钟几件？",
+      "answer": "100 件",
+      "explanation": "",
+      "choices": [
+        "100 件",
+        "点赞",
+        "鞋子",
+        "雪花"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:059",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "从 1 到 100，数字 9 出现几次？",
+      "answer": "20 次",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "菠萝",
+        "地图",
+        "20 次"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:060",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "船边梯子随潮上涨，哪级先被淹？",
+      "answer": "都不会",
+      "explanation": "",
+      "choices": [
+        "都不会",
+        "眼镜",
+        "下班",
+        "名字"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:061",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "两个父亲两个儿子吃饭，最少几人？",
+      "answer": "3 人",
+      "explanation": "",
+      "choices": [
+        "木马",
+        "3 人",
+        "水",
+        "进度"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:062",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西越燃烧越短？",
+      "answer": "蜡烛",
+      "explanation": "",
+      "choices": [
+        "进度",
+        "瀑布",
+        "蜡烛",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:063",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西有头有尾没身体？",
+      "answer": "硬币",
+      "explanation": "",
+      "choices": [
+        "木马",
+        "秘书",
+        "下班键",
+        "硬币"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:064",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西越冷越爱出来？",
+      "answer": "鼻涕",
+      "explanation": "",
+      "choices": [
+        "鼻涕",
+        "群消息",
+        "红绿灯",
+        "鼠标"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:065",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么东西看不见却能让风筝飞？",
+      "answer": "风",
+      "explanation": "",
+      "choices": [
+        "沉默",
+        "风",
+        "梳子",
+        "鼠标"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:066",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "医生为什么 tap 膝盖？",
+      "answer": "看反射",
+      "explanation": "",
+      "choices": [
+        "看反射",
+        "风",
+        "红绿灯",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:067",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么时候 2+2=5？",
+      "answer": "算错时",
+      "explanation": "",
+      "choices": [
+        "银河",
+        "秘书",
+        "眼球",
+        "算错时"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:068",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么房子没有门窗？",
+      "answer": "蘑菇",
+      "explanation": "",
+      "choices": [
+        "蘑菇",
+        "电池",
+        "热搜门槛",
+        "眼镜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:069",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么桥不能走人？",
+      "answer": "琴桥",
+      "explanation": "",
+      "choices": [
+        "钟表",
+        "琴桥",
+        "100 件",
+        "没有烟"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:070",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么帽不能戴？",
+      "answer": "螺帽",
+      "explanation": "",
+      "choices": [
+        "螺帽",
+        "验证码",
+        "休息",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:071",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么斗不能装米？",
+      "answer": "烟斗",
+      "explanation": "",
+      "choices": [
+        "加载圈",
+        "火柴",
+        "菠萝",
+        "烟斗"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:072",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么蛋不能吃？",
+      "answer": "脸蛋",
+      "explanation": "",
+      "choices": [
+        "琴桥",
+        "傻瓜",
+        "脸蛋",
+        "看反射"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:073",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么井不能打水？",
+      "answer": "陷阱",
+      "explanation": "",
+      "choices": [
+        "木马",
+        "陷阱",
+        "加载圈",
+        "螺帽"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:074",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么针不能缝衣？",
+      "answer": "指南针",
+      "explanation": "",
+      "choices": [
+        "指南针",
+        "100 件",
+        "风车",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:075",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么管不能吹？",
+      "answer": "试管",
+      "explanation": "",
+      "choices": [
+        "田鸡",
+        "休息",
+        "眼球",
+        "试管"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:076",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么花不能插？",
+      "answer": "火花",
+      "explanation": "",
+      "choices": [
+        "火花",
+        "回声",
+        "9 只",
+        "桌宠"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:077",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么镜不能照人？",
+      "answer": "望远镜",
+      "explanation": "",
+      "choices": [
+        "加班猫",
+        "算错时",
+        "望远镜",
+        "进度"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:078",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么鸡没有翅膀？",
+      "answer": "田鸡",
+      "explanation": "",
+      "choices": [
+        "田鸡",
+        "雪花",
+        "没有烟",
+        "陷阱"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:079",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么牛不会耕地？",
+      "answer": "蜗牛",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "桌宠",
+        "洞",
+        "蜗牛"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:080",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么虎不咬人？",
+      "answer": "壁虎",
+      "explanation": "",
+      "choices": [
+        "田鸡",
+        "钟表",
+        "壁虎",
+        "彩虹"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:081",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么龙不会飞？",
+      "answer": "水龙头",
+      "explanation": "",
+      "choices": [
+        "水",
+        "水龙头",
+        "雪花",
+        "雨"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:082",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么羊不会叫？",
+      "answer": "软羊",
+      "explanation": "",
+      "choices": [
+        "名字",
+        "硬币",
+        "软羊",
+        "瀑布"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:083",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么鱼不能吃？",
+      "answer": "木鱼",
+      "explanation": "",
+      "choices": [
+        "壁虎",
+        "水",
+        "9 只",
+        "木鱼"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:084",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么猫不会叫？",
+      "answer": "熊猫",
+      "explanation": "",
+      "choices": [
+        "熊猫",
+        "硬币",
+        "你睡着了吗",
+        "马蜂"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:085",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么蜂不会酿蜜？",
+      "answer": "马蜂",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "洞",
+        "马蜂",
+        "木马"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:086",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么狗不会叫？",
+      "answer": "热狗",
+      "explanation": "",
+      "choices": [
+        "热狗",
+        "红绿灯",
+        "瀑布",
+        "0 只"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:087",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么猫最辛苦？",
+      "answer": "加班猫",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "毛巾",
+        "西瓜",
+        "加班猫"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:088",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么鼠最聪明？",
+      "answer": "鼠标",
+      "explanation": "",
+      "choices": [
+        "鼠标",
+        "西瓜",
+        "红绿灯",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:089",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么牛每天被挤？",
+      "answer": "工作牛马",
+      "explanation": "",
+      "choices": [
+        "9 只",
+        "工作牛马",
+        "眼球",
+        "他没有头发"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:090",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么会议最短？",
+      "answer": "散会",
+      "explanation": "",
+      "choices": [
+        "0 只",
+        "休息",
+        "散会",
+        "键盘"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:091",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么班最想上？",
+      "answer": "下班",
+      "explanation": "",
+      "choices": [
+        "水",
+        "工作牛马",
+        "眼球",
+        "下班"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:092",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么息最受欢迎？",
+      "answer": "休息",
+      "explanation": "",
+      "choices": [
+        "风",
+        "帮忙后摸鱼",
+        "休息",
+        "进度"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:093",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么假最真实？",
+      "answer": "放假",
+      "explanation": "",
+      "choices": [
+        "进度",
+        "放假",
+        "洞",
+        "眼镜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:094",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么忙最幸福？",
+      "answer": "帮忙后摸鱼",
+      "explanation": "",
+      "choices": [
+        "帮忙后摸鱼",
+        "傻瓜",
+        "红绿灯",
+        "热狗"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:095",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "程序员的头发去哪了？",
+      "answer": "献给了 Bug",
+      "explanation": "",
+      "choices": [
+        "水",
+        "算错时",
+        "工作牛马",
+        "献给了 Bug"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:096",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么盘天天转却不前进？",
+      "answer": "光盘",
+      "explanation": "",
+      "choices": [
+        "光盘",
+        "火柴",
+        "针",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:097",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么箱打不开却装着世界？",
+      "answer": "音箱",
+      "explanation": "",
+      "choices": [
+        "螺帽",
+        "进度",
+        "音箱",
+        "都不会"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:098",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么键最想被按下？",
+      "answer": "下班键",
+      "explanation": "",
+      "choices": [
+        "下班键",
+        "脸蛋",
+        "手机",
+        "傻瓜"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:099",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么屏最懂你？",
+      "answer": "锁屏",
+      "explanation": "",
+      "choices": [
+        "地图",
+        "雪花",
+        "西瓜",
+        "锁屏"
+      ],
+      "tags": [
+        "脑筋急转弯"
+      ],
+      "difficulty": 2,
+      "locale": "zh-CN",
+      "active": true
+    },
+    {
+      "id": "riddle:humor202609:100",
+      "type": "riddle",
+      "revision": 1,
+      "prompt": "什么码总让人怀疑人生？",
+      "answer": "验证码",
+      "explanation": "",
+      "choices": [
+        "加班猫",
+        "脸蛋",
+        "验证码",
+        "瀑布"
       ],
       "tags": [
         "脑筋急转弯"

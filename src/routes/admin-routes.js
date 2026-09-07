@@ -27,6 +27,9 @@ function createAdminRouter({ controller, authService }) {
   router.get('/session', (req, res) => controller.session(req, res));
   router.post('/logout', requireWriteSession, (req, res) => controller.logout(req, res));
 
+  router.get('/overview', requireSession, (req, res, next) => {
+    Promise.resolve(controller.overview(req, res)).catch(next);
+  });
   router.get('/releases', requireSession, (req, res) => controller.releases(req, res));
   router.get('/site-settings', requireSession, (req, res) => controller.siteSettings(req, res));
   router.put(

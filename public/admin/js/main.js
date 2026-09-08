@@ -54,6 +54,27 @@ const logoutButton = document.querySelector('#logoutButton');
 const refreshPageButton = document.querySelector('#refreshPageButton');
 const themeToggleButton = document.querySelector('#themeToggleButton');
 const connectionStatus = document.querySelector('#connectionStatus');
+const sidebarToggleButton = document.querySelector('#sidebarToggleButton');
+const sidebarCloseButton = document.querySelector('#sidebarCloseButton');
+const sidebarBackdrop = document.querySelector('#sidebarBackdrop');
+const MOBILE_NAV_QUERY = '(max-width: 900px)';
+
+function isMobileNav() {
+  return window.matchMedia(MOBILE_NAV_QUERY).matches;
+}
+
+function setMobileNavOpen(open) {
+  if (!adminView) return;
+  const shouldOpen = Boolean(open) && isMobileNav();
+  adminView.classList.toggle('nav-open', shouldOpen);
+  document.body.classList.toggle('nav-lock', shouldOpen);
+  if (sidebarBackdrop) sidebarBackdrop.hidden = !shouldOpen;
+  if (sidebarToggleButton) sidebarToggleButton.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+}
+
+function closeMobileNav() {
+  setMobileNavOpen(false);
+}
 
 function currentTheme() {
   return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
@@ -158,6 +179,7 @@ function navigateTo(rawRoute) {
     window.history.replaceState(null, '', nextHash);
   }
   window.scrollTo({ top: 0, behavior: 'auto' });
+  closeMobileNav();
   return route;
 }
 
@@ -176,6 +198,7 @@ function showLogin(message = '') {
   loginError.textContent = message;
   loginView.hidden = false;
   adminView.hidden = true;
+  closeMobileNav();
 }
 
 function showAdmin(session) {
@@ -183,6 +206,7 @@ function showAdmin(session) {
   loginView.hidden = true;
   adminView.hidden = false;
   connectionStatus.textContent = '管理服务正常';
+  closeMobileNav();
   navigateTo(window.location.hash.slice(1));
 }
 
@@ -279,6 +303,21 @@ refreshPageButton?.addEventListener('click', async () => {
 
 themeToggleButton?.addEventListener('click', () => {
   setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+});
+
+sidebarToggleButton?.addEventListener('click', () => {
+  setMobileNavOpen(!adminView.classList.contains('nav-open'));
+});
+
+sidebarCloseButton?.addEventListener('click', closeMobileNav);
+sidebarBackdrop?.addEventListener('click', closeMobileNav);
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') closeMobileNav();
+});
+
+window.matchMedia(MOBILE_NAV_QUERY).addEventListener('change', (event) => {
+  if (!event.matches) closeMobileNav();
 });
 
 for (const item of document.querySelectorAll('[data-route]')) {

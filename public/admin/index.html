@@ -16,10 +16,10 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-devices">
-  <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-devices">
-  <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-devices">
-  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-v3-devices">
+  <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-mobile">
+  <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-mobile">
+  <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-mobile">
+  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-v3-mobile">
 </head>
 <body>
   <main class="app-root">
@@ -61,13 +61,15 @@
     </section>
 
     <div id="adminView" class="admin-shell" hidden>
-      <aside class="sidebar">
+      <div id="sidebarBackdrop" class="sidebar-backdrop" hidden></div>
+      <aside class="sidebar" id="adminSidebar">
         <div class="sidebar-brand">
           <img src="/assets/app-icon.png" width="36" height="36" alt="">
           <div>
             <strong>桌搭子</strong>
             <span>管理后台</span>
           </div>
+          <button id="sidebarCloseButton" class="sidebar-close button button-ghost" type="button" aria-label="关闭菜单">关闭</button>
         </div>
 
         <nav class="sidebar-nav" aria-label="后台导航">
@@ -147,10 +149,13 @@
 
       <div class="admin-content">
         <header class="content-header">
-          <div class="header-title">
-            <span class="header-kicker">管理工作区</span>
-            <h1 id="pageTitle">概览</h1>
-            <p id="pageSubtitle">今天先处理这些</p>
+          <div class="header-lead">
+            <button id="sidebarToggleButton" class="sidebar-toggle button button-secondary" type="button" aria-controls="adminSidebar" aria-expanded="false" aria-label="打开菜单">菜单</button>
+            <div class="header-title">
+              <span class="header-kicker">管理工作区</span>
+              <h1 id="pageTitle">概览</h1>
+              <p id="pageSubtitle">今天先处理这些</p>
+            </div>
           </div>
           <div class="header-actions">
             <button id="themeToggleButton" class="button button-secondary" type="button" title="切换到浅色主题">浅色</button>
@@ -1348,23 +1353,23 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-  <script src="/assets/admin/js/core/api.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/core/ui.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/core/list-view.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/core/stats.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/core/form-kit.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/core/router.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/overview.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/settings.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/releases.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/activations.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/interactions.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/companions.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/analytics.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/content.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/pages/feedback.js?v=admin-v3-devices"></script>
-  <script src="/assets/admin/js/main.js?v=admin-v3-devices"></script>
+  <script src="/assets/admin/js/core/api.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/core/ui.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/core/list-view.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/core/stats.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/core/form-kit.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/core/router.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/overview.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/settings.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/releases.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/activations.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/interactions.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/companions.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/analytics.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/content.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/feedback.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/main.js?v=admin-v3-mobile"></script>
 </body>
 </html>

@@ -173,6 +173,17 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminUi, /function registerAdminPage/);
 });
 
+test('production admin device table renders the current client version', async () => {
+  const publicDirectory = path.join(__dirname, '..', 'public');
+  const [adminMarkup, analyticsPage] = await Promise.all([
+    fs.promises.readFile(path.join(publicDirectory, 'admin', 'index.html'), 'utf8'),
+    fs.promises.readFile(path.join(publicDirectory, 'admin', 'js', 'pages', 'analytics.js'), 'utf8')
+  ]);
+  assert.match(adminMarkup, /<th>当前版本<\/th>/);
+  assert.match(adminMarkup, /analytics\.js\?v=admin-v4-device-version/);
+  assert.match(analyticsPage, /item\.appVersion \? `v\$\{item\.appVersion\}` : '-'/);
+});
+
 test('legacy Windows release metadata migrates to the platform-aware schema', async (context) => {
   const dataDirectory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-release-migration-test-'));
   context.after(() => fs.promises.rm(dataDirectory, { recursive: true, force: true }));

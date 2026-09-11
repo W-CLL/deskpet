@@ -64,6 +64,7 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
           cell('', item.activatedAt ? formatDate(item.activatedAt) : '-'),
           cell('', item.displayName || (item.authorizationType === 'trial' ? '体验设备' : '桌搭子')),
           cell('hash', item.deviceCode || item.installationSuffix || '-'),
+          cell('', item.appVersion ? `v${item.appVersion}` : '-'),
           stackedCell(
             '',
             item.lastSeenAt ? formatDate(item.lastSeenAt) : '-',
@@ -81,7 +82,7 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
             ? !(item.online || item.activityStatus === 'online')
             : item.activityStatus === filters.status
       )),
-    searchPlaceholder: '搜索激活码、昵称、设备码',
+    searchPlaceholder: '搜索激活码、昵称、设备码或版本',
     searchText: (item) => [
       item.activationCode,
       item.maskedCode,

@@ -7,16 +7,7 @@ let html = fs.readFileSync(filePath, 'utf8');
 const headInjection = `<meta name="color-scheme" content="dark light">
   <title>桌搭子管理后台</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem('deskpet-admin-theme');
-        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
-      } catch (error) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
+  <script src="/assets/admin/js/core/theme.js?v=admin-theme-1"></script>
   <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-dark">
   <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-dark">
   <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-dark">
@@ -29,7 +20,9 @@ html = html.replace(
 );
 
 html = html.replaceAll('??v=', '?v=');
+html = html.replace(/<html\b[^>]*>/, '<html lang="zh-CN" data-theme="dark">');
 html = html.replaceAll(/[?]v=admin-v3-[a-z]+/g, '?v=admin-v3-dark');
+html = html.replace(/(\/assets\/admin\/js\/main\.js)(?:\?[^"']*)?/, '$1?v=admin-theme-1');
 
 if (!html.includes('id="themeToggleButton"')) {
   html = html.replace(

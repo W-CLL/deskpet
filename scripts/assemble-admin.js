@@ -175,13 +175,14 @@ for (const name of pages) {
 }
 
 const html = `<!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="dark light">
   <title>桌搭子管理后台</title>
   <link rel="icon" href="/assets/app-icon.png">
+  <script src="/assets/admin/js/core/theme.js?v=admin-theme-1"></script>
   <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v2">
   <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v2">
   <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v2">
@@ -286,6 +287,7 @@ const html = `<!doctype html>
             <p id="pageSubtitle">今天先处理这些</p>
           </div>
           <div class="header-actions">
+            <button id="themeToggleButton" class="button button-secondary" type="button" title="切换到浅色主题">浅色</button>
             <button id="refreshPageButton" class="button button-secondary" type="button">刷新</button>
             <button id="logoutButton" class="button button-secondary" type="button">退出</button>
           </div>
@@ -358,7 +360,7 @@ ${pages.map((name) => {
   <script src="/assets/admin/js/pages/analytics.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/content.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/feedback.js?v=admin-v2"></script>
-  <script src="/assets/admin/js/main.js?v=admin-v2"></script>
+  <script src="/assets/admin/js/main.js?v=admin-theme-1"></script>
 </body>
 </html>
 `;

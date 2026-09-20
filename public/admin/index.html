@@ -1,21 +1,12 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <title>桌搭子管理后台</title>
   <link rel="icon" href="/assets/app-icon.png">
-  <script>
-    (function () {
-      try {
-        var saved = localStorage.getItem('deskpet-admin-theme');
-        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
-      } catch (error) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
+  <script src="/assets/admin/js/core/theme.js?v=admin-theme-1"></script>
   <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-mobile">
   <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-mobile">
   <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-mobile">
@@ -1373,6 +1364,6 @@
   <script src="/assets/admin/js/pages/analytics.js?v=admin-v4-device-version"></script>
   <script src="/assets/admin/js/pages/content.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/feedback.js?v=admin-v3-mobile"></script>
-  <script src="/assets/admin/js/main.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/main.js?v=admin-theme-1"></script>
 </body>
 </html>

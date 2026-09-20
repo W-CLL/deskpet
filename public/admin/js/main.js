@@ -52,7 +52,6 @@ const loginError = document.querySelector('#loginError');
 const adminView = document.querySelector('#adminView');
 const logoutButton = document.querySelector('#logoutButton');
 const refreshPageButton = document.querySelector('#refreshPageButton');
-const themeToggleButton = document.querySelector('#themeToggleButton');
 const connectionStatus = document.querySelector('#connectionStatus');
 const sidebarToggleButton = document.querySelector('#sidebarToggleButton');
 const sidebarCloseButton = document.querySelector('#sidebarCloseButton');
@@ -76,27 +75,6 @@ function closeMobileNav() {
   setMobileNavOpen(false);
 }
 
-function currentTheme() {
-  return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
-}
-
-function syncThemeToggleLabel() {
-  if (!themeToggleButton) return;
-  const dark = currentTheme() === 'dark';
-  themeToggleButton.textContent = dark ? '浅色' : '暗色';
-  themeToggleButton.title = dark ? '切换到浅色主题' : '切换到暗色主题';
-}
-
-function setTheme(theme) {
-  const next = theme === 'light' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  try {
-    localStorage.setItem('deskpet-admin-theme', next);
-  } catch {}
-  syncThemeToggleLabel();
-}
-
-syncThemeToggleLabel();
 const pageTitle = document.querySelector('#pageTitle');
 const pageSubtitle = document.querySelector('#pageSubtitle');
 const toast = document.querySelector('#toast');
@@ -299,10 +277,6 @@ logoutButton.addEventListener('click', async () => {
 
 refreshPageButton?.addEventListener('click', async () => {
   await ui.withBusy(refreshPageButton, refreshCurrentPage);
-});
-
-themeToggleButton?.addEventListener('click', () => {
-  setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
 });
 
 sidebarToggleButton?.addEventListener('click', () => {

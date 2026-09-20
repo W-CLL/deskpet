@@ -803,7 +803,7 @@ test('one-time activation gates current manifests and downloads', async (context
   );
   assert.equal(usageAnalytics.payload.usage.apiRoutes
     .filter((item) => item.path === '/api/update/latest')
-    .reduce((total, item) => total + item.requestCount, 0), 2);
+    .reduce((total, item) => total + item.requestCount, 0), 0);
 
   const headDownload = await fetch(`${baseUrl}${currentDownloadPath}`, { method: 'HEAD' });
   assert.equal(headDownload.status, 200);

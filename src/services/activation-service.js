@@ -23,6 +23,7 @@ class ActivationService {
   constructor({
     config,
     activationStore,
+    companionStore,
     auditService,
     analyticsService,
     activationIpRateOptions,
@@ -30,6 +31,7 @@ class ActivationService {
   }) {
     this.config = config;
     this.activationStore = activationStore;
+    this.companionStore = companionStore || null;
     this.auditService = auditService;
     this.analyticsService = analyticsService || null;
     this.ipLimiter = new LoginRateLimiter(activationIpRateOptions || DEFAULT_IP_RATE_OPTIONS);
@@ -201,6 +203,7 @@ class ActivationService {
 
     this.ipLimiter.reset(ip);
     this.deviceLimiter.reset(installationId);
+    this.companionStore?.promoteTrialProfile(installationId, license.accountId, license.licenseId);
     await this.auditService.write({
       action: 'activate',
       outcome: license.alreadyActivated ? 'retry' : 'success',

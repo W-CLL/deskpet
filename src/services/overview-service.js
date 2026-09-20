@@ -63,8 +63,8 @@ class OverviewService {
     const theaterPacks = packList.filter((item) => item.category === 'theater-scripts').length;
 
     const activeVersions = releases.activeVersions || {};
-    const draftCount = (releases.releases || []).filter((item) => item.status !== 'published').length;
-    const publishedCount = (releases.releases || []).filter((item) => item.status === 'published').length;
+    const draftCount = (releases.releases || []).filter((item) => !item.publishedAt).length;
+    const publishedCount = (releases.releases || []).filter((item) => Boolean(item.publishedAt)).length;
 
     return {
       generatedAt: new Date().toISOString(),

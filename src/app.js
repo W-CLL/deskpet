@@ -47,7 +47,9 @@ async function createApplication(options = {}) {
   const releaseStore = new ReleaseStore(config.dataDirectory);
   const activationStore = new ActivationStore(config.dataDirectory);
   const feedbackStore = new FeedbackStore(config.dataDirectory);
-  const interactionStore = new InteractionStore(config.dataDirectory);
+  const interactionStore = new InteractionStore(config.dataDirectory, {
+    getDefaults: () => releaseStore.siteSettings().defaults
+  });
   const analyticsStore = new AnalyticsStore(config.dataDirectory);
   const contentStore = new ContentStore(config.dataDirectory);
   const resourcePackStore = new ResourcePackStore(config.dataDirectory);
@@ -92,6 +94,7 @@ async function createApplication(options = {}) {
   activationService = new ActivationService({
     config,
     activationStore,
+    companionStore,
     auditService,
     analyticsService,
     activationIpRateOptions: options.activationIpRateOptions,

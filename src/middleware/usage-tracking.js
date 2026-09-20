@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { isUpdateCheckPath } = require('../../lib/usage-policy');
 
 function trialDeviceKey(installationId) {
   return `trial:${crypto.createHash('sha256').update(String(installationId || '')).digest('hex')}`;
@@ -82,6 +83,7 @@ function createUsageTracking({ activationService, analyticsService }) {
     const trackedPath = String(req.originalUrl || req.url || '/').split('?', 1)[0];
     if ((!trackedPath.startsWith('/api/') && !trackedPath.startsWith('/downloads/'))
       || trackedPath.startsWith('/api/admin/')
+      || isUpdateCheckPath(trackedPath)
       || req.method === 'OPTIONS') {
       next();
       return;

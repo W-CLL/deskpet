@@ -23,7 +23,7 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
   async function revokeLicense(item) {
     const confirmed = await confirmAction({
       title: `撤销授权 ${item.maskedCode}`,
-      message: '撤销后，该设备仍可运行桌搭子，但不能再检查或下载更新。',
+      message: '撤销后，该设备保留基础陪伴和公开更新，但不能继续使用需要授权的互动同步、大厅、搭子和反馈服务。',
       confirmLabel: '撤销授权',
       danger: true
     });
@@ -40,7 +40,7 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
   async function createRebindCode(item) {
     const confirmed = await confirmAction({
       title: `生成账号 …${item.account.suffix} 的换机码`,
-      message: '换机码在新设备成功绑定后才会撤销原设备授权，有效期为 24 小时。',
+      message: '换机码有效期为 24 小时。新设备成功绑定后，该账号原来绑定的所有设备都会失去授权；账号和搭子关系保留。',
       confirmLabel: '生成换机码'
     });
     if (!confirmed) return;

@@ -115,7 +115,7 @@ registerAdminPage(function createCompanionsPage({ ui, api, showToast, showLogin 
     ]
   });
 
-  const deliveryStatus = { received: '已领取', pending: '待领取', expired: '已过期' };
+  const deliveryStatus = { received: '设备已接收', pending: '等待设备接收', expired: '已过期' };
   const deliveryList = createListView('companion-deliveries', {
     emptyElement: byId('emptyCompanionDeliveries'),
     renderPage(items) {

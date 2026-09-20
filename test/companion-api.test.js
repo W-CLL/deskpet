@@ -72,8 +72,10 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
       appVersion: '3.1.0'
     })
   });
-  const trialDenied = await jsonResponse(await fetch(`${baseUrl}/api/companion`, {
-    headers: { Authorization: `Trial ${trialInstallationId}.${trialCredential}` }
+  const trialDenied = await jsonResponse(await fetch(`${baseUrl}/api/companion/pair`, {
+    method: 'POST',
+    headers: { Authorization: `Trial ${trialInstallationId}.${trialCredential}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: 'ABCDEFGH' })
   }));
   assert.equal(trialDenied.response.status, 403);
   assert.equal(trialDenied.payload.code, 'COMPANION_ACTIVATION_REQUIRED');
@@ -91,8 +93,8 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   }));
   assert.match(firstProfile.payload.pairingCode, /^[23456789A-HJ-NP-Z]{8}$/);
   assert.equal(firstProfile.payload.partner, null);
-  assert.equal(firstProfile.payload.hallEnabled, true);
-  assert.equal(secondProfile.payload.hallEnabled, true);
+  assert.equal(firstProfile.payload.hallEnabled, false);
+  assert.equal(secondProfile.payload.hallEnabled, false);
 
   await fetch(`${baseUrl}/api/companion`, {
     method: 'PATCH',

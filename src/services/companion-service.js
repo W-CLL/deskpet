@@ -79,27 +79,37 @@ class CompanionService {
   }
 
   profile(req) {
-    const license = this.requireAccount(req);
-    return this.companionStore.profile(license.accountId);
+    const license = this.requireAccount(req, { allowTrial: true });
+    return this.clientProfile(license, this.companionStore.profile(license.accountId));
+  }
+
+  clientProfile(license, profile) {
+    // Trial users can meet people in the hall, but private pairing is a separate
+    // activated feature. Do not expose a usable private pairing code in trial.
+    return license.trial ? { ...profile, pairingCode: '', partner: null } : profile;
   }
 
   hall(req) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     return this.companionStore.hall(license.accountId);
   }
 
   updateHall(req, body) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     if (typeof body?.enabled !== 'boolean') {
       throw new HttpError(400, 'Invalid companion hall setting', 'INVALID_COMPANION_HALL_SETTING');
     }
-    return this.companionStore.setHallEnabled(license.accountId, body.enabled);
+    return this.clientProfile(license, this.companionStore.setHallEnabled(license.accountId, body.enabled));
   }
 
   updateProfile(req, body) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     try {
-      return this.companionStore.updateProfile(license.accountId, body?.displayName);
+      const displayName = String(body?.displayName || '').trim();
+      if ([...displayName].length > 12) {
+        throw new HttpError(400, '昵称最多 12 个字符', 'INVALID_COMPANION_NAME');
+      }
+      return this.clientProfile(license, this.companionStore.updateProfile(license.accountId, displayName));
     } catch (error) {
       throw mapStoreError(error);
     }
@@ -145,10 +155,13 @@ class CompanionService {
   }
 
   async sendHall(req, buffer, recipientId, message) {
-    const license = this.requireAccount(req);
+    const license = this.requireAccount(req, { allowTrial: true });
     const target = String(recipientId || '').trim();
     if (!target || target.length > 128) {
       throw new HttpError(400, 'Invalid hall recipient', 'INVALID_COMPANION_HALL_RECIPIENT');
+    }
+    if ([...String(message || '').trim()].length > 120) {
+      throw new HttpError(400, '留言最多 120 个字符', 'INVALID_COMPANION_MESSAGE');
     }
     const { width, height } = inspectGif(buffer);
     const id = crypto.randomUUID();

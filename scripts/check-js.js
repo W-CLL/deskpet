@@ -14,7 +14,7 @@ const files = [
   path.join(root, 'server.js'),
   __filename,
   ...['src', 'lib', 'public'].flatMap((directory) => javascriptFiles(path.join(root, directory))),
-  ...['set-password.js', 'generate-signing-key.js', 'generate-content-library.js', 'import-release.js', 'migrate.js']
+  ...['set-password.js', 'generate-signing-key.js', 'generate-content-library.js', 'generate-companion-content-pack.js', 'import-release.js', 'migrate.js']
     .map((file) => path.join(__dirname, file))
 ];
 for (const file of files) {

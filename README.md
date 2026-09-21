@@ -73,6 +73,7 @@ http://127.0.0.1:3100/admin
 - 批次默认返回 15 条、最多 30 条；完整离线包支持 `ETag`，客户端下载后可长期保存并在断网时使用。
 - 每次内容变化都会递增 `catalogVersion`；响应包含停用 ID、SHA-256、Ed25519 签名和签名原文 `signedPayload`。客户端应使用更新清单同一公钥验证 Base64 解码后的原文字节，并以原文中解析出的内容为准。
 - 内容数据保存在 `DESKPET_DATA_DIR/content.db`。可导入的格式见 `examples/content-import.example.json`。
+- `examples/advanced-content-packs/content-import.zh-CN-companion-190.json` 包含 60 道猜歌题、心情/工作/学习关怀和对应的小贴士，可直接在管理后台导入；使用 `npm run content:generate-companion` 可重新生成。
 
 `generate-signing-key` 会输出客户端公钥。正式发布前，桌面客户端必须内置与服务器私钥配对的公钥。已有生产环境必须复用原来的整个数据目录，不能重新生成密钥。
 
@@ -87,6 +88,7 @@ http://127.0.0.1:3100/admin
 | `npm test` | 运行 HTTP 端到端测试 |
 | `npm run set-password` | 交互式设置管理员密码 |
 | `npm run generate-signing-key` | 首次生成 Ed25519 签名密钥，拒绝覆盖旧密钥 |
+| `npm run content:generate-companion` | 生成猜歌、心情、工作和学习扩展内容包 |
 | `npm run import-release -- <version> <exe>` | 从命令行导入并发布标准命名的 EXE，发布前执行完整校验 |
 
 ## 账号与数据库迁移

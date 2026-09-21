@@ -523,11 +523,31 @@ function rotate(values, offset) {
   return [...values.slice(index), ...values.slice(0, index)];
 }
 
-function quizChoices(records, index) {
-  const values = [records[index][1]];
-  for (let offset = 1; values.length < 4 && offset < records.length; offset += 1) {
-    const candidate = records[(index + offset * 7) % records.length][1];
-    if (!values.includes(candidate)) values.push(candidate);
+function quizChoices(records, index, categoryIndex = null) {
+  const answer = records[index][1];
+  const category = categoryIndex === null ? null : records[index][categoryIndex];
+  const prompt = records[index][0];
+  const peers = records.filter((record, peerIndex) => (
+    peerIndex !== index && (category === null || record[categoryIndex] === category)
+  ));
+  peers.sort((left, right) => {
+    const leftSameShape = prompt.startsWith('什么') === left[0].startsWith('什么') ? 0 : 1;
+    const rightSameShape = prompt.startsWith('什么') === right[0].startsWith('什么') ? 0 : 1;
+    return leftSameShape - rightSameShape
+      || Math.abs(left[1].length - answer.length) - Math.abs(right[1].length - answer.length);
+  });
+  const values = [answer];
+  for (const candidate of peers) {
+    if (!values.includes(candidate[1])) values.push(candidate[1]);
+    if (values.length === 4) break;
+  }
+  // A small, same-shape fallback keeps short categories playable without
+  // mixing in unrelated answers from another subject.
+  if (values.length < 4) {
+    for (const candidate of records) {
+      if (!values.includes(candidate[1])) values.push(candidate[1]);
+      if (values.length === 4) break;
+    }
   }
   return rotate(values, index);
 }
@@ -630,11 +650,11 @@ function buildLibraries() {
   const math = makeMath();
   return {
     joke: jokes.map(([prompt, answer, tag], index) => commonItem('joke', index, {
-      prompt, answer, explanation: `这是围绕“${tag}”特点展开的拟人化冷笑话。`, tags: [tag, '冷笑话']
+      prompt, answer, explanation: '', tags: [tag, '冷笑话']
     })),
     math: math.map((source, index) => commonItem('math', index, source)),
     trivia: trivia.map(([prompt, answer, explanation, tag, difficulty], index) => commonItem('trivia', index, {
-      prompt, answer, explanation, choices: quizChoices(trivia, index), tags: [tag, '趣味知识'], difficulty
+      prompt, answer, explanation, choices: quizChoices(trivia, index, 3), tags: [tag, '趣味知识'], difficulty
     })),
     riddle: riddles.map(([prompt, answer, explanation], index) => commonItem('riddle', index, {
       prompt, answer, explanation, choices: quizChoices(riddles, index), tags: ['脑筋急转弯'], difficulty: index < 40 ? 1 : 2

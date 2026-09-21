@@ -15,6 +15,7 @@
     "set-password": "node scripts/set-password.js",
     "generate-signing-key": "node scripts/generate-signing-key.js",
     "content:generate": "node scripts/generate-content-library.js",
+    "content:generate-companion": "node scripts/generate-companion-content-pack.js",
     "import-release": "node scripts/import-release.js",
     "check": "node scripts/check-js.js",
     "test": "node --test test/*.test.js"

@@ -318,6 +318,31 @@ class ReleaseService {
     return result;
   }
 
+  async updateNotes(req, platform, architecture, version, body) {
+    if (!body || typeof body !== 'object' || Array.isArray(body)
+      || typeof body.notes !== 'string' || typeof body.expectedNotes !== 'string'
+      || Object.keys(body).some((key) => !['notes', 'expectedNotes'].includes(key))) {
+      throw new HttpError(400, '请提供更新说明和编辑前的原文', 'INVALID_RELEASE_NOTES');
+    }
+    let release;
+    try {
+      release = await this.releaseStore.updateNotes(platform, architecture, version, body);
+    } catch (error) {
+      throw mapStoreError(error);
+    }
+    await this.auditService.write({
+      action: 'update_release_notes',
+      outcome: 'success',
+      ip: clientIp(req, this.config),
+      platform: release.platform,
+      architecture: release.architecture,
+      version: release.version,
+      previousNotes: body.expectedNotes,
+      notes: release.notes
+    });
+    return { release };
+  }
+
   async validateRelease(platform, architecture, version) {
     try {
       return await validateReleaseArtifact({

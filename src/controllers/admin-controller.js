@@ -247,6 +247,16 @@ class AdminController {
     ));
   }
 
+  async updateReleaseNotes(req, res) {
+    res.status(200).json(await this.releaseService.updateNotes(
+      req,
+      req.params.platform,
+      req.params.architecture,
+      req.params.version,
+      req.body
+    ));
+  }
+
   async delete(req, res) {
     res.status(200).json(await this.releaseService.delete(
       req,

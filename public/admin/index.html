@@ -373,7 +373,7 @@
                 <label>
                   <span>更新说明</span>
                   <textarea id="releaseNotes" name="notes" rows="6" maxlength="1200" aria-describedby="releaseNotesHelp" placeholder="从用户能感知的变化写起，每行一项：&#10;- 体验期也能在桌宠大厅向在线朋友送出桌宠。&#10;- 大厅有了独立入口，找人和发送更清楚。&#10;- 手动换一只后，不会再自动打开连续换宠。"></textarea>
-                  <small id="releaseNotesHelp">写清“现在可以做什么、解决了什么困扰”，并注明平台差异；避免只写“修复若干问题”或接口、字段等实现细节。</small>
+                  <small id="releaseNotesHelp">写清用户能感知的功能或体验优化，并注明平台差异。后台统计、在线离线判定、活跃上报等管理专用内容仅留内部记录；影响用户的变化应如实说明。</small>
                 </label>
 
                 <div id="uploadProgress" class="progress-wrap" hidden>
@@ -381,6 +381,24 @@
                   <span id="uploadProgressText">0%</span>
                 </div>
               </div>
+            </form>
+
+            <form id="releaseNotesEditorForm" class="release-drawer-form drawer-form-stack" hidden>
+              <div class="release-form-block">
+                <strong id="releaseNotesEditorTarget"></strong>
+                <p class="muted">保存后，应用检查更新及官网公开下载页面会使用对应版本的最新说明；草稿在发布后展示。</p>
+              </div>
+              <label for="releaseNotesEditorText">
+                <span>面向用户的更新说明</span>
+                <textarea id="releaseNotesEditorText" name="notes" rows="10" maxlength="1200" aria-describedby="releaseNotesEditorHelp releaseNotesEditorCount releaseNotesEditorError" placeholder="每行一项，写清用户能感知的变化。"></textarea>
+                <small id="releaseNotesEditorCount">0 / 1200 字符</small>
+                <small id="releaseNotesEditorHelp">只写实际功能或体验优化。后台统计、在线离线判定、活跃上报等管理专用内容仅留内部记录；影响用户的行为、数据、权限或使用条件变化应如实说明。</small>
+              </label>
+              <details>
+                <summary>纯文本预览</summary>
+                <textarea id="releaseNotesEditorPreview" rows="8" readonly aria-label="更新说明纯文本预览" placeholder="暂未填写更新说明"></textarea>
+              </details>
+              <p id="releaseNotesEditorError" class="form-error" role="alert"></p>
             </form>
           </section>
 
@@ -1415,7 +1433,7 @@
   <script src="/assets/admin/js/core/router.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/overview.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/settings.js?v=admin-daily-summaries-2"></script>
-  <script src="/assets/admin/js/pages/releases.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/releases.js?v=admin-release-notes-1"></script>
   <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/activations.js?v=admin-v3-mobile"></script>

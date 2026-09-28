@@ -54,6 +54,12 @@ function createAdminRouter({ controller, authService }) {
     requireWriteSession,
     (req, res) => controller.delete(req, res)
   );
+  router.patch(
+    '/releases/:platform/:architecture/:version/notes',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updateReleaseNotes(req, res)
+  );
   router.put(
     '/uploads/:uploadId',
     requireWriteSession,

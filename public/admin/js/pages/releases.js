@@ -5,6 +5,92 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
   } = ui;
 
   const platformInputs = () => document.querySelectorAll('input[name="platform"]');
+  const uploadForm = byId('uploadForm');
+  const notesForm = byId('releaseNotesEditorForm');
+  const releaseFormsHost = uploadForm.parentElement;
+  const notesInput = byId('releaseNotesEditorText');
+  const notesPreview = byId('releaseNotesEditorPreview');
+  const notesCount = byId('releaseNotesEditorCount');
+  const notesError = byId('releaseNotesEditorError');
+  let notesEditor = null;
+  let notesDrawerButtons = null;
+  let notesSaving = false;
+
+  // The shared drawer moves forms into its body. Keep both release forms
+  // reachable when another drawer replaces that body.
+  function parkReleaseForms() {
+    for (const form of [uploadForm, notesForm]) {
+      form.hidden = true;
+      if (form.parentElement !== releaseFormsHost) releaseFormsHost.append(form);
+    }
+  }
+
+  function updateNotesPreview() {
+    notesCount.textContent = `${notesInput.value.length} / 1200 字符`;
+    notesPreview.value = notesInput.value;
+    notesInput.setCustomValidity(notesInput.value.length > 1200 ? '更新说明最多 1200 字符。' : '');
+    if (notesDrawerButtons) {
+      notesDrawerButtons.save.disabled = notesSaving || Boolean(notesEditor?.conflicted)
+        || notesInput.value.length > 1200;
+    }
+  }
+
+  function openNotesDrawer(release) {
+    if (notesSaving) return;
+    parkReleaseForms();
+    notesEditor = { ...release, expectedNotes: release.notes || '', conflicted: false };
+    notesInput.value = notesEditor.expectedNotes;
+    notesError.textContent = '';
+    setText('releaseNotesEditorTarget', `${platformLabel(release)} · v${release.version}`);
+    notesForm.querySelector('details').open = false;
+    notesDrawerButtons = globalThis.AdminFormKit.openFormDrawer({
+      form: notesForm,
+      title: '编辑更新说明',
+      eyebrow: '版本发布',
+      submitLabel: '保存说明',
+      focusSelector: '#releaseNotesEditorText'
+    });
+    updateNotesPreview();
+  }
+
+  async function saveReleaseNotes() {
+    if (notesSaving || !notesEditor || notesEditor.conflicted) return;
+    updateNotesPreview();
+    if (!notesForm.reportValidity()) return;
+    const editing = notesEditor;
+    const buttons = notesDrawerButtons;
+    const notes = notesInput.value;
+    notesSaving = true;
+    notesInput.readOnly = true;
+    notesForm.setAttribute('aria-busy', 'true');
+    notesError.textContent = '';
+    buttons.save.disabled = true;
+    buttons.save.textContent = '保存中…';
+    try {
+      await api(`${releaseApiPath(editing)}/notes`, {
+        method: 'PATCH',
+        body: { notes, expectedNotes: editing.expectedNotes }
+      });
+      showToast(`${platformLabel(editing)} v${editing.version} 更新说明已保存`);
+      if (byId('drawerBody').contains(notesForm)) globalThis.AdminFormKit.closeDrawer();
+      notesForm.hidden = true;
+      if (notesEditor === editing) notesEditor = null;
+      await loadReleases();
+    } catch (error) {
+      if (error.status === 409 && error.code === 'RELEASE_NOTES_CONFLICT') {
+        editing.conflicted = true;
+        notesError.textContent = '说明已被其他人修改，当前输入已保留。请先复制需要保留的内容，关闭后刷新版本列表，再重新打开编辑。';
+      } else {
+        notesError.textContent = error.message || '保存失败，当前输入已保留，请稍后重试。';
+      }
+    } finally {
+      notesSaving = false;
+      notesInput.readOnly = false;
+      notesForm.removeAttribute('aria-busy');
+      buttons.save.textContent = '保存说明';
+      updateNotesPreview();
+    }
+  }
 
   function releaseStatusKey(release) {
     if (release.active) return 'active';
@@ -69,6 +155,8 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
   }
 
   function openReleaseDrawer(presetPlatform) {
+    if (notesSaving) return;
+    parkReleaseForms();
     resetUploadForm(presetPlatform);
     globalThis.AdminFormKit.openFormDrawer({
       form: byId('uploadForm'),
@@ -127,6 +215,7 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
           hashCell(release.sha256),
           cell('', formatDate(release.createdAt)),
           actionsCell(
+            actionButton('编辑说明', 'button-secondary', () => openNotesDrawer(release)),
             !release.active && actionButton('发布', 'button-secondary', () => publishRelease(release)),
             !release.active && actionButton('删除', 'button-danger', () => deleteRelease(release))
           )
@@ -171,6 +260,8 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
   });
   bindClick('manageAndroidDevicesButton', () => navigateTo('android/devices'));
   bindClick('createReleaseButton', () => openReleaseDrawer());
+  notesInput.addEventListener('input', updateNotesPreview);
+  bindSubmit('releaseNotesEditorForm', saveReleaseNotes);
 
   bindSubmit('uploadForm', () => submitUpload({
     form: byId('uploadForm'),
@@ -189,7 +280,7 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
     afterReset: () => {
       resetUploadForm('windows');
       byId('uploadForm').hidden = true;
-      globalThis.AdminFormKit?.closeDrawer();
+      if (byId('drawerBody').contains(uploadForm)) globalThis.AdminFormKit?.closeDrawer();
     },
     reload: loadReleases,
     successText: '安装包已上传为草稿'

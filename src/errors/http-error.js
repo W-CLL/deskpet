@@ -13,6 +13,9 @@ function mapStoreError(error) {
   }
   const mappings = new Map([
     ['版本不存在', [404, 'VERSION_NOT_FOUND']],
+    ['更新说明必须为文本', [400, 'INVALID_RELEASE_NOTES']],
+    ['更新说明不能超过 1200 个字符', [400, 'NOTES_TOO_LONG']],
+    ['更新说明已被修改，请重新打开编辑后再保存', [409, 'RELEASE_NOTES_CONFLICT']],
     ['该版本已经存在', [409, 'VERSION_EXISTS']],
     ['该平台和架构的版本已经存在', [409, 'VERSION_EXISTS']],
     ['当前发布版本不能删除', [409, 'ACTIVE_VERSION_DELETE_REJECTED']],

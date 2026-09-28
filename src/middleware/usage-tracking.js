@@ -20,6 +20,7 @@ function identityFromLicense(license) {
 }
 
 function responseIdentity(req, res, initial) {
+  if (res.locals.activityDevice) return identityFromLicense(res.locals.activityDevice);
   if (initial) return initial;
   if (res.locals.activatedLicense) {
     return identityFromLicense({
@@ -29,16 +30,6 @@ function responseIdentity(req, res, initial) {
       appVersion: req.body?.appVersion,
       platform: req.headers['x-deskpet-platform'],
       architecture: req.headers['x-deskpet-architecture']
-    });
-  }
-  if (res.locals.trialStarted) {
-    return identityFromLicense({
-      id: `trial:${req.body?.installationId}`,
-      installationId: req.body?.installationId,
-      appVersion: req.body?.appVersion,
-      platform: req.headers['x-deskpet-platform'],
-      architecture: req.headers['x-deskpet-architecture'],
-      trial: true
     });
   }
   return null;

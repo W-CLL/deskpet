@@ -49,8 +49,14 @@ class PublicController {
 
   async trial(req, res) {
     const result = await this.activationService.trial(req, req.body);
-    res.locals.trialStarted = true;
+    res.locals.activityDevice = this.activationService.identifyActivityDevice(req.body);
     res.status(200).json(result);
+  }
+
+  heartbeat(req, res) {
+    res.locals.activityDevice = this.activationService.heartbeat(req, req.body);
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json({ ok: true, serverTime: new Date().toISOString() });
   }
 
   feedback(req, res) {

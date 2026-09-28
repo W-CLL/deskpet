@@ -39,6 +39,7 @@ class ActivationService {
       activationDeviceRateOptions || DEFAULT_DEVICE_RATE_OPTIONS
     );
     this.trialLimiter = new LoginRateLimiter(DEFAULT_TRIAL_RATE_OPTIONS);
+    this.activityLimiter = new LoginRateLimiter({ maxFailures: 240, windowMs: 60_000, blockMs: 60_000 });
   }
 
   list() {
@@ -141,6 +142,22 @@ class ActivationService {
       throw new HttpError(401, '设备授权无效或已撤销', 'LICENSE_REQUIRED');
     }
     return license;
+  }
+
+  identifyActivityDevice(body) {
+    return this.activationStore.identifyActivityDevice(body);
+  }
+
+  heartbeat(req, body) {
+    const ip = clientIp(req, this.config);
+    const rate = this.activityLimiter.status(ip);
+    if (!rate.allowed) {
+      throw new HttpError(429, '活跃上报过于频繁，请稍后重试', 'ACTIVITY_RATE_LIMITED');
+    }
+    this.activityLimiter.fail(ip);
+    const device = this.identifyActivityDevice(body);
+    if (!device) throw new HttpError(401, '设备身份无效', 'ACTIVITY_DEVICE_INVALID');
+    return device;
   }
 
   async activate(req, body) {

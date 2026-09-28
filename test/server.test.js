@@ -43,9 +43,10 @@ test('usage summary separates online, 7-day and 15-day inactive devices', () => 
 
   const usage = service.usageSummary(inventory, now);
   assert.equal(usage.summary.onlineDevices, 1);
-  assert.equal(usage.summary.inactive7Days, 2);
-  assert.equal(usage.summary.inactive15Days, 1);
-  assert.equal(usage.devices.find((item) => item.deviceKey === 'revoked').activityStatus, 'revoked');
+  assert.equal(usage.summary.inactive7Days, 3);
+  assert.equal(usage.summary.inactive15Days, 2);
+  assert.equal(usage.devices.find((item) => item.deviceKey === 'revoked').activityStatus, 'inactive15');
+  assert.equal(usage.devices.find((item) => item.deviceKey === 'revoked').authorizationState, 'revoked');
 });
 
 test('usage summary apiRequests is the full daily total, not the top-200 listing', async (context) => {
@@ -180,7 +181,7 @@ test('production admin device table renders the current client version', async (
     fs.promises.readFile(path.join(publicDirectory, 'admin', 'js', 'pages', 'analytics.js'), 'utf8')
   ]);
   assert.match(adminMarkup, /<th>当前版本<\/th>/);
-  assert.match(adminMarkup, /analytics\.js\?v=admin-v4-device-version/);
+  assert.match(adminMarkup, /analytics\.js\?v=admin-v5-device-activity/);
   assert.match(analyticsPage, /item\.appVersion \? `v\$\{item\.appVersion\}` : '-'/);
 });
 

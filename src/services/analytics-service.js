@@ -150,10 +150,8 @@ class AnalyticsService {
     const inactive15Cutoff = now - 15 * 24 * 60 * 60 * 1000;
     const deviceRows = [...devices.values()].map((item) => {
       const lastSeen = Date.parse(item.lastSeenAt || item.firstSeenAt);
-      const activeAuthorization = item.authorizationState === 'active';
       let activityStatus = 'recent';
-      if (!activeAuthorization) activityStatus = item.authorizationState;
-      else if (lastSeen >= onlineCutoff) activityStatus = 'online';
+      if (lastSeen >= onlineCutoff) activityStatus = 'online';
       else if (lastSeen <= inactive15Cutoff) activityStatus = 'inactive15';
       else if (lastSeen <= inactive7Cutoff) activityStatus = 'inactive7';
       return { ...item, activityStatus };
@@ -166,9 +164,9 @@ class AnalyticsService {
       summary: {
         trackedDevices: deviceRows.length,
         activeAuthorizedDevices: activeDevices.length,
-        onlineDevices: activeDevices.filter((item) => item.activityStatus === 'online').length,
-        inactive7Days: activeDevices.filter((item) => ['inactive7', 'inactive15'].includes(item.activityStatus)).length,
-        inactive15Days: activeDevices.filter((item) => item.activityStatus === 'inactive15').length,
+        onlineDevices: deviceRows.filter((item) => item.activityStatus === 'online').length,
+        inactive7Days: deviceRows.filter((item) => ['inactive7', 'inactive15'].includes(item.activityStatus)).length,
+        inactive15Days: deviceRows.filter((item) => item.activityStatus === 'inactive15').length,
         trialDevices: trials.length,
         activeTrials: trials.filter((item) => item.authorizationState === 'active').length,
         releaseDownloads: details.downloads.reduce((total, item) => total + item.downloadCount, 0),

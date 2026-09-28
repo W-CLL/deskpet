@@ -23,6 +23,7 @@ function createPublicRouter(controller) {
   router.get('/healthz', (req, res) => controller.health(req, res));
   router.post('/api/activate', ...jsonBody(4096), (req, res) => controller.activate(req, res));
   router.post('/api/trial', ...jsonBody(4096), (req, res) => controller.trial(req, res));
+  router.post('/api/device/heartbeat', ...jsonBody(4096), (req, res) => controller.heartbeat(req, res));
   router.get('/api/feedback', (req, res) => controller.feedback(req, res));
   router.post(
     '/api/feedback',

@@ -13,7 +13,7 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
 
   const activityLabels = {
     online: '在线', recent: '近期活跃', inactive7: '7 天不活跃',
-    inactive15: '15 天不活跃', revoked: '已撤销', expired: '体验已过期'
+    inactive15: '15 天不活跃'
   };
   const featureLabels = {
     trial_visit: '体验来访', companion_pair: '绑定搭子', companion_unpair: '解除搭子',
@@ -50,16 +50,45 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
     return `${days} 天前`;
   }
 
+  function authorizationLabel(item) {
+    if (item.authorizationState === 'revoked') return '已撤销';
+    if (item.authorizationState === 'expired') {
+      return item.authorizationType === 'trial' ? '体验已过期' : '授权已过期';
+    }
+    if (item.authorizationState === 'active') {
+      return item.authorizationType === 'trial' ? '体验有效' : '授权有效';
+    }
+    return '授权状态未知';
+  }
+
+  function isOnline(item) {
+    return item.activityStatus ? item.activityStatus === 'online' : item.online === true;
+  }
+
+  function matchesDeviceFilters(item, filters) {
+    // Preserve the existing type/status keys and interpret legacy authorization status values.
+    const legacyAuthorization = ['expired', 'revoked'].includes(filters.status) ? filters.status : '';
+    const authorizationState = filters.authorizationState || legacyAuthorization;
+    const activity = legacyAuthorization ? '' : filters.status;
+    if (filters.authorization && (item.authorizationType === 'trial' ? 'trial' : 'license') !== filters.authorization) return false;
+    if (authorizationState && item.authorizationState !== authorizationState) return false;
+    if (activity === 'online') return isOnline(item);
+    if (activity === 'offline') return !isOnline(item);
+    if (activity === 'inactive7') return ['inactive7', 'inactive15'].includes(item.activityStatus);
+    return !activity || item.activityStatus === activity;
+  }
+
   const deviceList = createListView('usage-devices', {
     emptyElement: byId('emptyUsageDevices'),
     renderPage(items) {
       fillTable(byId('usageDeviceRows'), items, (item) => {
-        const authLabel = item.authorizationType === 'trial' ? '体验' : '已激活';
-        const onlineLabel = item.online || item.activityStatus === 'online' ? '在线' : '离线';
+        const typeLabel = item.authorizationType === 'trial' ? '体验' : '正式授权';
+        const onlineLabel = isOnline(item) ? '在线' : '离线';
         const code = item.activationCode || item.maskedCode || (item.authorizationType === 'trial' ? '—' : '-');
         return [
-          badgeCell(authLabel, item.authorizationType === 'trial' ? 'warning' : 'active'),
-          badgeCell(onlineLabel, item.online || item.activityStatus === 'online' ? 'active' : ''),
+          cell('', typeLabel),
+          badgeCell(authorizationLabel(item), item.authorizationState === 'active' ? 'active' : ''),
+          badgeCell(onlineLabel, isOnline(item) ? 'active' : ''),
           cell('hash', code),
           cell('', item.activatedAt ? formatDate(item.activatedAt) : '-'),
           cell('', item.displayName || (item.authorizationType === 'trial' ? '体验设备' : '桌搭子')),
@@ -73,16 +102,8 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
         ];
       });
     },
-    matches: (item, filters) => (!filters.authorization
-      || (item.authorizationType === 'trial' ? 'trial' : 'license') === filters.authorization)
-      && (!filters.status || (
-        filters.status === 'online'
-          ? (item.online || item.activityStatus === 'online')
-          : filters.status === 'offline'
-            ? !(item.online || item.activityStatus === 'online')
-            : item.activityStatus === filters.status
-      )),
-    searchPlaceholder: '搜索激活码、昵称、设备码或版本',
+    matches: matchesDeviceFilters,
+    searchPlaceholder: '搜索激活码、昵称、设备码、版本或授权状态',
     searchText: (item) => [
       item.activationCode,
       item.maskedCode,
@@ -91,6 +112,11 @@ registerAdminPage(function createAnalyticsPage({ ui }) {
       item.installationSuffix,
       item.accountId,
       item.authorizationType,
+      item.authorizationType === 'trial' ? '体验' : '正式授权 已激活',
+      item.authorizationState,
+      authorizationLabel(item),
+      isOnline(item) ? '在线' : '离线',
+      activityLabels[item.activityStatus],
       item.platform,
       item.appVersion
     ]

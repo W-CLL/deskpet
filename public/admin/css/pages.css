@@ -365,6 +365,129 @@
   grid-column: 1 / -1;
 }
 
+/* Daily summary settings */
+.daily-summary-settings > .muted,
+.daily-summary-placeholders p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.daily-summary-template-heading {
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.daily-summary-template-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.daily-summary-template {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.daily-summary-template > label,
+.daily-summary-template-controls > label {
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.daily-summary-template textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.daily-summary-template-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.daily-summary-template-controls > label:not(.settings-switch) {
+  flex: 0 1 140px;
+  min-width: 120px;
+  max-width: 100%;
+}
+
+.daily-summary-template-controls .settings-switch {
+  flex: 0 0 auto;
+  min-height: 34px;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.daily-summary-settings input[type="checkbox"] {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.daily-summary-placeholders,
+.daily-summary-preview {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.daily-summary-placeholders summary,
+.daily-summary-preview summary {
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.daily-summary-placeholders[open] summary,
+.daily-summary-preview[open] summary {
+  margin-bottom: 8px;
+}
+
+.daily-summary-placeholders dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  margin-bottom: 0;
+}
+
+.daily-summary-placeholders dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.daily-summary-placeholders code {
+  overflow-wrap: anywhere;
+}
+
+.daily-summary-preview strong,
+.daily-summary-preview p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.daily-summary-preview p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .daily-summary-template-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Content CRUD */
 .content-layout {
   display: grid;

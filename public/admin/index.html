@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v3-mobile">
   <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v3-mobile">
   <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v3-mobile">
-  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-v3-mobile">
+  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-daily-summaries-2">
 </head>
 <body>
   <main class="app-root">
@@ -1268,6 +1268,53 @@
                   </div>
                 </section>
 
+                <section class="settings-block daily-summary-settings" aria-labelledby="dailySummaryHeading">
+                  <h3 id="dailySummaryHeading">日常周总结与月总结</h3>
+                  <p class="muted">周总结在每周收尾时间后开放，回顾此前完整的 7 天。例如周五 18:00 总结上周五 18:00 至本周五 18:00 的记录。月总结在次月 1 日开放，回顾完整的上个月。时间按用户电脑的本地时间计算。</p>
+                  <div class="settings-switch-list">
+                    <label class="settings-switch"><input id="dailySummariesEnabled" type="checkbox"> <span>启用日常总结</span></label>
+                    <label class="settings-switch"><input id="weeklySummaryEnabled" type="checkbox"> <span>周总结</span></label>
+                    <label class="settings-switch"><input id="monthlySummaryEnabled" type="checkbox"> <span>月总结</span></label>
+                  </div>
+                  <div class="settings-fields settings-fields-3">
+                    <label for="weeklySummaryWeekday">
+                      <span>每周收尾日</span>
+                      <select id="weeklySummaryWeekday">
+                        <option value="1">周一</option>
+                        <option value="2">周二</option>
+                        <option value="3">周三</option>
+                        <option value="4">周四</option>
+                        <option value="5">周五（推荐）</option>
+                        <option value="6">周六</option>
+                        <option value="0">周日</option>
+                      </select>
+                    </label>
+                    <label for="weeklySummaryTime">
+                      <span>周总结开放时间</span>
+                      <input id="weeklySummaryTime" type="time" required>
+                    </label>
+                    <label for="monthlySummaryTime">
+                      <span>次月 1 日开放时间</span>
+                      <input id="monthlySummaryTime" type="time" required>
+                    </label>
+                  </div>
+                  <div class="form-section-heading daily-summary-template-heading">
+                    <h3>总结模板 <span id="dailySummaryTemplateCount" class="muted"></span></h3>
+                    <div class="header-actions">
+                      <button id="addWeeklySummaryTemplate" class="button button-secondary" type="button">新增周模板</button>
+                      <button id="addMonthlySummaryTemplate" class="button button-secondary" type="button">新增月模板</button>
+                    </div>
+                  </div>
+                  <p class="muted">不同周期轮换使用同类已启用模板，每类建议准备 3 份以上。可直接编辑标题与正文；新增、停用或移除后，点击「保存配置」生效。</p>
+                  <details class="daily-summary-placeholders">
+                    <summary>可用占位符与填写说明</summary>
+                    <p>标题和正文使用纯文字，不支持 HTML 或尖括号。下列占位符会替换为用户的实际记录；请保留名称和花括号。没有记录的日子不会被推断成某种心情。</p>
+                    <dl id="dailySummaryPlaceholders"></dl>
+                  </details>
+                  <div id="dailySummaryTemplates" class="daily-summary-template-list"></div>
+                  <p id="dailySummarySaveState" class="muted" role="status" aria-live="polite"></p>
+                </section>
+
                 <section class="settings-block">
                   <h3>新安装默认值</h3>
                   <p class="muted">用于尚未设置偏好的新安装；互动频率在新账号首次创建档案时采用此值。已有账号和用户主动选择不会被覆盖。剧场间隔不会自动开启小剧场。</p>
@@ -1354,7 +1401,7 @@
   <script src="/assets/admin/js/core/form-kit.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/core/router.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/overview.js?v=admin-v3-mobile"></script>
-  <script src="/assets/admin/js/pages/settings.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/settings.js?v=admin-daily-summaries-2"></script>
   <script src="/assets/admin/js/pages/releases.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-mobile"></script>

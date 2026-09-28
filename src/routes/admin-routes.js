@@ -35,7 +35,7 @@ function createAdminRouter({ controller, authService }) {
   router.put(
     '/site-settings',
     requireWriteSession,
-    ...jsonBody(MAX_JSON_BODY),
+    ...jsonBody(512 * 1024),
     (req, res) => controller.updateSiteSettings(req, res)
   );
   router.post(

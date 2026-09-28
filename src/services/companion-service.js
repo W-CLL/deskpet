@@ -62,12 +62,13 @@ function isValidRecipientId(value) {
 }
 
 class CompanionService {
-  constructor({ companionStore, activationService, analyticsService, auditService, config }) {
+  constructor({ companionStore, activationService, analyticsService, auditService, config, getSiteSettings }) {
     this.companionStore = companionStore;
     this.activationService = activationService;
     this.analyticsService = analyticsService || null;
     this.auditService = auditService || null;
     this.config = config || null;
+    this.getSiteSettings = getSiteSettings || (() => ({}));
   }
 
   requireAccount(req, { allowTrial = false } = {}) {
@@ -75,6 +76,15 @@ class CompanionService {
     if (license.trial && !allowTrial) {
       throw new HttpError(403, '激活完整版本后可以使用搭子联机', 'COMPANION_ACTIVATION_REQUIRED');
     }
+    const settings = this.getSiteSettings();
+    const platform = String(req.headers?.['x-deskpet-platform'] || '').trim().toLowerCase();
+    // Only the authenticated owner's request may apply the first-use default.
+    // Store calls for admin deliveries and passive recipients stay opted out.
+    this.companionStore.ensureProfile(license.accountId, {
+      hallEnabled: (platform === 'windows' || platform === 'macos')
+        && settings?.features?.companionHall !== false
+        && settings?.defaults?.desktopHallEnabled === true
+    });
     return license;
   }
 

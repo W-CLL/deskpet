@@ -135,7 +135,8 @@ async function createApplication(options = {}) {
     activationService,
     analyticsService,
     auditService,
-    config
+    config,
+    getSiteSettings: () => releaseStore.siteSettings()
   });
   const visitStickerService = new VisitStickerService({
     config,

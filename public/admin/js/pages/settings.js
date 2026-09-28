@@ -250,6 +250,7 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
     byId('featureFishMode').checked = features.fishMode !== false;
     byId('featureAutoUpdates').checked = features.autoUpdates !== false;
     const defaults = settings.defaults || {};
+    byId('defaultDesktopHallEnabled').checked = defaults.desktopHallEnabled === true;
     byId('defaultPersonality').value = defaults.personality || 'lively';
     byId('defaultInteractionMode').value = defaults.interactionMode || 'standard';
     byId('defaultTheaterInterval').value = String(defaults.theaterIntervalSeconds || 300);
@@ -274,6 +275,7 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
           },
           defaults: {
             ...currentSiteSettings.defaults,
+            desktopHallEnabled: byId('defaultDesktopHallEnabled').checked,
             personality: byId('defaultPersonality').value,
             interactionMode: byId('defaultInteractionMode').value,
             theaterIntervalSeconds: Number(byId('defaultTheaterInterval').value)

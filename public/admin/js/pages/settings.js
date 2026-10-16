@@ -290,6 +290,8 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
     byId('wechatId').value = settings.wechatId || '';
     byId('activationTitle').value = settings.activation?.title || '还没有激活码';
     byId('activationDescription').value = settings.activation?.description || '';
+    byId('activationReplacementTitle').value = settings.activation?.replacementTitle || '需要更换激活码';
+    byId('activationReplacementDescription').value = settings.activation?.replacementDescription || '';
     activationQrDataUrl = settings.activation?.qrCodeDataUrl || '';
     previewActivationQr();
     byId('announcement').value = settings.announcement || '';
@@ -321,6 +323,8 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
           activation: {
             title: byId('activationTitle').value.trim(),
             description: byId('activationDescription').value.trim(),
+            replacementTitle: byId('activationReplacementTitle').value.trim(),
+            replacementDescription: byId('activationReplacementDescription').value.trim(),
             qrCodeDataUrl: activationQrDataUrl
           },
           announcement: byId('announcement').value.trim(),

@@ -49,6 +49,8 @@ test('activation configuration validates PNG and text without accepting executab
   assert.equal(normalizeActivationSettings({ qrCodeDataUrl: PNG }).qrCodeDataUrl, PNG);
   assert.throws(() => normalizeActivationSettings({ title: '' }), /激活页标题/);
   assert.throws(() => normalizeActivationSettings({ description: '长'.repeat(501) }), /激活页文案/);
+  assert.throws(() => normalizeActivationSettings({ replacementTitle: '' }), /更换激活码标题/);
+  assert.throws(() => normalizeActivationSettings({ replacementDescription: '长'.repeat(501) }), /更换激活码文案/);
   for (const image of ['https://example.com/qr.png', 'data:image/svg+xml;base64,PHN2Zy8+',
     'data:image/png;base64,YmFk', `data:image/png;base64,${'A'.repeat(350_000)}`]) {
     assert.throws(() => normalizeActivationSettings({ qrCodeDataUrl: image }), /激活页二维码/);
@@ -60,7 +62,13 @@ test('activation configuration validates PNG and text without accepting executab
 
 test('admin activation settings persist, are public without login, and retain previous values on invalid updates', async (context) => {
   const { application, directory, request, admin } = await fixture(context);
-  const activation = { title: '扫码联系作者', description: '新的说明\n支持两台设备', qrCodeDataUrl: PNG };
+  const activation = {
+    title: '扫码联系作者',
+    description: '新的说明\n支持两台设备',
+    replacementTitle: '更换前请联系作者',
+    replacementDescription: '这是单独配置的更换激活码说明',
+    qrCodeDataUrl: PNG
+  };
   assert.equal((await request('/api/admin/site-settings', 'PUT', { activation })).status, 401);
   assert.equal((await request('/api/admin/site-settings', 'PUT', { activation }, { Cookie: admin.Cookie })).status, 403);
   assert.equal((await request('/api/admin/site-settings', 'PUT', { activation, wechatId: 'new_wechat123' }, admin)).status, 200);

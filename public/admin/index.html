@@ -1296,8 +1296,10 @@
                   <h3>激活页二维码与文案</h3>
                   <p class="muted">保存后同步至新版客户端；离线时保留最近配置。二维码仅支持 PNG，最大 256 KB，边长不超过 2048 像素。</p>
                   <div class="settings-fields">
-                    <label><span>卡片标题</span><input id="activationTitle" maxlength="60" required></label>
-                    <label><span>引导文案</span><textarea id="activationDescription" maxlength="500" rows="4" required></textarea></label>
+                    <label><span>首次激活卡片标题</span><input id="activationTitle" maxlength="60" required></label>
+                    <label><span>首次激活引导文案</span><textarea id="activationDescription" maxlength="500" rows="4" required></textarea></label>
+                    <label><span>更换激活码卡片标题</span><input id="activationReplacementTitle" maxlength="60" required></label>
+                    <label><span>更换激活码引导文案</span><textarea id="activationReplacementDescription" maxlength="500" rows="4" required></textarea></label>
                     <label><span>上传新二维码</span><input id="activationQrFile" type="file" accept="image/png"></label>
                     <img id="activationQrPreview" alt="待保存的激活页二维码" width="168" height="168" hidden>
                     <button id="resetActivationQrButton" class="button button-secondary" type="button">恢复安装包内置二维码</button>

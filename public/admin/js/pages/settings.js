@@ -1,6 +1,51 @@
 registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
   const { byId, withBusy, copyText, bindSubmit, bindClick } = ui;
   let currentSiteSettings = {};
+  let activationQrDataUrl = '';
+  let readingActivationQr = false;
+
+  function previewActivationQr() {
+    const preview = byId('activationQrPreview');
+    preview.hidden = !activationQrDataUrl;
+    if (activationQrDataUrl) preview.src = activationQrDataUrl;
+    else preview.removeAttribute('src');
+  }
+
+  byId('activationQrFile').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.type !== 'image/png' || file.size > 256 * 1024) {
+      event.target.value = '';
+      showToast('请选择不超过 256 KB 的 PNG 二维码', 'error');
+      return;
+    }
+    readingActivationQr = true;
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('二维码读取失败，请重试'));
+        reader.readAsDataURL(file);
+      });
+      const image = new Image();
+      image.src = dataUrl;
+      await image.decode();
+      if (image.width > 2048 || image.height > 2048) throw new Error('二维码边长不能超过 2048 像素');
+      activationQrDataUrl = dataUrl;
+      previewActivationQr();
+      showToast('二维码已选择，保存配置后生效');
+    } catch (error) {
+      showToast(error.message || '二维码无法读取', 'error');
+    } finally {
+      readingActivationQr = false;
+      event.target.value = '';
+    }
+  });
+  bindClick('resetActivationQrButton', () => {
+    activationQrDataUrl = '';
+    previewActivationQr();
+    showToast('保存配置后恢复内置二维码');
+  });
   let summaryTemplates = [];
   let summaryPreviewRefreshers = [];
   const summaryPlaceholders = [
@@ -243,6 +288,10 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
     currentSiteSettings = settings;
     byId('xianyuUrl').value = settings.xianyuUrl || '';
     byId('wechatId').value = settings.wechatId || '';
+    byId('activationTitle').value = settings.activation?.title || '还没有激活码';
+    byId('activationDescription').value = settings.activation?.description || '';
+    activationQrDataUrl = settings.activation?.qrCodeDataUrl || '';
+    previewActivationQr();
     byId('announcement').value = settings.announcement || '';
     const features = settings.features || {};
     byId('featureTrialVisits').checked = features.trialVisits !== false;
@@ -258,6 +307,10 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
   }
 
   bindSubmit('siteSettingsForm', async () => {
+    if (readingActivationQr) {
+      showToast('正在读取二维码，请稍后保存', 'error');
+      return;
+    }
     await withBusy(byId('saveSiteSettingsButton'), async () => {
       const settings = await api('/api/admin/site-settings', {
         method: 'PUT',
@@ -265,6 +318,11 @@ registerAdminPage(function createSettingsPage({ ui, api, showToast }) {
           ...currentSiteSettings,
           xianyuUrl: byId('xianyuUrl').value.trim(),
           wechatId: byId('wechatId').value.trim(),
+          activation: {
+            title: byId('activationTitle').value.trim(),
+            description: byId('activationDescription').value.trim(),
+            qrCodeDataUrl: activationQrDataUrl
+          },
           announcement: byId('announcement').value.trim(),
           features: {
             ...currentSiteSettings.features,

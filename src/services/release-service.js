@@ -131,6 +131,9 @@ class ReleaseService {
       settings = await this.releaseStore.updateSiteSettings(body);
     } catch (error) {
       const message = error?.message || '';
+      if (/激活页/.test(message)) {
+        throw new HttpError(400, message, 'INVALID_ACTIVATION_SETTINGS');
+      }
       if (/闲鱼链接|闲鱼 HTTPS 链接/.test(message)) {
         throw new HttpError(400, message, 'INVALID_XIANYU_URL');
       }

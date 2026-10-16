@@ -3,6 +3,8 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
     byId, setText, bindClick, bindSubmit, formatDate, cell, actionButton, stackedCell,
     badgeCell, actionsCell, fillTable, createListView, loadJson, copyText, withBusy
   } = ui;
+  const generateCodeForm = byId('generateCodeForm');
+  const activateDeviceForm = byId('activateDeviceForm');
 
   const activationStatus = {
     unused: ['未使用', ''],
@@ -234,7 +236,7 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
   });
 
   function openGenerateDrawer() {
-    const form = byId('generateCodeForm');
+    const form = generateCodeForm;
     globalThis.AdminFormKit.openFormDrawer({
       form,
       title: '生成激活码',
@@ -265,6 +267,36 @@ registerAdminPage(function createActivationsPage({ ui, api, showToast, confirmAc
       byId('activationNote').value = '';
       byId('generateCodeForm').hidden = true;
       globalThis.AdminFormKit?.closeDrawer();
+      await loadActivations();
+    });
+  });
+
+  bindClick('activateDeviceButton', () => {
+    globalThis.AdminFormKit.openFormDrawer({
+      form: activateDeviceForm, title: '指定设备激活', eyebrow: '设备授权',
+      submitLabel: '激活该设备', focusSelector: '#manualInstallationId'
+    });
+  });
+  bindSubmit('activateDeviceForm', async () => {
+    const installationId = byId('manualInstallationId').value.trim();
+    const confirmed = await confirmAction({
+      title: '确认激活指定设备', message: `设备码：${installationId}。请核对完整设备码，授权后新版客户端联网即可同步。`,
+      confirmLabel: '确认激活'
+    });
+    if (!confirmed) return;
+    const button = document.querySelector('#editorDrawer .drawer-footer-actions .button-primary');
+    await withBusy(button, async () => {
+      const activated = await api('/api/admin/devices/activate', {
+        method: 'POST', body: { installationId, code: byId('manualActivationCode').value.trim().toUpperCase() }
+      });
+      byId('activateDeviceForm').reset();
+      byId('activateDeviceForm').hidden = true;
+      globalThis.AdminFormKit?.closeDrawer();
+      if (activated.activationCode) {
+        byId('generatedCodesText').value = activated.activationCode;
+        byId('generatedCodesDialog').showModal();
+      }
+      showToast('设备已激活，客户端联网后同步授权');
       await loadActivations();
     });
   });

@@ -411,6 +411,7 @@
                 </div>
                 <div class="header-actions">
                   <button id="refreshActivationButton" class="button button-secondary" type="button">刷新</button>
+                  <button id="activateDeviceButton" class="button button-secondary" type="button">指定设备激活</button>
                   <button id="createActivationButton" class="button button-primary" type="button">生成激活码</button>
                 </div>
               </div>
@@ -436,6 +437,12 @@
                   <span>备注</span>
                   <input id="activationNote" name="note" maxlength="120" placeholder="例如：测试设备或发放批次">
                 </label>
+              </form>
+
+              <form id="activateDeviceForm" class="drawer-form-stack" hidden>
+                <p class="muted">请让用户先联网打开新版激活页，复制完整设备码。不填购买码会为此设备新建账号并激活；填写已有购买码则加入该账号。同组码最多两台，不会撤销已有设备。</p>
+                <label><span>完整设备码</span><input id="manualInstallationId" minlength="20" maxlength="80" pattern="[A-Za-z0-9_-]{20,80}" required autocomplete="off"></label>
+                <label><span>6 位购买激活码（选填）</span><input id="manualActivationCode" minlength="6" maxlength="6" pattern="[A-HJ-NP-Za-hj-np-z2-9]{6}" placeholder="留空直接为此设备激活新账号" autocomplete="off"></label>
               </form>
 
               <div class="list-toolbar" data-list-controls="activations">
@@ -1286,6 +1293,18 @@
                 </section>
 
                 <section class="settings-block">
+                  <h3>激活页二维码与文案</h3>
+                  <p class="muted">保存后同步至新版客户端；离线时保留最近配置。二维码仅支持 PNG，最大 256 KB，边长不超过 2048 像素。</p>
+                  <div class="settings-fields">
+                    <label><span>卡片标题</span><input id="activationTitle" maxlength="60" required></label>
+                    <label><span>引导文案</span><textarea id="activationDescription" maxlength="500" rows="4" required></textarea></label>
+                    <label><span>上传新二维码</span><input id="activationQrFile" type="file" accept="image/png"></label>
+                    <img id="activationQrPreview" alt="待保存的激活页二维码" width="168" height="168" hidden>
+                    <button id="resetActivationQrButton" class="button button-secondary" type="button">恢复安装包内置二维码</button>
+                  </div>
+                </section>
+
+                <section class="settings-block">
                   <h3>远程功能开关</h3>
                   <div class="settings-switch-list">
                     <label class="settings-switch"><input id="featureTrialVisits" type="checkbox"> <span>体验来访</span></label>
@@ -1432,11 +1451,11 @@
   <script src="/assets/admin/js/core/form-kit.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/core/router.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/overview.js?v=admin-v3-mobile"></script>
-  <script src="/assets/admin/js/pages/settings.js?v=admin-daily-summaries-2"></script>
+  <script src="/assets/admin/js/pages/settings.js?v=admin-activation-1"></script>
   <script src="/assets/admin/js/pages/releases.js?v=admin-release-notes-1"></script>
   <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v3-mobile"></script>
-  <script src="/assets/admin/js/pages/activations.js?v=admin-v3-mobile"></script>
+  <script src="/assets/admin/js/pages/activations.js?v=admin-activation-1"></script>
   <script src="/assets/admin/js/pages/interactions.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/companions.js?v=admin-v3-mobile"></script>
   <script src="/assets/admin/js/pages/analytics.js?v=admin-v5-device-activity"></script>

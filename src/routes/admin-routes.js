@@ -111,6 +111,12 @@ function createAdminRouter({ controller, authService }) {
     (req, res) => controller.activationCodes(req, res)
   );
   router.post(
+    '/devices/activate',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.activateDevice(req, res)
+  );
+  router.post(
     '/activation-codes',
     requireWriteSession,
     ...jsonBody(MAX_JSON_BODY),

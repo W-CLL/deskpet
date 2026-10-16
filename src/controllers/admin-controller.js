@@ -80,6 +80,10 @@ class AdminController {
     res.status(201).json(generated);
   }
 
+  async activateDevice(req, res) {
+    res.status(201).json(await this.activationService.activateDevice(req, req.body));
+  }
+
   async revealActivationCode(req, res) {
     const codeId = requireParam(req.params.id, UUID_PATTERN);
     res.status(200).json(await this.activationService.reveal(req, codeId));

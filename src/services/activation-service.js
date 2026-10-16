@@ -46,6 +46,28 @@ class ActivationService {
     return this.activationStore.list();
   }
 
+  async activateDevice(req, body) {
+    let license;
+    try {
+      license = this.activationStore.activateDevice(body);
+    } catch (error) {
+      if (error?.code === 'ACCOUNT_DEVICE_LIMIT') {
+        throw new HttpError(409, error.message, error.code);
+      }
+      throw error;
+    }
+    if (!license) {
+      throw new HttpError(409, '无法激活：请核对完整设备码及选填的购买码，设备须先联网启动且未被激活；不支持用换机码手动激活。', 'DEVICE_ACTIVATION_REJECTED');
+    }
+    this.companionStore?.promoteTrialProfile(body.installationId, license.accountId, license.licenseId);
+    this.analyticsService?.forgetTrialDevice(body.installationId);
+    await this.auditService.write({
+      action: 'admin-device-activate', outcome: 'success', ip: clientIp(req, this.config),
+      installationId: body.installationId, accountId: license.accountId, licenseId: license.licenseId
+    });
+    return license;
+  }
+
   devices() {
     return this.activationStore.deviceInventory();
   }
@@ -253,6 +275,11 @@ class ActivationService {
     });
     if (!trial) {
       throw new HttpError(400, '试用设备信息无效，请重新启动应用', 'TRIAL_DEVICE_INVALID');
+    }
+    const license = this.activationStore.syncLicense(body);
+    if (license) {
+      this.analyticsService?.recordActivation(req, license, body);
+      return { ...trial, license };
     }
     return trial;
   }

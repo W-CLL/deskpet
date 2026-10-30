@@ -161,7 +161,7 @@ test('pagination and filters query the server while failures remain distinct fro
 test('admin shell and route registration expose the uninstall lifecycle page', () => {
   const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
   const shell = read('public/admin/index.html');
-  assert.match(shell, /data-page="uninstalls"/);
+  assert.match(shell, /data-route="uninstalls"/);
   assert.match(shell, /data-page-panel="uninstalls"/);
   assert.match(shell, /id="uninstallsRoot"/);
   assert.match(shell, /pages\/uninstalls\.js/);

@@ -132,12 +132,15 @@ test('admin serves the theme bootstrap as an allowed same-origin script before C
     'main.js must leave theme restoration and toggle binding to the single bootstrap');
 });
 
-test('admin page generation and head repair preserve the CSP-compatible theme bootstrap', async (context) => {
+test('admin assembly preserves the canonical page and head repair preserves its controls', async (context) => {
   const directory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-admin-theme-generation-'));
   context.after(() => fs.promises.rm(directory, { recursive: true, force: true }));
   await fs.promises.mkdir(path.join(directory, 'public/admin'), { recursive: true });
   await fs.promises.mkdir(path.join(directory, 'scripts'));
   await fs.promises.copyFile(path.join(root, 'public/admin.html'), path.join(directory, 'public/admin.html'));
+  const canonicalPath = path.join(directory, 'public/admin/index.html');
+  const canonicalHtml = await fs.promises.readFile(path.join(root, 'public/admin/index.html'), 'utf8');
+  await fs.promises.copyFile(path.join(root, 'public/admin/index.html'), canonicalPath);
   let assembledMainScript = '';
   for (const script of ['assemble-admin.js', 'fix-theme-head.js']) {
     const scriptPath = path.join(directory, 'scripts', script);
@@ -145,6 +148,16 @@ test('admin page generation and head repair preserve the CSP-compatible theme bo
     const result = spawnSync(process.execPath, [scriptPath], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
     const html = await fs.promises.readFile(path.join(directory, 'public/admin/index.html'), 'utf8');
+    if (script === 'assemble-admin.js') {
+      assert.equal(html, canonicalHtml, 'assembly must not overwrite the maintained page with legacy HTML');
+      const secondRun = spawnSync(process.execPath, [scriptPath], { encoding: 'utf8' });
+      assert.equal(secondRun.status, 0, secondRun.stderr);
+      assert.equal(await fs.promises.readFile(canonicalPath, 'utf8'), canonicalHtml, 'assembly must remain idempotent');
+    }
+    const bodyWithoutScriptVersions = (markup) => markup.slice(markup.indexOf('<body>'))
+      .replace(/(<script\b[^>]*src="[^"?]+)\?[^"\s]+/g, '$1');
+    assert.equal(bodyWithoutScriptVersions(html), bodyWithoutScriptVersions(canonicalHtml),
+      `${script} must preserve all production forms, drawers, navigation and page modules`);
     assert.match(html, /<html lang="zh-CN" data-theme="dark">/);
     assert.match(html, /id="themeToggleButton"/);
     const main = html.match(/<script\b[^>]*src="([^"]*\/js\/main\.js\?v=[A-Za-z0-9._-]+)"[^>]*>/);
@@ -155,4 +168,18 @@ test('admin page generation and head repair preserve the CSP-compatible theme bo
     assert.equal((html.match(/\/core\/theme\.js/g) || []).length, 1);
     assert.ok(html.indexOf('/core/theme.js') < html.indexOf('<link rel="stylesheet"'));
   }
+});
+
+test('admin assembly refuses to recreate a missing canonical page from legacy HTML', async (context) => {
+  const directory = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'deskpet-admin-missing-canonical-'));
+  context.after(() => fs.promises.rm(directory, { recursive: true, force: true }));
+  await fs.promises.mkdir(path.join(directory, 'public/admin'), { recursive: true });
+  await fs.promises.mkdir(path.join(directory, 'scripts'));
+  await fs.promises.copyFile(path.join(root, 'public/admin.html'), path.join(directory, 'public/admin.html'));
+  const scriptPath = path.join(directory, 'scripts/assemble-admin.js');
+  await fs.promises.copyFile(path.join(root, 'scripts/assemble-admin.js'), scriptPath);
+  const result = spawnSync(process.execPath, [scriptPath], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Missing canonical public\/admin\/index\.html/);
+  assert.equal(fs.existsSync(path.join(directory, 'public/admin/index.html')), false);
 });

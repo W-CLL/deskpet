@@ -182,7 +182,7 @@ test('production admin usage-device list renders the current client version', as
   ]);
   assert.match(adminMarkup, /data-page-panel="analytics"/);
   assert.match(adminMarkup,
-    /<table class="usage-device-table">[\s\S]*?<th>版本<\/th>[\s\S]*?<tbody id="usageDeviceRows"><\/tbody>/);
+    /<table class="usage-device-table">[\s\S]*?<th>当前版本<\/th>[\s\S]*?<tbody id="usageDeviceRows"><\/tbody>/);
   assert.match(adminMarkup,
     /<script\b[^>]*src="\/assets\/admin\/js\/pages\/analytics\.js\?v=[A-Za-z0-9._-]+"[^>]*>/);
   assert.match(analyticsPage, /item\.appVersion \? `v\$\{item\.appVersion\}` : '-'/);

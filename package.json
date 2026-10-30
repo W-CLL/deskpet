@@ -23,5 +23,8 @@
   "dependencies": {
     "ali-oss": "^6.23.0",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
   }
 }

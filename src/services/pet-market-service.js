@@ -210,8 +210,8 @@ class PetMarketService {
     }
     const priceFen = safeInteger(merged.priceFen, '商品价格', { maximum: 580 });
     if ((chargingMode === 'free' && priceFen !== 0)
-        || (chargingMode === 'paid' && ![280, 580].includes(priceFen))) {
-      throw new HttpError(400, '免费商品价格必须为 0，付费商品只能为 280 或 580 分', 'INVALID_PET_MARKET_PRICE');
+        || (chargingMode === 'paid' && ![280, 380, 580].includes(priceFen))) {
+      throw new HttpError(400, '免费商品价格必须为 0，付费商品只能为 280、380 或 580 分', 'INVALID_PET_MARKET_PRICE');
     }
     const status = String(merged.status || '');
     if (!['draft', 'published', 'unlisted'].includes(status)) {

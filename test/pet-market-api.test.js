@@ -1034,6 +1034,45 @@ test('only an unsnapshotted legacy placeholder order binds once without changing
   assert.equal(store.paymentSnapshot(legacy.id).collectionAccountId, COLLECTION_ACCOUNT);
 });
 
+test('380 fen products stay private as drafts, preserve their price on edits, and create exact-price orders', async (context) => {
+  const f = await fixture(context);
+  const created = await f.createProduct(product('middle-price-pet', 'paid', 380, { status: 'draft' }));
+  assert.equal(created.status, 201);
+  assert.equal(created.body.product.priceFen, 380);
+  assert.equal(created.body.product.status, 'draft');
+  assert.equal((await f.upload('middle-price-pet', '1.0.0', 'middle-price-pet title')).status, 201);
+  const edited = await f.updateProduct('middle-price-pet', { description: 'Updated draft description' });
+  assert.equal(edited.status, 200);
+  assert.equal(edited.body.product.priceFen, 380);
+  assert.equal(edited.body.product.status, 'draft');
+  assert.equal((await f.request('/api/pet-market/catalog')).body.products.length, 0);
+
+  for (const priceFen of [0, 100, 279, 381, 500]) {
+    const rejected = await f.updateProduct('middle-price-pet', { priceFen });
+    assert.equal(rejected.status, 400);
+    assert.equal(rejected.body.code, 'INVALID_PET_MARKET_PRICE');
+  }
+  const freeWithPrice = await f.updateProduct('middle-price-pet', { chargingMode: 'free', priceFen: 380 });
+  assert.equal(freeWithPrice.status, 400);
+  assert.equal(freeWithPrice.body.code, 'INVALID_PET_MARKET_PRICE');
+  for (const priceFen of [280, 580, 380]) {
+    const updated = await f.updateProduct('middle-price-pet', { priceFen });
+    assert.equal(updated.status, 200);
+    assert.equal(updated.body.product.priceFen, priceFen);
+  }
+
+  assert.equal((await f.updateProduct('middle-price-pet', { status: 'published' })).status, 200);
+  assert.equal((await f.request('/api/pet-market/catalog')).body.products[0].priceFen, 380);
+  await f.paymentSettings();
+  await f.heartbeat();
+  const buyer = await f.activate(await f.trial());
+  const order = await f.request('/api/pet-market/orders', {
+    method: 'POST', headers: buyer.headers, body: { productId: 'middle-price-pet' }
+  });
+  assert.equal(order.status, 201);
+  assert.equal(order.body.order.amountFen, 380);
+});
+
 test('direct GIF upload, product labels and public covers follow the verified publishing flow', async (context) => {
   const f = await fixture(context);
   const created = await f.createProduct(product('warm-cat', 'paid', 280, {

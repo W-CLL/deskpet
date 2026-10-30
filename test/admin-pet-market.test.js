@@ -158,6 +158,26 @@ test('pet market admin uses activeVersion and enforces upload-dependent settings
   assert.equal(admin.uploadOptions().body({}).version, '2.1.0');
 });
 
+test('pet shop editor offers 380 fen and preserves each supported price when saving a draft', async () => {
+  for (const priceFen of [280, 380, 580]) {
+    const admin = loadAdminPage([{
+      id: 'priced-draft', title: '待审核桌宠', description: '', chargingMode: 'paid', priceFen,
+      status: 'draft', isDefault: false, sortOrder: 0, previewMode: 'first5',
+      previewPaths: [], activeVersion: '', versions: []
+    }]);
+    await admin.page.load();
+    assert.match(admin.elements.petMarketRoot.innerHTML, /<option value="380">¥3\.80<\/option>/);
+    admin.renderedRows()[0][5].buttons[0].action();
+    assert.equal(admin.elements.petMarketPrice.value, String(priceFen));
+    admin.elements.petMarketDescription.value = '仅修改简介';
+    await admin.elements.petMarketForm.dispatch('submit');
+    const saved = admin.apiCalls.find(call => call.options?.method === 'PATCH');
+    assert.equal(saved.options.body.priceFen, priceFen);
+    assert.equal(saved.options.body.chargingMode, 'paid');
+    assert.equal(saved.options.body.status, 'draft');
+  }
+});
+
 test('pet shop payment drawer reads persisted targets and saves explicit settings without replacing unsaved edits on refresh', async () => {
   const admin = loadAdminPage([], { enabled: true, recipientName: '测试昵称', recipientAccount: 'test_pay01',
     instructions: '请核对昵称', available: true, listenerOnline: true, unavailableReason: '' });

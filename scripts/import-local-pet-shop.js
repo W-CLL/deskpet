@@ -48,7 +48,7 @@ async function run(options) {
   for (const product of products) {
     if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(product.id || '') || ids.has(product.id))
       throw new Error('商品标识无效或重复');
-    if (![0, 280, 580].includes(product.priceFen)) throw new Error('清单价格必须是免费、2.8 或 5.8 元');
+    if (![0, 280, 380, 580].includes(product.priceFen)) throw new Error('清单价格必须是免费、2.8、3.8 或 5.8 元');
     ids.add(product.id);
   }
   const login = await fetch(`${baseUrl}/api/admin/login`, {

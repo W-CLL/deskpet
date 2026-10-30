@@ -53,7 +53,7 @@ registerAdminPage(function createPetMarketPage({ ui, api, showToast }) {
       <label><span>标签（最多 4 个，每个不超过 12 个字）</span><input id="petMarketTags" maxlength="100" placeholder="例如：治愈、萌宠、打工搭子"><small>使用逗号、顿号或换行分隔。</small></label>
       <label><span><input id="petMarketIsFeatured" type="checkbox"> 精选推荐</span></label>
       <label><span>是否收费</span><select id="petMarketChargingMode"><option value="free">免费 · 激活后领取</option><option value="paid">收费 · 激活后购买</option></select></label>
-      <label><span>收费价格</span><select id="petMarketPrice"><option value="280">普通款 ¥2.80</option><option value="580">复杂 / 热门款 ¥5.80</option></select></label>
+      <label><span>收费价格</span><select id="petMarketPrice"><option value="280">普通款 ¥2.80</option><option value="380">¥3.80</option><option value="580">复杂 / 热门款 ¥5.80</option></select></label>
       <label><span>上架状态</span><select id="petMarketStatus"><option value="draft">草稿</option><option value="published">上架</option><option value="unlisted">下架</option></select></label>
       <label><span><input id="petMarketIsDefault" type="checkbox"> 设为默认免费桌宠（替换当前默认款）</span></label>
       <label><span>排序（数字越小越靠前）</span><input id="petMarketSortOrder" type="number" step="1" min="0" max="99999" value="0" required></label>
@@ -119,7 +119,7 @@ registerAdminPage(function createPetMarketPage({ ui, api, showToast }) {
     byId('petMarketTags').value = (product?.tags || []).join('、');
     byId('petMarketIsFeatured').checked = Boolean(product?.isFeatured);
     byId('petMarketChargingMode').value = product?.chargingMode || 'free';
-    byId('petMarketPrice').value = String(product?.priceFen === 580 ? 580 : 280);
+    byId('petMarketPrice').value = String([280, 380, 580].includes(product?.priceFen) ? product.priceFen : 280);
     byId('petMarketStatus').value = product?.status || 'draft';
     byId('petMarketIsDefault').checked = Boolean(product?.isDefault);
     byId('petMarketSortOrder').value = String(product?.sortOrder || 0);

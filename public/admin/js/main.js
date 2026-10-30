@@ -16,8 +16,11 @@ const routeMeta = {
   'companions/deliveries': ['搭子联机 · 投递', '最近投递明细'],
   content: ['内容库', '维护六类互动内容'],
   'resource-packs': ['资源包', '上传词包与小剧场'],
+  'pet-market': ['桌宠小铺', '免费默认款、收费设置和受保护的资源包'],
+  'pet-market-orders': ['小铺订单', '付款订单、交易状态与订单明细'],
   'visit-stickers': ['体验来访', '上传表情包'],
   feedback: ['问题反馈', '问题与建议处理'],
+  uninstalls: ['卸载反馈', '设备卸载意向、完成报告与重装恢复'],
   settings: ['系统设置', '远程配置与默认值']
 };
 
@@ -37,8 +40,11 @@ const pageModuleIdByRoute = {
   companions: 'companions',
   content: 'content',
   'resource-packs': 'resource-packs',
+  'pet-market': 'pet-market',
+  'pet-market-orders': 'pet-market-orders',
   'visit-stickers': 'visit-stickers',
   feedback: 'feedback',
+  uninstalls: 'uninstalls',
   settings: 'settings'
 };
 

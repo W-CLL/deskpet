@@ -3,6 +3,8 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
     byId, setText, bindClick, bindSubmit, formatBytes, formatDate, cell, actionButton, stackedCell,
     hashCell, actionsCell, fillTable, createListView, loadJson, submitUpload
   } = ui;
+  let editingPack = null;
+  const statusLabels = { draft: '草稿', published: '已上架', unlisted: '已下架' };
 
   function categoryLabel(category) {
     return category === 'theater-scripts' ? '小剧场剧本' : '互动词包';
@@ -12,16 +14,37 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
     return document.querySelector('#editorDrawer .drawer-footer-actions .button-primary');
   }
 
-  function openUploadDrawer() {
+  function openUploadDrawer(pack = null) {
     const form = byId('resourcePackForm');
+    editingPack = pack;
+    form.reset();
+    byId('resourcePackCategory').value = pack?.category || 'interaction-words';
+    byId('resourcePackTitle').value = pack?.title || '';
+    byId('resourcePackDescription').value = pack?.description || '';
+    byId('resourcePackVersion').value = pack?.version || '1.0.0';
+    byId('resourcePackVersion').readOnly = Boolean(pack);
+    byId('resourcePackStatus').value = pack?.status || 'published';
+    byId('resourcePackFile').required = !pack;
+    byId('resourcePackFile').closest('label').hidden = Boolean(pack);
+    byId('resourcePackFormError').textContent = pack?.validationError || '';
     globalThis.AdminFormKit.openFormDrawer({
       form,
-      title: '上传资源包',
+      title: pack ? '编辑资源包' : '上传资源包',
       eyebrow: '资源包',
-      submitLabel: '上传并公开',
+      submitLabel: pack ? '保存资源包设置' : '上传并校验',
       onCancel: () => form.reset(),
       focusSelector: '#resourcePackTitle'
     });
+  }
+
+  async function togglePublished(pack) {
+    try {
+      await api(`/api/admin/resource-packs/${encodeURIComponent(pack.id)}`, {
+        method: 'PATCH', body: { status: pack.status === 'published' ? 'unlisted' : 'published' }
+      });
+      showToast(pack.status === 'published' ? '资源包已下架' : '资源包已上架');
+      await loadResourcePacks();
+    } catch (error) { showToast(error.message, 'error'); }
   }
 
   async function deleteResourcePack(pack) {
@@ -51,11 +74,15 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
         download.textContent = '下载';
         return [
           stackedCell('version-cell', pack.title, pack.description),
-          cell('', categoryLabel(pack.category)),
-          stackedCell('file-cell', pack.originalName, formatBytes(pack.size)),
+          stackedCell('', categoryLabel(pack.category), statusLabels[pack.status] || '已上架',
+            pack.installable === false ? `无法安装：${pack.validationError || '请重新上传有效资源包'}` : `${pack.fileCount || 0} 个内容 · 免费`),
+          stackedCell('file-cell', pack.originalName, `版本 ${pack.version || '1.0.0'} · ${formatBytes(pack.size)}`),
           hashCell(pack.sha256),
           cell('', formatDate(pack.createdAt)),
-          actionsCell(download, actionButton('删除', 'button-danger', () => deleteResourcePack(pack)))
+          actionsCell(...(pack.status === 'published' && pack.installable !== false ? [download] : []),
+            actionButton('编辑', 'button-secondary', () => openUploadDrawer(pack)),
+            actionButton(pack.status === 'published' ? '下架' : '上架', 'button-secondary', () => togglePublished(pack)),
+            actionButton('删除', 'button-danger', () => deleteResourcePack(pack)))
         ];
       });
     },
@@ -78,7 +105,24 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
     }, byId('refreshResourcePacksButton'));
   }
 
-  bindSubmit('resourcePackForm', () => submitUpload({
+  bindSubmit('resourcePackForm', async () => {
+    if (editingPack) {
+      const button = drawerSubmitButton();
+      if (button) button.disabled = true;
+      byId('resourcePackFormError').textContent = '';
+      try {
+        await api(`/api/admin/resource-packs/${encodeURIComponent(editingPack.id)}`, { method: 'PATCH', body: {
+          title: byId('resourcePackTitle').value.trim(), description: byId('resourcePackDescription').value.trim(),
+          category: byId('resourcePackCategory').value, status: byId('resourcePackStatus').value
+        } });
+        globalThis.AdminFormKit.closeDrawer();
+        showToast('资源包设置已保存');
+        await loadResourcePacks();
+      } catch (error) { byId('resourcePackFormError').textContent = error.message; }
+      finally { if (button) button.disabled = false; }
+      return;
+    }
+    await submitUpload({
     form: byId('resourcePackForm'),
     fileInput: byId('resourcePackFile'),
     button: drawerSubmitButton(),
@@ -89,17 +133,20 @@ registerAdminPage(function createResourcePacksPage({ ui, api, showToast, confirm
     body: () => ({
       category: byId('resourcePackCategory').value,
       title: byId('resourcePackTitle').value.trim(),
-      description: byId('resourcePackDescription').value.trim()
+      description: byId('resourcePackDescription').value.trim(),
+      status: byId('resourcePackStatus').value,
+      version: byId('resourcePackVersion').value.trim()
     }),
     afterReset: () => {
       byId('resourcePackForm').hidden = true;
       globalThis.AdminFormKit?.closeDrawer();
     },
     reload: loadResourcePacks,
-    successText: '资源包已上传并公开'
-  }));
+    successText: '资源包已通过校验并保存'
+    });
+  });
   bindClick('refreshResourcePacksButton', loadResourcePacks);
-  bindClick('createResourcePackButton', openUploadDrawer);
+  bindClick('createResourcePackButton', () => openUploadDrawer());
 
   return { id: 'resource-packs', load: loadResourcePacks };
 });

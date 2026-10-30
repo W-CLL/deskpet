@@ -22,7 +22,6 @@ html = html.replace(
 html = html.replaceAll('??v=', '?v=');
 html = html.replace(/<html\b[^>]*>/, '<html lang="zh-CN" data-theme="dark">');
 html = html.replaceAll(/[?]v=admin-v3-[a-z]+/g, '?v=admin-v3-dark');
-html = html.replace(/(\/assets\/admin\/js\/main\.js)(?:\?[^"']*)?/, '$1?v=admin-theme-1');
 
 if (!html.includes('id="themeToggleButton"')) {
   html = html.replace(

@@ -1072,6 +1072,11 @@
                 <span class="editor-state">ZIP</span>
               </div>
               <form id="resourcePackForm" class="upload-form">
+                <p class="field-hint">小剧场与互动词库全部免费，无需下单。用户下载并安装后默认待启用，在“小剧场设置”或“互动词库设置”中自行开启。</p>
+                <p class="field-hint">免费资源：ZIP 内放 1–80 个 JSON；每个不超过 256 KB，总解压大小不超过 20 MB。可附 README.txt / README.md。上传时校验剧本或词库格式。</p>
+                <label><span>版本</span><input id="resourcePackVersion" value="1.0.0" maxlength="40" pattern="[A-Za-z0-9][A-Za-z0-9._-]{0,39}" required></label>
+                <label><span>上架状态</span><select id="resourcePackStatus"><option value="published">上架 · 免费下载</option><option value="draft">草稿</option><option value="unlisted">下架</option></select></label>
+                <p id="resourcePackFormError" class="form-error" role="alert"></p>
                 <section class="release-form-block">
                   <div class="form-block-heading">
                     <span class="form-block-index">01</span>

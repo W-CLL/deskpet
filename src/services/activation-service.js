@@ -166,6 +166,17 @@ class ActivationService {
     return license;
   }
 
+  requireActivatedLicense(req, markUpdate = false) {
+    const license = this.authenticate(req, markUpdate);
+    if (!license) {
+      throw new HttpError(401, '设备授权无效或已撤销', 'LICENSE_REQUIRED');
+    }
+    if (license.trial) {
+      throw new HttpError(403, '需要正式激活后才能购买或使用桌宠', 'ACTIVATION_REQUIRED');
+    }
+    return license;
+  }
+
   identifyActivityDevice(body) {
     return this.activationStore.identifyActivityDevice(body);
   }

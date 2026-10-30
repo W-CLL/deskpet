@@ -9,7 +9,15 @@ function jsonBody(limit) {
       }
       return next();
     },
-    express.json({ limit, strict: true })
+    express.json({
+      limit,
+      strict: true,
+      // Internal service authentication signs the exact JSON bytes. Keep a
+      // copy before JSON parsing normalises whitespace or key ordering.
+      verify(req, _res, buffer) {
+        req.rawBody = Buffer.from(buffer);
+      }
+    })
   ];
 }
 

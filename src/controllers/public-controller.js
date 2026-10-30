@@ -13,7 +13,9 @@ class PublicController {
     analyticsService,
     resourcePackService,
     companionService,
-    visitStickerService
+    visitStickerService,
+    petMarketService,
+    uninstallService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -26,6 +28,8 @@ class PublicController {
     this.resourcePackService = resourcePackService;
     this.companionService = companionService;
     this.visitStickerService = visitStickerService;
+    this.petMarketService = petMarketService;
+    this.uninstallService = uninstallService;
     this.startedAt = new Date().toISOString();
   }
 
@@ -57,6 +61,15 @@ class PublicController {
     res.locals.activityDevice = this.activationService.heartbeat(req, req.body);
     res.setHeader('Cache-Control', 'no-store');
     res.status(200).json({ ok: true, serverTime: new Date().toISOString() });
+  }
+
+  async installEvent(req, res) {
+    const result = await this.uninstallService.record(req, req.body);
+    if (req.body?.eventType !== 'uninstall_completed') {
+      res.locals.activityDevice = this.activationService.identifyActivityDevice(req.body);
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(result);
   }
 
   feedback(req, res) {
@@ -194,10 +207,11 @@ class PublicController {
     res.status(200).json(this.releaseService.siteSettings());
   }
 
-  publicResourcePacks(_req, res) {
+  publicResourcePacks(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
     res.status(200).json({
       generatedAt: new Date().toISOString(),
-      packs: this.resourcePackService.publicList()
+      packs: this.resourcePackService.publicList(queryValue(req, 'category') || queryValue(req, 'kind'))
     });
   }
 
@@ -205,7 +219,7 @@ class PublicController {
     const item = await this.resourcePackService.download(req.params.id);
     const safeName = item.pack.originalName.replace(/[^A-Za-z0-9._-]/g, '_') || 'resource-pack.zip';
     res.status(200);
-    res.setHeader('Cache-Control', 'public, max-age=3600');
+    res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'application/zip');
     res.setHeader(
       'Content-Disposition',
@@ -213,6 +227,83 @@ class PublicController {
     );
     res.setHeader('Content-Length', item.size);
     res.setHeader('ETag', `"${item.pack.sha256}"`);
+    res.setHeader('X-Accel-Buffering', 'no');
+    res.end(item.bytes);
+  }
+
+  petMarketCatalog(req, res) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.status(200).json(this.petMarketService.catalog(req));
+  }
+
+  async petMarketPreview(req, res) {
+    const item = await this.petMarketService.preview(
+      req.params.id,
+      req.params.version,
+      queryValue(req, 'file')
+    );
+    res.status(200);
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Type', 'image/gif');
+    res.setHeader('Content-Length', item.bytes.length);
+    res.setHeader('ETag', `"${item.file.sha256}"`);
+    res.send(item.bytes);
+  }
+
+  petMarketClaim(req, res) {
+    res.status(200).json(this.petMarketService.claim(req, req.params.id));
+  }
+
+  petMarketCreateOrder(req, res) {
+    const result = this.petMarketService.createOrder(req, req.body);
+    res.status(result.reused ? 200 : 201).json(result);
+  }
+
+  petMarketOrders(req, res) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.status(200).json(this.petMarketService.listOrders(req, queryValue(req, 'cursor')));
+  }
+
+  petMarketOrder(req, res) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.status(200).json(this.petMarketService.getOrder(req, req.params.id));
+  }
+
+  petMarketCancelOrder(req, res) {
+    res.status(200).json(this.petMarketService.cancelOrder(req, req.params.id));
+  }
+
+  petMarketPaymentEvent(req, res) {
+    res.status(200).json(this.petMarketService.paymentEvent(req, req.body));
+  }
+
+  petMarketPaymentHeartbeat(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(this.petMarketService.paymentHeartbeat(req, req.body));
+  }
+
+  petMarketDownloadDescriptor(req, res) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.status(200).json(this.petMarketService.downloadDescriptor(req, req.params.id));
+  }
+
+  petMarketAuthorizeUse(req, res) {
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.status(200).json(this.petMarketService.authorizeUse(req, req.params.id));
+  }
+
+  async petMarketDownload(req, res, next) {
+    const item = this.petMarketService.download(req, req.params.id, req.params.version);
+    const stat = await fs.promises.stat(item.filePath);
+    const safeName = item.version.fileName.replace(/[^A-Za-z0-9._-]/g, '_') || 'deskpet.zip';
+    res.status(200);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(item.version.fileName)}`);
+    res.setHeader('Content-Length', stat.size);
+    res.setHeader('ETag', `"${item.version.sha256}"`);
     res.setHeader('X-Accel-Buffering', 'no');
     const stream = fs.createReadStream(item.filePath, { highWaterMark: 1024 * 1024 });
     stream.on('error', next);
@@ -229,8 +320,16 @@ class PublicController {
   }
 
   async download(req, res, next) {
+    res.vary('User-Agent');
+    res.vary('X-DeskPet-Platform');
     const item = await this.releaseService.download(req, req.params.fileName);
     res.locals.releaseDownload = item.release;
+    if (item.redirectUrl) {
+      res.setHeader('Cache-Control', 'private, no-store');
+      res.locals.ossRedirect = true;
+      res.redirect(302, item.redirectUrl);
+      return;
+    }
     res.status(item.range ? 206 : 200);
     res.setHeader('Accept-Ranges', 'bytes');
     res.setHeader(

@@ -178,16 +178,17 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
     try {
       const result = await api(`${releaseApiPath(release)}/publish`, { method: 'POST' });
       showToast(`${platformLabel(result.release)} v${result.release.version} 已发布，签名和 SHA-256 校验通过`);
-      await loadReleases();
     } catch (error) {
       showToast(error.message, 'error');
+    } finally {
+      await loadReleases();
     }
   }
 
   async function deleteRelease(release) {
     const confirmed = await confirmAction({
       title: `删除 ${platformLabel(release)} v${release.version}`,
-      message: '安装包和版本记录将永久删除。',
+      message: release.oss ? '本地安装包和版本记录将永久删除；OSS 对象和上传历史保留。' : '安装包和版本记录将永久删除。',
       confirmLabel: '删除版本',
       danger: true
     });
@@ -201,6 +202,23 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
     }
   }
 
+  async function syncOss(release) {
+    try {
+      await api(`${releaseApiPath(release)}/oss-sync`, {method:'POST'});
+      showToast('OSS 同步完成，文件已校验');
+    } catch (error) { showToast(error.message, 'error'); }
+    finally { await loadReleases(); }
+  }
+
+  function storageLabel(release) {
+    if (!release.oss) return '';
+    const labels = {pending:'OSS 待同步',uploading:'OSS 同步中',uploaded:'OSS 已同步',failed:'OSS 同步失败'};
+    let label = labels[release.oss.status] || '本地存储';
+    if (release.oss.errorCode) label += ` · ${release.oss.errorCode}`;
+    if (release.oss.urlExpiresAt) label += ` · 链接有效至 ${formatDate(release.oss.urlExpiresAt)}`;
+    return label;
+  }
+
   const listView = createListView('releases', {
     emptyElement: byId('emptyReleases'),
     renderPage(releases) {
@@ -211,11 +229,12 @@ registerAdminPage(function createReleasesPage({ ui, api, showToast, confirmActio
           stackedCell('version-cell', `v${release.version}`, release.notes ? release.notes.split('\n')[0] : '无更新说明'),
           cell('', platformLabel(release)),
           badgeCell(statusText, statusClass),
-          stackedCell('file-cell', release.fileName, formatBytes(release.size)),
+          stackedCell('file-cell', release.fileName, [formatBytes(release.size),storageLabel(release)].filter(Boolean).join(' · ')),
           hashCell(release.sha256),
           cell('', formatDate(release.createdAt)),
           actionsCell(
             actionButton('编辑说明', 'button-secondary', () => openNotesDrawer(release)),
+            release.oss && actionButton('同步 OSS', 'button-secondary', () => syncOss(release)),
             !release.active && actionButton('发布', 'button-secondary', () => publishRelease(release)),
             !release.active && actionButton('删除', 'button-danger', () => deleteRelease(release))
           )

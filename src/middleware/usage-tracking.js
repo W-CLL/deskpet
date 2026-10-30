@@ -103,7 +103,9 @@ function createUsageTracking({ activationService, analyticsService }) {
         });
         const range = String(req.headers.range || '');
         const startsDownload = !range || /^bytes=0-/i.test(range);
-        if (req.method === 'GET' && res.statusCode >= 200 && res.statusCode < 300
+        const downloadAccepted = (res.statusCode >= 200 && res.statusCode < 300)
+          || (res.statusCode === 302 && res.locals.ossRedirect);
+        if (req.method === 'GET' && downloadAccepted
           && res.locals.releaseDownload && startsDownload) {
           analyticsService.recordReleaseDownload(res.locals.releaseDownload);
         }

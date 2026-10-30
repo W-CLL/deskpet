@@ -174,14 +174,17 @@ test('admin shell includes the Android management hooks used by admin.js', async
   assert.match(adminUi, /function registerAdminPage/);
 });
 
-test('production admin device table renders the current client version', async () => {
+test('production admin usage-device list renders the current client version', async () => {
   const publicDirectory = path.join(__dirname, '..', 'public');
   const [adminMarkup, analyticsPage] = await Promise.all([
     fs.promises.readFile(path.join(publicDirectory, 'admin', 'index.html'), 'utf8'),
     fs.promises.readFile(path.join(publicDirectory, 'admin', 'js', 'pages', 'analytics.js'), 'utf8')
   ]);
-  assert.match(adminMarkup, /<th>当前版本<\/th>/);
-  assert.match(adminMarkup, /analytics\.js\?v=admin-v5-device-activity/);
+  assert.match(adminMarkup, /data-page-panel="analytics"/);
+  assert.match(adminMarkup,
+    /<table class="usage-device-table">[\s\S]*?<th>版本<\/th>[\s\S]*?<tbody id="usageDeviceRows"><\/tbody>/);
+  assert.match(adminMarkup,
+    /<script\b[^>]*src="\/assets\/admin\/js\/pages\/analytics\.js\?v=[A-Za-z0-9._-]+"[^>]*>/);
   assert.match(analyticsPage, /item\.appVersion \? `v\$\{item\.appVersion\}` : '-'/);
 });
 

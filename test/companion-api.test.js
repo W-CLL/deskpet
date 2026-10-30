@@ -113,6 +113,16 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   }));
   assert.equal(paired.response.status, 200);
   assert.equal(paired.payload.partner.displayName, '小夏');
+  assert.equal(paired.payload.partner.online, true, 'active private partners need not join the hall');
+
+  application.companionStore.database.prepare(
+    'UPDATE companion_profiles SET private_last_seen_at = ? WHERE account_id = ?'
+  ).run(new Date(Date.now() - 91_000).toISOString(), second.accountId);
+  const offlinePartner = await jsonResponse(await fetch(`${baseUrl}/api/companion`, {
+    headers: first.headers
+  }));
+  assert.equal(offlinePartner.payload.partner.online, false);
+  assert.deepEqual(Object.keys(offlinePartner.payload.partner).sort(), ['displayName', 'online', 'pairedAt']);
 
   const gif = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
   const sent = await jsonResponse(await fetch(`${baseUrl}/api/companion/deliveries`, {
@@ -129,6 +139,11 @@ test('two accounts pair and deliver an uploaded GIF once', async (context) => {
   assert.equal(pending.payload.deliveries.length, 1);
   assert.equal(pending.payload.deliveries[0].senderName, '小明');
   assert.equal(pending.payload.deliveries[0].width, 1);
+  const returnedPartner = await jsonResponse(await fetch(`${baseUrl}/api/companion`, {
+    headers: first.headers
+  }));
+  assert.equal(returnedPartner.payload.partner.online, true, 'inbox polling restores private presence');
+  assert.equal(returnedPartner.payload.online, false, 'the existing public online flag remains hall-only');
 
   const downloaded = await fetch(`${baseUrl}${pending.payload.deliveries[0].downloadPath}`, {
     headers: second.headers

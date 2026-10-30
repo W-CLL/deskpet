@@ -24,6 +24,9 @@ function createPublicRouter(controller) {
   router.post('/api/activate', ...jsonBody(4096), (req, res) => controller.activate(req, res));
   router.post('/api/trial', ...jsonBody(4096), (req, res) => controller.trial(req, res));
   router.post('/api/device/heartbeat', ...jsonBody(4096), (req, res) => controller.heartbeat(req, res));
+  router.post('/api/device/install-events', ...jsonBody(16 * 1024), (req, res, next) => {
+    Promise.resolve(controller.installEvent(req, res)).catch(next);
+  });
   router.get('/api/feedback', (req, res) => controller.feedback(req, res));
   router.post(
     '/api/feedback',
@@ -108,6 +111,51 @@ function createPublicRouter(controller) {
     (req, res) => controller.trialVisitFile(req, res)
   );
   router.get('/api/update/latest', (req, res) => controller.latest(req, res));
+  router.get('/api/pet-market/catalog', (req, res) => controller.petMarketCatalog(req, res));
+  router.get(
+    '/api/pet-market/products/:id/versions/:version/preview',
+    (req, res) => controller.petMarketPreview(req, res)
+  );
+  router.post(
+    '/api/pet-market/products/:id/claim',
+    (req, res) => controller.petMarketClaim(req, res)
+  );
+  router.post(
+    '/api/pet-market/orders',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketCreateOrder(req, res)
+  );
+  router.get('/api/pet-market/orders', (req, res) => controller.petMarketOrders(req, res));
+  router.get(
+    '/api/pet-market/orders/:id',
+    (req, res) => controller.petMarketOrder(req, res)
+  );
+  router.post(
+    '/api/pet-market/orders/:id/cancel',
+    (req, res) => controller.petMarketCancelOrder(req, res)
+  );
+  router.post(
+    '/api/pet-market/payment-heartbeat',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketPaymentHeartbeat(req, res)
+  );
+  router.post(
+    '/api/pet-market/payment-events',
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketPaymentEvent(req, res)
+  );
+  router.get(
+    '/api/pet-market/products/:id/download-descriptor',
+    (req, res) => controller.petMarketDownloadDescriptor(req, res)
+  );
+  router.post(
+    '/api/pet-market/products/:id/authorize-use',
+    (req, res) => controller.petMarketAuthorizeUse(req, res)
+  );
+  router.get(
+    '/api/pet-market/products/:id/versions/:version/download',
+    (req, res, next) => controller.petMarketDownload(req, res, next)
+  );
   router.get('/api/public/downloads', (req, res) => {
     setWebsiteCors(req, res);
     return controller.publicDownloads(req, res);

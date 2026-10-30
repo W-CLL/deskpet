@@ -369,6 +369,7 @@
       progressText,
       createPath,
       body,
+      afterUpload,
       afterReset,
       reload,
       successText
@@ -383,7 +384,8 @@
           method: 'POST',
           body: { ...body(file), fileName: file.name, fileSize: file.size }
         });
-        await uploadBinary(task.uploadUrl, file, progressBar, progressText);
+        const result = await uploadBinary(task.uploadUrl, file, progressBar, progressText);
+        await afterUpload?.(result);
         progressBar.value = 100;
         progressText.textContent = '100%';
         form.reset();

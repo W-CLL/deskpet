@@ -1,12 +1,21 @@
 (function (global) {
   'use strict';
 
+  let restoreDrawerForm = null;
+
+  function releaseDrawerForm() {
+    const restore = restoreDrawerForm;
+    restoreDrawerForm = null;
+    restore?.();
+  }
+
   function openDrawer({ title, eyebrow = '编辑', body, footer }) {
     const drawer = document.querySelector('#editorDrawer');
     const backdrop = document.querySelector('#drawerBackdrop');
     const drawerBody = document.querySelector('#drawerBody');
     const drawerFooter = document.querySelector('#drawerFooter');
     if (!drawer || !backdrop || !drawerBody || !drawerFooter) return;
+    releaseDrawerForm();
     document.querySelector('#drawerTitle').textContent = title;
     document.querySelector('#drawerEyebrow').textContent = eyebrow;
     drawerBody.replaceChildren(body || document.createElement('div'));
@@ -16,6 +25,7 @@
   }
 
   function closeDrawer() {
+    releaseDrawerForm();
     const drawer = document.querySelector('#editorDrawer');
     const backdrop = document.querySelector('#drawerBackdrop');
     if (drawer) drawer.hidden = true;
@@ -32,6 +42,9 @@
     focusSelector
   }) {
     if (!form) return;
+    releaseDrawerForm();
+    const originalParent = form.parentNode;
+    const originalNextSibling = form.nextSibling;
     form.hidden = false;
 
     const footer = document.createElement('div');
@@ -58,6 +71,20 @@
 
     footer.append(cancel, save);
     openDrawer({ title, eyebrow, body: form, footer });
+    // Pages find reusable form fields by ID after saving and while refreshing.
+    // Return the actual form (including its listeners) before replacing drawer content.
+    restoreDrawerForm = () => {
+      form.hidden = true;
+      if (originalParent) {
+        if (originalNextSibling?.parentNode === originalParent) {
+          originalParent.insertBefore(form, originalNextSibling);
+        } else {
+          originalParent.append(form);
+        }
+      } else {
+        form.remove();
+      }
+    };
 
     const focusNode = focusSelector
       ? form.querySelector(focusSelector)

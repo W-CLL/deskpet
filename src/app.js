@@ -4,6 +4,8 @@ const path = require('node:path');
 const express = require('express');
 const { ReleaseStore } = require('../lib/storage');
 const { ActivationStore } = require('../lib/activation-store');
+const { WechatGrantStore } = require('../lib/wechat-grant-store');
+const { OssUploadStore } = require('../lib/oss-upload-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
 const { AnalyticsStore } = require('../lib/analytics-store');
@@ -11,6 +13,8 @@ const { ContentStore } = require('../lib/content-store');
 const { ResourcePackStore } = require('../lib/resource-pack-store');
 const { CompanionStore } = require('../lib/companion-store');
 const { VisitStickerStore } = require('../lib/visit-sticker-store');
+const { PetMarketStore } = require('../lib/pet-market-store');
+const { UninstallStore } = require('../lib/uninstall-store');
 const { loadConfig } = require('./config/app-config');
 const { AdminController } = require('./controllers/admin-controller');
 const { PublicController } = require('./controllers/public-controller');
@@ -19,6 +23,8 @@ const { errorHandler, notFound } = require('./middleware/error-handler');
 const { createUsageTracking } = require('./middleware/usage-tracking');
 const { createAdminRouter } = require('./routes/admin-routes');
 const { createPublicRouter } = require('./routes/public-routes');
+const { createWechatInternalRouter } = require('./routes/wechat-internal-routes');
+const { createWechatInternalAuth } = require('./middleware/wechat-internal-auth');
 const { ActivationService } = require('./services/activation-service');
 const { AdminAuthService } = require('./services/admin-auth-service');
 const { AuditService } = require('./services/audit-service');
@@ -31,6 +37,10 @@ const { ResourcePackService } = require('./services/resource-pack-service');
 const { CompanionService } = require('./services/companion-service');
 const { VisitStickerService } = require('./services/visit-sticker-service');
 const { OverviewService } = require('./services/overview-service');
+const { PetMarketService } = require('./services/pet-market-service');
+const { UninstallService } = require('./services/uninstall-service');
+const { WechatGrantService } = require('./services/wechat-grant-service');
+const { OssService } = require('./services/oss-service');
 
 function serveFile(filePath, cacheControl) {
   return function sendStaticFile(_req, res, next) {
@@ -44,8 +54,13 @@ function serveFile(filePath, cacheControl) {
 async function createApplication(options = {}) {
   process.umask(0o077);
   const config = loadConfig(options);
+  const ossUploadStore = new OssUploadStore(config.dataDirectory);
+  const ossService = options.ossService || new OssService(config, {
+    store: ossUploadStore, client: options.ossClient
+  });
   const releaseStore = new ReleaseStore(config.dataDirectory);
   const activationStore = new ActivationStore(config.dataDirectory);
+  const wechatGrantStore = new WechatGrantStore(config.dataDirectory, { activationStore });
   const feedbackStore = new FeedbackStore(config.dataDirectory);
   const interactionStore = new InteractionStore(config.dataDirectory, {
     getDefaults: () => releaseStore.siteSettings().defaults
@@ -55,7 +70,14 @@ async function createApplication(options = {}) {
   const resourcePackStore = new ResourcePackStore(config.dataDirectory);
   const companionStore = new CompanionStore(config.dataDirectory, options.companionOptions);
   const visitStickerStore = new VisitStickerStore(config.dataDirectory);
+  const petMarketStore = new PetMarketStore(config.dataDirectory, {
+    collectionAccountId: config.petMarketCollectionAccountId,
+    now: options.petMarketNow,
+    randomInt: options.petMarketRandomInt
+  });
+  const uninstallStore = new UninstallStore(config.dataDirectory);
   await Promise.all([
+    ossUploadStore.initialize(),
     releaseStore.initialize(),
     activationStore.initialize(),
     feedbackStore.initialize(),
@@ -64,8 +86,11 @@ async function createApplication(options = {}) {
     contentStore.initialize(),
     resourcePackStore.initialize(),
     companionStore.initialize(),
-    visitStickerStore.initialize()
+    visitStickerStore.initialize(),
+    petMarketStore.initialize(),
+    uninstallStore.initialize()
   ]);
+  await wechatGrantStore.initialize();
   interactionStore.pruneRawEvents();
   analyticsStore.pruneUsage();
 
@@ -100,12 +125,14 @@ async function createApplication(options = {}) {
     activationIpRateOptions: options.activationIpRateOptions,
     activationDeviceRateOptions: options.activationDeviceRateOptions
   });
+  const wechatGrantService = new WechatGrantService({ grantStore: wechatGrantStore });
   const releaseService = new ReleaseService({
     config,
     releaseStore,
     activationService,
     auditService,
-    signingPrivateKey
+    signingPrivateKey,
+    ossService
   });
   const feedbackService = new FeedbackService({
     config,
@@ -144,6 +171,22 @@ async function createApplication(options = {}) {
     activationService,
     auditService
   });
+  const petMarketService = new PetMarketService({
+    config,
+    petMarketStore,
+    activationService,
+    activationStore,
+    companionStore,
+    auditService,
+    signingPrivateKey
+  });
+  const uninstallService = new UninstallService({
+    config,
+    uninstallStore,
+    activationService,
+    companionStore,
+    auditService
+  });
   const overviewService = new OverviewService({
     analyticsService,
     activationService,
@@ -164,7 +207,9 @@ async function createApplication(options = {}) {
     resourcePackService,
     companionService,
     visitStickerService,
-    overviewService
+    overviewService,
+    petMarketService,
+    uninstallService
   });
   const publicController = new PublicController({
     authService,
@@ -177,7 +222,9 @@ async function createApplication(options = {}) {
     analyticsService,
     resourcePackService,
     companionService,
-    visitStickerService
+    visitStickerService,
+    petMarketService,
+    uninstallService
   });
 
   const app = express();
@@ -186,6 +233,10 @@ async function createApplication(options = {}) {
   app.use(accessPolicy());
   app.use(canonicalOrigin(config));
   app.use(createUsageTracking({ activationService, analyticsService }));
+  app.use('/api/internal/wechat', createWechatInternalRouter({
+    grantService: wechatGrantService,
+    authenticate: createWechatInternalAuth({ config, grantStore: wechatGrantStore })
+  }));
   app.use(createPublicRouter(publicController));
   app.use('/api/admin', createAdminRouter({
     controller: adminController,
@@ -223,6 +274,9 @@ async function createApplication(options = {}) {
     releaseService.cleanup();
     resourcePackService.cleanup();
     visitStickerService.cleanup();
+    petMarketService.cleanup();
+    try { ossService.refreshDownloadLinks?.(releaseStore.list()); }
+    catch { console.error('oss-link-refresh-failed'); }
   }, 60_000);
   maintenanceTimer.unref();
   const interactionCleanupTimer = setInterval(() => {
@@ -242,7 +296,9 @@ async function createApplication(options = {}) {
     config,
     handler: app,
     store: releaseStore,
+    ossUploadStore,
     activationStore,
+    wechatGrantStore,
     feedbackStore,
     interactionStore,
     analyticsStore,
@@ -250,17 +306,23 @@ async function createApplication(options = {}) {
     resourcePackStore,
     companionStore,
     visitStickerStore,
+    petMarketStore,
+    uninstallStore,
     services: {
       activationService,
+      wechatGrantService,
       authService,
       feedbackService,
       interactionService,
       contentService,
       releaseService,
+      ossService,
       analyticsService,
       resourcePackService,
       companionService,
-      visitStickerService
+      visitStickerService,
+      petMarketService,
+      uninstallService
     },
     close() {
       if (closed) return;
@@ -268,12 +330,16 @@ async function createApplication(options = {}) {
       clearInterval(maintenanceTimer);
       clearInterval(interactionCleanupTimer);
       clearInterval(companionCleanupTimer);
+      ossUploadStore.close();
       companionStore.close();
       visitStickerStore.close();
+      petMarketStore.close();
+      uninstallStore.close();
       contentStore.close();
       analyticsStore.close();
       interactionStore.close();
       feedbackStore.close();
+      wechatGrantStore.close();
       activationStore.close();
     }
   };

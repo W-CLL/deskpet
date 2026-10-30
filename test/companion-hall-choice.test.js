@@ -60,12 +60,13 @@ test('version 7 marks old profiles unknown without changing hall or presence sta
     await fs.promises.rm(dataDirectory, { recursive: true, force: true });
   });
   await store.initialize();
-  assert.equal(store.migrationState.currentVersion, 7);
+  assert.equal(store.migrationState.currentVersion, 8);
   for (const previous of before) {
     const current = store.database.prepare('SELECT * FROM companion_profiles WHERE account_id = ?')
       .get(previous.account_id);
     assert.deepEqual({ ...current }, { ...previous,
-      hall_choice: 'legacy_unknown', hall_choice_at: null, hall_opted_out_at: null });
+      hall_choice: 'legacy_unknown', hall_choice_at: null, hall_opted_out_at: null,
+      private_last_seen_at: null });
   }
   store.close();
   await store.initialize();

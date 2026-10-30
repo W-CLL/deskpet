@@ -10,6 +10,8 @@ const {
   normalizeVersion
 } = require('../lib/storage');
 const { loadConfig } = require('../src/config/app-config');
+const { OssUploadStore } = require('../lib/oss-upload-store');
+const { OssService } = require('../src/services/oss-service');
 const {
   validateReleaseArtifact
 } = require('../src/services/release-service');
@@ -43,7 +45,8 @@ async function main() {
   const config = loadConfig();
   const store = new ReleaseStore(config.dataDirectory);
   await store.initialize();
-  if (store.has(platform, architecture, version)) {
+  const existing = store.find(platform, architecture, version);
+  if (existing?.publishedAt) {
     throw new Error(`${platform}/${architecture} 的版本 ${version} 已经存在`);
   }
   const signingPrivateKey = crypto.createPrivateKey(
@@ -67,17 +70,24 @@ async function main() {
     fs.createWriteStream(temporaryPath, { flags: 'wx', mode: 0o600 })
   );
 
+  const ossUploadStore = new OssUploadStore(config.dataDirectory);
   try {
-    const release = await store.commitUpload({
+    await ossUploadStore.initialize();
+    const sha256 = hash.digest('hex');
+    if (existing && (existing.sha256 !== sha256 || existing.size !== stat.size)) {
+      throw new Error('已有草稿与本次安装包不一致，已拒绝覆盖');
+    }
+    const release = existing || await store.commitUpload({
       temporaryPath,
       platform,
       architecture,
       version,
       originalName: path.basename(artifactPath),
       size: stat.size,
-      sha256: hash.digest('hex'),
+      sha256,
       notes: process.env.DESKPET_RELEASE_NOTES || ''
     });
+    if (existing) await fs.promises.rm(temporaryPath, {force:true});
     const validation = await validateReleaseArtifact({
       releaseStore: store,
       publicUrl: config.publicUrl,
@@ -86,6 +96,8 @@ async function main() {
       architecture,
       version
     });
+    const ossService = new OssService(config, {store:ossUploadStore});
+    if (ossService.enabled) await ossService.upload(release, store.filePath(release));
     const published = await store.publish(platform, architecture, version);
     await store.audit({
       action: 'cli-import',
@@ -100,6 +112,8 @@ async function main() {
   } catch (error) {
     await fs.promises.rm(temporaryPath, { force: true }).catch(() => {});
     throw error;
+  } finally {
+    ossUploadStore.close();
   }
 }
 

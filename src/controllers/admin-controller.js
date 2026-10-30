@@ -24,7 +24,9 @@ class AdminController {
     resourcePackService,
     companionService,
     visitStickerService,
-    overviewService
+    overviewService,
+    petMarketService,
+    uninstallService
   }) {
     this.authService = authService;
     this.activationService = activationService;
@@ -37,6 +39,8 @@ class AdminController {
     this.companionService = companionService;
     this.visitStickerService = visitStickerService;
     this.overviewService = overviewService;
+    this.petMarketService = petMarketService;
+    this.uninstallService = uninstallService;
   }
 
   async login(req, res) {
@@ -65,6 +69,12 @@ class AdminController {
 
   siteSettings(_req, res) {
     res.status(200).json(this.releaseService.siteSettings());
+  }
+
+  async syncOss(req, res) {
+    res.status(200).json(await this.releaseService.syncOss(
+      req, req.params.platform, req.params.architecture, req.params.version
+    ));
   }
 
   async updateSiteSettings(req, res) {
@@ -105,6 +115,21 @@ class AdminController {
 
   feedback(_req, res) {
     res.status(200).json(this.feedbackService.listAll());
+  }
+
+  uninstalls(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(this.uninstallService.listAdmin({
+      status: queryValue(req, 'status'),
+      q: queryValue(req, 'q'),
+      page: queryValue(req, 'page'),
+      pageSize: queryValue(req, 'pageSize')
+    }));
+  }
+
+  uninstallDetails(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(this.uninstallService.details(req.params.installationId));
   }
 
   interactions(_req, res) {
@@ -200,6 +225,11 @@ class AdminController {
     res.status(200).json(await this.resourcePackService.delete(req, id));
   }
 
+  async updateResourcePack(req, res) {
+    const id = requireParam(req.params.id, UUID_PATTERN);
+    res.status(200).json(await this.resourcePackService.update(req, id, req.body));
+  }
+
   visitStickers(_req, res) {
     res.status(200).json(this.visitStickerService.adminList());
   }
@@ -225,6 +255,76 @@ class AdminController {
   async deleteVisitSticker(req, res) {
     const id = requireParam(req.params.id, UUID_PATTERN);
     res.status(200).json(await this.visitStickerService.deleteSticker(req, id));
+  }
+
+  petMarketProducts(_req, res) {
+    res.status(200).json(this.petMarketService.listProducts());
+  }
+
+  petMarketOrders(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(this.petMarketService.listAdminOrders({
+      status: queryValue(req, 'status'),
+      q: queryValue(req, 'q'),
+      page: queryValue(req, 'page'),
+      pageSize: queryValue(req, 'pageSize')
+    }));
+  }
+
+  petMarketPaymentSettings(_req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(this.petMarketService.paymentSettings());
+  }
+
+  async savePetMarketPaymentSettings(req, res) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(await this.petMarketService.savePaymentSettings(req, req.body));
+  }
+
+  async createPetMarketProduct(req, res) {
+    res.status(201).json(await this.petMarketService.createProduct(req, req.body));
+  }
+
+  async updatePetMarketProduct(req, res) {
+    res.status(200).json(await this.petMarketService.updateProduct(
+      req,
+      req.params.id,
+      req.body
+    ));
+  }
+
+  createPetMarketVersionUpload(req, res) {
+    res.status(201).json(this.petMarketService.createVersionUpload(
+      req.params.id,
+      req.body,
+      res.locals.adminSession
+    ));
+  }
+
+  async receivePetMarketVersionUpload(req, res) {
+    const uploadId = requireParam(req.params.uploadId, UPLOAD_ID_PATTERN);
+    res.status(201).json(await this.petMarketService.receiveVersionUpload(
+      req,
+      uploadId,
+      res.locals.adminSession
+    ));
+  }
+
+  petMarketPaymentEvents(_req, res) {
+    res.status(200).json(this.petMarketService.listPaymentEvents());
+  }
+
+  petMarketReparsePaymentEvent(req, res) {
+    res.status(200).json(this.petMarketService.reparsePaymentEvent(req.params.id, req.body));
+  }
+
+  petMarketConfirmPaymentEvent(req, res) {
+    res.status(200).json(this.petMarketService.confirmPaymentEvent(req.params.id, req.body));
+  }
+
+  petMarketConfirmOrderPayment(req, res) {
+    const { username } = this.authService.sessionPayload(res.locals.adminSession);
+    res.status(200).json(this.petMarketService.confirmOrderPayment(req.params.id, req.body, username));
   }
 
   createUpload(req, res) {

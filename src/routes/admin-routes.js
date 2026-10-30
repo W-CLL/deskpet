@@ -45,6 +45,11 @@ function createAdminRouter({ controller, authService }) {
     (req, res) => controller.createUpload(req, res)
   );
   router.post(
+    '/releases/:platform/:architecture/:version/oss-sync',
+    requireWriteSession,
+    (req, res) => controller.syncOss(req, res)
+  );
+  router.post(
     '/releases/:platform/:architecture/:version/publish',
     requireWriteSession,
     (req, res) => controller.publish(req, res)
@@ -82,6 +87,10 @@ function createAdminRouter({ controller, authService }) {
     requireWriteSession,
     (req, res) => controller.deleteResourcePack(req, res)
   );
+  router.patch(
+    '/resource-packs/:id', requireWriteSession, ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updateResourcePack(req, res)
+  );
   router.get('/visit-stickers', requireSession, (req, res) => controller.visitStickers(req, res));
   router.post(
     '/visit-stickers',
@@ -103,6 +112,74 @@ function createAdminRouter({ controller, authService }) {
     '/visit-stickers/:id',
     requireWriteSession,
     (req, res) => controller.deleteVisitSticker(req, res)
+  );
+
+  router.get(
+    '/pet-market/payment-settings',
+    requireSession,
+    (req, res) => controller.petMarketPaymentSettings(req, res)
+  );
+  router.put(
+    '/pet-market/payment-settings',
+    requireWriteSession,
+    ...jsonBody(512 * 1024),
+    (req, res) => controller.savePetMarketPaymentSettings(req, res)
+  );
+  router.get(
+    '/pet-market/orders',
+    requireSession,
+    (req, res) => controller.petMarketOrders(req, res)
+  );
+  router.post(
+    '/pet-market/orders/:id/confirm-payment',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketConfirmOrderPayment(req, res)
+  );
+  router.get(
+    '/pet-market/products',
+    requireSession,
+    (req, res) => controller.petMarketProducts(req, res)
+  );
+  router.post(
+    '/pet-market/products',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createPetMarketProduct(req, res)
+  );
+  router.patch(
+    '/pet-market/products/:id',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.updatePetMarketProduct(req, res)
+  );
+  router.post(
+    '/pet-market/products/:id/versions',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.createPetMarketVersionUpload(req, res)
+  );
+  router.put(
+    '/pet-market/product-uploads/:uploadId',
+    requireWriteSession,
+    (req, res) => controller.receivePetMarketVersionUpload(req, res)
+  );
+  router.get(
+    '/pet-market/payment-events',
+    requireSession,
+    (req, res) => controller.petMarketPaymentEvents(req, res)
+  );
+  router.post(
+    '/pet-market/payment-events/:id/reparse',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketReparsePaymentEvent(req, res)
+  );
+  router.post(
+    '/pet-market/payment-events/:id/confirm',
+    requireWriteSession,
+    ...jsonBody(MAX_JSON_BODY),
+    (req, res) => controller.petMarketConfirmPaymentEvent(req, res)
   );
 
   router.get(
@@ -140,6 +217,12 @@ function createAdminRouter({ controller, authService }) {
   );
 
   router.get('/feedback', requireSession, (req, res) => controller.feedback(req, res));
+  router.get('/uninstalls', requireSession, (req, res) => controller.uninstalls(req, res));
+  router.get(
+    '/uninstalls/:installationId',
+    requireSession,
+    (req, res) => controller.uninstallDetails(req, res)
+  );
   router.get('/interactions', requireSession, (req, res) => controller.interactions(req, res));
   router.get('/companions', requireSession, (req, res) => controller.companions(req, res));
   router.post(

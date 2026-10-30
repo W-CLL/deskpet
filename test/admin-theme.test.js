@@ -109,10 +109,10 @@ test('admin serves the theme bootstrap as an allowed same-origin script before C
   assert.equal(response.status, 200);
   assert.match(response.headers.get('content-security-policy'), /(?:^|;\s*)script-src 'self'(?:;|$)/);
   const html = await response.text();
-  assert.match(html, /\/js\/main\.js\?v=admin-theme-1/, 'old cached main script must not bind a second theme handler');
   assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc=)[^>]*>/i, 'inline scripts would be blocked by CSP');
   const bootstrap = html.match(/<script\b[^>]*src="([^"]*\/core\/theme\.js[^"]*)"[^>]*>/);
   assert.ok(bootstrap, 'theme bootstrap must load from the served admin page');
+  assert.equal((html.match(/\/core\/theme\.js/g) || []).length, 1, 'theme bootstrap must bind controls only once');
   assert.doesNotMatch(bootstrap[0], /\b(?:async|defer|type="module")\b/);
   assert.ok(html.indexOf(bootstrap[0]) < html.indexOf('<link rel="stylesheet"'), 'saved theme must apply before CSS paints');
   const scriptUrl = new URL(bootstrap[1], baseUrl);
@@ -121,6 +121,15 @@ test('admin serves the theme bootstrap as an allowed same-origin script before C
   assert.equal(scriptResponse.status, 200);
   assert.match(scriptResponse.headers.get('content-type'), /javascript/);
   assert.equal(await scriptResponse.text(), themeScript);
+
+  const main = html.match(/<script\b[^>]*src="([^"]*\/js\/main\.js\?v=([A-Za-z0-9._-]+))"[^>]*>/);
+  assert.ok(main, 'the generated page must use a versioned main script URL');
+  const mainResponse = await fetch(new URL(main[1], baseUrl));
+  assert.equal(mainResponse.status, 200, 'the exact generated main script URL must be loadable');
+  assert.match(mainResponse.headers.get('content-type'), /javascript/);
+  const mainScript = await mainResponse.text();
+  assert.doesNotMatch(mainScript, /deskpet-admin-theme|themeToggleButton/,
+    'main.js must leave theme restoration and toggle binding to the single bootstrap');
 });
 
 test('admin page generation and head repair preserve the CSP-compatible theme bootstrap', async (context) => {
@@ -129,6 +138,7 @@ test('admin page generation and head repair preserve the CSP-compatible theme bo
   await fs.promises.mkdir(path.join(directory, 'public/admin'), { recursive: true });
   await fs.promises.mkdir(path.join(directory, 'scripts'));
   await fs.promises.copyFile(path.join(root, 'public/admin.html'), path.join(directory, 'public/admin.html'));
+  let assembledMainScript = '';
   for (const script of ['assemble-admin.js', 'fix-theme-head.js']) {
     const scriptPath = path.join(directory, 'scripts', script);
     await fs.promises.copyFile(path.join(root, 'scripts', script), scriptPath);
@@ -137,8 +147,12 @@ test('admin page generation and head repair preserve the CSP-compatible theme bo
     const html = await fs.promises.readFile(path.join(directory, 'public/admin/index.html'), 'utf8');
     assert.match(html, /<html lang="zh-CN" data-theme="dark">/);
     assert.match(html, /id="themeToggleButton"/);
-    assert.match(html, /\/js\/main\.js\?v=admin-theme-1/);
+    const main = html.match(/<script\b[^>]*src="([^"]*\/js\/main\.js\?v=[A-Za-z0-9._-]+)"[^>]*>/);
+    assert.ok(main, `${script} must leave a valid cachebuster on main.js`);
+    if (script === 'assemble-admin.js') assembledMainScript = main[1];
+    else assert.equal(main[1], assembledMainScript, 'head repair must preserve the assembler cachebuster');
     assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc=)[^>]*>/i);
+    assert.equal((html.match(/\/core\/theme\.js/g) || []).length, 1);
     assert.ok(html.indexOf('/core/theme.js') < html.indexOf('<link rel="stylesheet"'));
   }
 });

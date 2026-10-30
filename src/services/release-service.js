@@ -98,13 +98,14 @@ async function validateReleaseArtifact({
 }
 
 class ReleaseService {
-  constructor({ config, releaseStore, activationService, auditService, signingPrivateKey }) {
+  constructor({ config, releaseStore, activationService, auditService, signingPrivateKey, ossService }) {
     this.config = config;
     this.releaseStore = releaseStore;
     this.activationService = activationService;
     this.auditService = auditService;
     this.signingPrivateKey = signingPrivateKey;
     this.signingPublicKey = crypto.createPublicKey(signingPrivateKey);
+    this.ossService = ossService;
     this.pendingUploads = new Map();
   }
 
@@ -117,7 +118,8 @@ class ReleaseService {
       releaseTargets: RELEASE_PLATFORMS,
       activeVersions: this.releaseStore.data.activeVersions,
       publicVersions: this.releaseStore.data.publicVersions,
-      releases: this.releaseStore.list()
+      releases: this.releaseStore.list().map((release) => this.ossService?.enabled
+        ? {...release, oss:this.ossService.status(release)} : release)
     };
   }
 
@@ -293,6 +295,13 @@ class ReleaseService {
     let result;
     try {
       const validation = await this.validateRelease(platform, architecture, version);
+      const pendingRelease = this.releaseStore.find(platform, architecture, version);
+      if (this.ossService?.enabled) {
+        await this.ossService.upload(
+          pendingRelease,
+          this.releaseStore.filePath(pendingRelease)
+        );
+      }
       const release = await this.releaseStore.publish(platform, architecture, version);
       result = { release, validation };
     } catch (error) {
@@ -319,6 +328,15 @@ class ReleaseService {
       signatureVerified: result.validation.signatureVerified
     });
     return result;
+  }
+
+  async syncOss(req, platform, architecture, version) {
+    if (!this.ossService?.enabled) throw new HttpError(409, '尚未配置 OSS', 'OSS_NOT_CONFIGURED');
+    await this.validateRelease(platform, architecture, version);
+    const release = this.releaseStore.find(platform, architecture, version);
+    await this.ossService.upload(release, this.releaseStore.filePath(release));
+    await this.auditService.write({action:'sync_oss',outcome:'success',ip:clientIp(req,this.config),platform,architecture,version});
+    return {oss:this.ossService.status(release)};
   }
 
   async updateNotes(req, platform, architecture, version, body) {
@@ -424,6 +442,24 @@ class ReleaseService {
     if (!isPublic) this.activationService.requireLicense(req);
 
     const filePath = this.releaseStore.filePath(release);
+    // Android 1.4.1 added support for the trusted OSS download domain.
+    const androidAgent = /^ZhuoDazi-Android\/([^\s]+)/i.exec(req.headers['user-agent'] || '');
+    const androidClient = req.headers['x-deskpet-platform'] === 'android' || Boolean(androidAgent);
+    const clientVersion = String(req.headers['x-deskpet-version'] || androidAgent?.[1] || '');
+    const parts = /^([0-9]+)\.([0-9]+)\.([0-9]+)$/.exec(clientVersion)?.slice(1).map(Number);
+    const supportsOss = parts && (parts[0] > 1 || (parts[0] === 1
+      && (parts[1] > 4 || (parts[1] === 4 && parts[2] >= 1))));
+    const legacyAndroid = androidClient && (!supportsOss
+      || this.config.oss?.downloadDomain !== 'oss-download.desktoppet.online');
+    const androidNeedsDomain = release.platform === 'android' && !this.config.oss?.downloadDomain;
+    if (this.ossService?.enabled && !legacyAndroid && !androidNeedsDomain) {
+      return {
+        redirectUrl: await this.ossService.downloadUrl(release, filePath, req.method),
+        isBootstrap: isPublic,
+        release,
+        size: release.size
+      };
+    }
     const stat = await fs.promises.stat(filePath);
     let range;
     try {

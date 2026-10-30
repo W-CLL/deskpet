@@ -175,6 +175,15 @@ server.js
 
 不要上传 `node_modules/`、`test/`、`data/`、`work/`、EXE 或本地密钥。Linux 上用锁文件重新安装依赖：
 
+3.5.3 配套后端另需包含 `lib/local-market-store.js`（正式付款库复用的核心实现）、
+`lib/pet-market-*.js`、`lib/resource-pack-package.js`、`lib/uninstall-store.js`、对应
+`src/services/`、路由、控制器，以及 `public/admin/js/pages/pet-market*.js`、
+`uninstalls.js` 和更新后的后台入口。部署脚本只需生产运行/迁移/检查使用的脚本；
+排除 `scripts/local-market-server.js`、`local-pet-market-demo.js`、
+`import-local-pet-shop.js`、`import-local-resource-packs.js`，以及所有 `.local-review/`、
+`demo-secrets.json`、桥接器私密配置、本地聊天库和本地订单数据库。
+已有服务器若包含 OSS 或微信授权等独立扩展，必须基于当前服务器代码合并，不能用旧本地目录整包覆盖。
+
 ```bash
 cd /www/wwwroot/deskpet
 npm ci --omit=dev
@@ -200,13 +209,27 @@ auth.json
 activation.db*
 feedback.db*
 interaction.db*
+analytics.db*
 content.db*
+companion.db*
+visit-stickers.db*
+pet-market.db*
+uninstall.db*
+oss-uploads.db*
 activation-pepper.key
 activation-encryption.key
 signing-private.pem
 releases.json
 releases/
 uploads/
+companion-deliveries/
+visit-stickers/
+visit-sticker-uploads/
+resource-packs.json
+resource-packs/
+resource-pack-uploads/
+pet-market-assets/
+pet-market-uploads/
 audit.jsonl
 ```
 
@@ -387,12 +410,32 @@ native\dist\ZhuoDazi-Desktop-Pet-2.1.2.exe
    `migrate:existing` 会先确认 `activation.db` 确实存在，避免数据目录写错后生成一套空库。该步骤可提前发现目录权限、磁盘空间或数据库损坏问题。即使跳过，服务重新启动时
    也会在监听端口前自动执行未完成迁移。
 
+   1.1.0 新增 `pet-market.db`、`uninstall.db`，迁移也覆盖来访表情库。新库为空，不导入演示商品、订单或支付记录；已有订单/购买权益保留，手动确认迁移不会伪造微信支付事件。
+   既有资源包在启动时重新检查 ZIP、大小及 SHA-256，不合格旧包仍保留在管理后台并显示原因，但不进入可自动安装的公开列表。
+   私人搭子在线状态将 `companion` 迁移升至 8。旧服务最多认识版本 7，会主动拒绝新版数据库，不能仅回退代码后继续使用新版数据库。
+   建议停服备份、迁移和内部健康检查期间暂停外部请求，检查通过后再恢复流量；放量前失败可恢复完整备份。
+   放量后若需回退且要保留新写入，应使用明确兼容 `companion/8` 的回退代码，不能删除迁移记录假装降级。
+
 7. 在宝塔重新启动项目。
 8. 检查项目日志、`/healthz`、`/admin`、账号数量和一次客户端更新请求。
 
 不要只执行 `git pull` 就结束：服务端依赖可能已经变化，`npm ci --omit=dev` 是更新流程的一部分。
 不要在未设置 `DESKPET_DATA_DIR` 的普通 SSH Shell 中直接运行迁移，否则会在代码目录
 创建一套新的空数据。迁移只向前执行；如需回退代码，应停止服务并恢复升级前备份。
+
+### 桌宠小铺收款接入
+
+新部署默认不启用收款且没有收款人或商品。管理员自行上传正式桌宠、互动词库和小剧场，设置定价/预览/发布状态；不能将本地验收数据目录复制到生产。
+
+自动确认收款需要在服务器同时设置 `DESKPET_PET_MARKET_BRIDGE_TOKEN` 与
+`DESKPET_PET_MARKET_COLLECTION_ACCOUNT_ID`，前者使用 24–256 字符的独立秘密，后者与本地监听微信账号匹配。
+独立 Windows 监听器使用生产专用配置与生产队列，向规范 HTTPS 域名的
+`POST /api/pet-market/payment-heartbeat` 和 `POST /api/pet-market/payment-events` 发送 Bearer 鉴权请求。
+本地测试令牌、订单队列不得复用到生产，不需要将微信数据库或解密密钥上传服务器。
+
+后台填写收款人/微信号或收款码并开启收款后，只有收到对应来源的有效在线心跳才允许新订单付款。
+监听电脑须保持唤醒、微信登录和监听进程运行；服务重启后需要新的心跳。
+用户漏填备注时，可在“小铺订单”核对真实付款后手动确认，记录管理员、核对说明和时间；不会代替管理员核实到账。
 
 ## 11. 备份与恢复
 

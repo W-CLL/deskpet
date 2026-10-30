@@ -1,11 +1,16 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { ActivationStore } = require('../lib/activation-store');
+const { WechatGrantStore } = require('../lib/wechat-grant-store');
+const { OssUploadStore } = require('../lib/oss-upload-store');
 const { FeedbackStore } = require('../lib/feedback-store');
 const { InteractionStore } = require('../lib/interaction-store');
 const { AnalyticsStore } = require('../lib/analytics-store');
 const { ContentStore } = require('../lib/content-store');
 const { CompanionStore } = require('../lib/companion-store');
+const { VisitStickerStore } = require('../lib/visit-sticker-store');
+const { PetMarketStore } = require('../lib/pet-market-store');
+const { UninstallStore } = require('../lib/uninstall-store');
 
 function validateDataDirectory(dataDirectory, requireExisting) {
   if (!requireExisting) {
@@ -44,30 +49,50 @@ async function main(args = process.argv.slice(2)) {
   );
   validateDataDirectory(dataDirectory, args.includes('--require-existing'));
   const activationStore = new ActivationStore(dataDirectory);
+  const wechatGrantStore = new WechatGrantStore(dataDirectory, { activationStore });
+  const ossUploadStore = new OssUploadStore(dataDirectory);
   const feedbackStore = new FeedbackStore(dataDirectory);
   const interactionStore = new InteractionStore(dataDirectory);
   const analyticsStore = new AnalyticsStore(dataDirectory);
   const contentStore = new ContentStore(dataDirectory);
   const companionStore = new CompanionStore(dataDirectory);
+  const visitStickerStore = new VisitStickerStore(dataDirectory);
+  const petMarketStore = new PetMarketStore(dataDirectory);
+  const uninstallStore = new UninstallStore(dataDirectory);
 
   try {
     await activationStore.initialize();
+    await wechatGrantStore.initialize();
+    await ossUploadStore.initialize();
     await feedbackStore.initialize();
     await interactionStore.initialize();
     await analyticsStore.initialize();
     await contentStore.initialize();
     await companionStore.initialize();
+    await visitStickerStore.initialize();
+    await petMarketStore.initialize();
+    await uninstallStore.initialize();
     const result = {
       dataDirectory,
       activation: activationStore.migrationState,
+      wechatGrants: wechatGrantStore.migrationState,
+      ossUploads: ossUploadStore.migrationState,
       feedback: feedbackStore.migrationState,
       interaction: interactionStore.migrationState,
       analytics: analyticsStore.migrationState,
       content: contentStore.migrationState,
-      companion: companionStore.migrationState
+      companion: companionStore.migrationState,
+      visitStickers: visitStickerStore.migrationState,
+      petMarket: petMarketStore.migrationState,
+      uninstall: uninstallStore.migrationState
     };
     console.log(JSON.stringify(result, null, 2));
   } finally {
+    ossUploadStore.close();
+    wechatGrantStore.close();
+    uninstallStore.close();
+    petMarketStore.close();
+    visitStickerStore.close();
     companionStore.close();
     contentStore.close();
     analyticsStore.close();

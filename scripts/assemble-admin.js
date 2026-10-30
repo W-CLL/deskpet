@@ -20,7 +20,7 @@ function extractPanel(name) {
 
 const pages = [
   'overview', 'android', 'releases', 'activations', 'interactions',
-  'companions', 'analytics', 'content', 'resource-packs', 'visit-stickers', 'feedback'
+  'companions', 'analytics', 'content', 'resource-packs', 'pet-market', 'pet-market-orders', 'visit-stickers', 'feedback', 'uninstalls'
 ];
 
 // Build settings panel from overview remote-config pieces + address fields
@@ -168,6 +168,12 @@ const panelHtml = {};
 for (const name of pages) {
   if (name === 'overview') {
     panelHtml[name] = cleanOverview(extractPanel('overview'));
+  } else if (name === 'pet-market') {
+    panelHtml[name] = '<div id="petMarketRoot"></div>';
+  } else if (name === 'pet-market-orders') {
+    panelHtml[name] = '<div id="petMarketOrdersRoot"></div>';
+  } else if (name === 'uninstalls') {
+    panelHtml[name] = '<div id="uninstallsRoot"></div>';
   } else {
     let html = extractPanel(name);
     panelHtml[name] = html;
@@ -186,7 +192,7 @@ const html = `<!doctype html>
   <link rel="stylesheet" href="/assets/admin/css/tokens.css?v=admin-v2">
   <link rel="stylesheet" href="/assets/admin/css/base.css?v=admin-v2">
   <link rel="stylesheet" href="/assets/admin/css/layout.css?v=admin-v2">
-  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=admin-v2">
+  <link rel="stylesheet" href="/assets/admin/css/pages.css?v=pet-market-manual-confirm-1">
 </head>
 <body>
   <main class="app-root">
@@ -261,11 +267,14 @@ const html = `<!doctype html>
             <p class="sidebar-label">内容运营</p>
             <button class="nav-item" type="button" data-page="content"><span>内容库</span><small>六类互动内容</small></button>
             <button class="nav-item" type="button" data-page="resource-packs"><span>资源包</span><small>词包与小剧场</small></button>
+            <button class="nav-item" type="button" data-page="pet-market"><span>桌宠小铺</span><small>免费与收费桌宠</small></button>
+            <button class="nav-item" type="button" data-route="pet-market-orders"><span>小铺订单</span><small>付款记录与状态</small></button>
             <button class="nav-item" type="button" data-page="visit-stickers"><span>体验来访</span><small>表情包</small></button>
           </div>
           <div class="nav-group">
             <p class="sidebar-label">支持与设置</p>
             <button class="nav-item" type="button" data-page="feedback"><span>问题反馈</span><small>问题与建议</small></button>
+            <button class="nav-item" type="button" data-page="uninstalls"><span>卸载反馈</span><small>设备卸载与恢复</small></button>
             <button class="nav-item" type="button" data-page="settings"><span>系统设置</span><small>远程配置</small></button>
           </div>
         </nav>
@@ -353,6 +362,8 @@ ${pages.map((name) => {
   <script src="/assets/admin/js/pages/settings.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/releases.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/resource-packs.js?v=admin-v2"></script>
+  <script src="/assets/admin/js/pages/pet-market.js?v=pet-market-orders-1"></script>
+  <script src="/assets/admin/js/pages/pet-market-orders.js?v=pet-market-manual-confirm-1"></script>
   <script src="/assets/admin/js/pages/visit-stickers.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/activations.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/interactions.js?v=admin-v2"></script>
@@ -360,7 +371,8 @@ ${pages.map((name) => {
   <script src="/assets/admin/js/pages/analytics.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/content.js?v=admin-v2"></script>
   <script src="/assets/admin/js/pages/feedback.js?v=admin-v2"></script>
-  <script src="/assets/admin/js/main.js?v=admin-theme-1"></script>
+  <script src="/assets/admin/js/pages/uninstalls.js?v=uninstall-lifecycle-1"></script>
+  <script src="/assets/admin/js/main.js?v=pet-market-orders-1"></script>
 </body>
 </html>
 `;
